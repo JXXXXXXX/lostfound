@@ -66,11 +66,14 @@
                 {% if user %}
                     {# 用户已登陆 #}
                     {% if upload_success %}
-                    <div class="alert alert-success">上传信息成功!</div>
+                        <div class="alert alert-success">上传信息成功!</div>
 
                     {% endif %}
                     {% if upload_fail %}
-                    <div class="alert alert-warning">请填写完整!</div>
+                        <div class="alert alert-warning">请按规则填写！</div>
+                    {% endif %}
+                    {% if upload_time_error %}
+                        <div class="alert alert-danger">时间输入有误！</div>
                     {% endif %}
                     <form enctype="multipart/form-data" action="upload" method="POST">
                     <!--上传信息类型选择-->
@@ -96,7 +99,7 @@
                     <!--物品名称-->
                     <div  class="piece" >
                         <label for="lName">物品名称：</label>
-                        <input type="text"  id="lName" value="" name="name"/><br/>
+                        <input type="text"  id="lName"  name="name" onfocus="if (value ==&#39;(10个字符以内)&#39;){value =&#39;&#39;}" onblur="if (value ==&#39;&#39;){value=&#39;(10个字符以内)&#39;}" value="(10个字符以内)"><br/>
                     </div>
 
                     <div  class="piece" >
@@ -106,12 +109,12 @@
 
                     <div  class="piece" >
                         <label for="lLocation">物品地点：</label>
-                        <input type="text" id="lLocation" id="" value="" name="position"/><br/>
+                        <input type="text" id="lLocation" id=""  name="position" onfocus="if (value ==&#39;(请勿为空)&#39;){value =&#39;&#39;}" onblur="if (value ==&#39;&#39;){value=&#39;(请勿为空)&#39;}" value="(请勿为空)"/><br/>
                     </div>
 
                     <div  class="piece" >
                         <label for="lDetail" style="float: left;padding-right: 13px;" >细节描述:</label>
-                        <textarea id="lDetail" rows="5" cols="20" name="dscp"></textarea>
+                        <textarea id="lDetail" rows="5" cols="20" name="dscp" onfocus="if (value ==&#39;(请勿为空)&#39;){value =&#39;&#39;}" onblur="if (value ==&#39;&#39;){value=&#39;(请勿为空)&#39;}"></textarea>
                     </div>
 
                     <div class="piece">
