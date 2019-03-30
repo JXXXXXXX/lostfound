@@ -201,7 +201,7 @@ def objShowinfo_view(request,object_id):
     context['show_user'] = show_user
     context['user_login'] = user_login
     # -----------------主要部分---------------------
-    return render_to_response("objShowinfo.html",context)
+    return render_to_response("detail.html",context)
 
 #物品列表显示
 def objList_view(request):
@@ -235,6 +235,8 @@ def profile_view(request,nav_id):
             for obj_id in check_box_list:
                 #更改物品状态
                 p=models.Object.objects.get(id=str(obj_id))
+                if p.state == 0 or p.state == -1:
+                    continue
                 p.state=2
                 p.save()
                 #创建Taken表记录

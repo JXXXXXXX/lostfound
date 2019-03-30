@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
+		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
+		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+		<title>物品详情</title>
+		<style type="text/css">
+			body{
+				font-family: "Microsoft YaHei UI"
+			}
+			.col-md-6 hr{
+				margin: 0;
+			}
+			p{
+				margin-bottom: 0;
+			}
+		</style>
+	</head>
+	<body background="../static/Wopop_files/login_bgx.gif">
+		<div class="container" style="width: 700px;height:560px;background: #C6C8CA;margin:150px auto;">
+
+			<h2 style="text-align: center;">物品详情</h2>
+			<hr >
+            {% if show_obj %}
+			<div class="row">
+                <!--物品图片-->
+                {% if obj.img %}
+                    <img src="{{ obj.img.url }}" class="thumbnail" style="width: 250px;height: 250px;"><br/>
+                {% else %}
+                    <img src="../static/images/demo/470x470.gif" alt="图片" class="thumbnail" style="width: 250px;height: 250px;">
+                {% endif %}
+				<div class="col-md-5" >
+
+				</div>
+				<div class="col-md-6">
+					<div id="name">
+						<h4>物品名称：</h4>
+						<p>{{ obj.name }}</p>
+					</div><hr >					
+					<div id="time">
+						<h4>拾物时间：</h4>
+						<p>{{ obj.time }}</p>
+					</div><hr >
+					<div id="location">
+						<h4>拾物地点：</h4>
+						<p>{{ obj.position }}</p>
+					</div><hr >
+					<div id="detail">
+						<h4>细节描述：</h4>
+						<p>{{ obj.dscp }}</p>
+					</div><hr >
+				</div>
+			</div>
+            {% endif %}
+
+
+            <div id="tel" class="col-md-6">
+                <h4>信息发布者联系方式：</h4>
+                {% if show_user %}
+                    <div id="id_username">
+						<h4>姓名：</h4>
+						<p>{{user.name}}</p>
+					</div><hr >
+                    <div id="id_username">
+						<h4>电话：</h4>
+						<p>{{user.phone}}</p>
+					</div><hr >
+                    <div id="id_username">
+						<h4>邮箱：</h4>
+						<p>{{user.email}}</p>
+					</div><hr >
+                {% else %}
+                    <a href="../login">登陆后可见</a>
+                {% endif %}
+            </div><hr >
+        {# 按钮功能 #}
+        {% if user_login %}
+            {% if user_login.tag == 1 and obj.state == 0 %}
+                <form action="" method="POST">
+                    <input type="submit" name='delete' value="未通过" />
+                    <input type="submit" name='pass' value="通过" />
+                </form>
+            {% endif %}
+            {% if user_login.tag == 1 and obj.state != 0 %}
+                <a href="../profile/2">返回个人中心</a>
+            {% endif %}
+        {% endif %}
+        <a href="../main">
+            返回首页
+        </a>
+		</div>
+		
+	</body>
+</html>
