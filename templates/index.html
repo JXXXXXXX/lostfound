@@ -60,9 +60,11 @@
 		
 		<div class="container" style="background-color: #C6C8CA;">
 			<div class="row">
+
+                {# 左侧 #}
 				<div class="col-md-3" >
-                        {# 左侧分类栏 #}
- 						<div class="list-group" >
+                    {# 分类栏 #}
+                    <div class="list-group" >
 							<a href="sort/0" class="list-group-item">总览</a>
 							<a href="sort/1" class="list-group-item">证件现金</a>
 							<a href="sort/2" class="list-group-item">书本文具</a>
@@ -71,11 +73,17 @@
 							<a href="sort/5" class="list-group-item">生活用品</a>
 							<a href="sort/6" class="list-group-item">其他</a>
 						</div>
-						
-						<button type="button" class="btn btn-default btn-lg" style="margin: 30px 60px;" onclick="window.location.href='re_lost.html'">发布寻物</button>
-						<button type="button" class="btn btn-default btn-lg" style="margin: 30px 60px;" onclick="window.location.href='re_found.html'">发布招领</button>
+
+                    {# 信息上传按钮 #}
+                    <a href="/upload2">
+                        <button type="button" class="btn btn-default btn-lg" style="margin: 30px 60px;" href="/upload2">
+                            信息上传
+                        </button>
+                    </a>
 					 
 				</div>
+
+                {# 失物招领 板块 #}
 				<div class="col-md-9 ">
 					<h3 style="margin-bottom: 0px;">失物招领</h3>
 					<hr style="margin-top: 12px;">
@@ -83,14 +91,25 @@
 						<div >
 							<div id="gallery" >
 								<ul>
-									<li><a rel="gallery_group" href="#" title="Image 1"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 2"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 3"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 4"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 5"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 6"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 7"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 8"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
+                                    {% if lost %}
+									    {% for obj in lost %}
+                                            <li>
+                                                <a rel="gallery_group" href="object/{{ obj.id }}" title="Image">
+                                                    {% if obj.img %}
+                                                        <img src="{{ obj.img.url }}" alt="" />
+                                                    {% else %}
+                                                        <img src="../static/images/demo/80x80.gif" alt="" />
+                                                    {% endif %}
+                                                    <div style="width: 150px;height: 60px;background: #FFFFFF;">
+                                                        {{ obj.name }}
+                                                    </div>
+                                                </a>
+                                            </li>
+
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>没有记录</p>
+                                    {% endif %}
 								</ul>
 							</div>
 						</div>
@@ -99,7 +118,8 @@
 
 						
 				</div>
-				
+
+                {# 寻物启事 板块 #}
 				<div class="col-md-9 col-md-offset-3">
 					<h3 style="margin-bottom: 0px;">寻物启事</h3>
 					<hr style="margin-top: 12px;">
@@ -107,14 +127,25 @@
 						<div >
 							<div id="gallery" >
 								<ul>
-									<li><a rel="gallery_group" href="#" title="Image 1"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 2"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 3"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 4"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 5"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 6"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 7"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
-									<li><a rel="gallery_group" href="#" title="Image 8"><img src="../static/images/demo/80x80.gif" alt="" /><div style="width: 150px;height: 60px;background: #FFFFFF;">物品描述</div></a></li>
+                                    {% if found %}
+									    {% for obj in found %}
+                                            <li>
+                                                <a rel="gallery_group" href="object/{{ obj.id }}" title="Image">
+                                                    {% if obj.img %}
+                                                        <img src="{{ obj.img.url }}" alt="" />
+                                                    {% else %}
+                                                        <img src="../static/images/demo/80x80.gif" alt="" />
+                                                    {% endif %}
+                                                    <div style="width: 150px;height: 60px;background: #FFFFFF;">
+                                                        {{ obj.name }}
+                                                    </div>
+                                                </a>
+                                            </li>
+
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>没有记录</p>
+                                    {% endif %}
 								</ul>
 							</div>
 						</div>

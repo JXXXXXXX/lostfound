@@ -24,7 +24,7 @@ def login_view(request):
                 if user_db.pwd == password:
                     # 密码正确
                     request.session["sno"]=user_db.sno # 记录用户sno
-                    return render_to_response('afterlogin.html') # 登陆成功
+                    return redirect('/main') # 登陆成功 返回主界面
                         # redirect 只能通过session传递参数
                 else:
                     # 密码错误
@@ -312,6 +312,25 @@ def quit_view(request):
 # 主界面
 def main_view(request):
     context={}
+    # 选择最近的【失物招领】和【寻物启事】各8条
+    try:
+        lost = models.Object.objects.filter(tag=False)
+        found = models.Object.objects.filter(tag=True)
+        if len(lost)>8:
+            num_lost = 8
+        else:
+            num_lost = len(lost)
+        if len(found)>8:
+            num_found = 8
+        else:
+            num_found = len(found)
+        if num_lost!=0:
+            context['lost']=lost[0:num_lost-1]
+        if num_found!=0:
+            context['found']=found[0:num_found-1]
+
+    except models.Object.DoesNotExist:
+        return HttpResponse("DoesNotExist Error")
     if 'sno' in request.session:
         # 用户已登陆
         context['sno']=request.session['sno']

@@ -26,7 +26,9 @@
 			<hr >
 			<div id="content" style="margin: 0px 30px auto;">
 
-				<form enctype="multipart/form-data" action="upload2" method="POST">
+                {% if user %}
+                    {# 用户已登陆 #}
+                    <form enctype="multipart/form-data" action="upload2" method="POST">
                     <!--上传信息类型选择-->
                     <div class="piece" >
                         <label for="categary">选择信息类型：</label>
@@ -75,6 +77,13 @@
 
                     <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">提交</button>
                 </form>
+                {% else %}
+                    您还未登陆
+                    <a href="/login2">
+                        点此登陆
+                    </a>
+                {% endif %}
+
 
 			</div>
 		</div>
