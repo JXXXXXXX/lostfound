@@ -5,17 +5,22 @@
     <title>失物/招领信息列表</title>
 </head>
 <body>
-    <ul>
-    {% for obj in context %}
-        {# 超链接 object/20位长度id #}
-        <li><a href="{% url 'object' obj.id %}">
-        {% if obj.tag %}
-            招领信息:{{obj.name}}{{obj.id}}
-        {% else %}
-            失物信息:{{obj.name}}{{obj.id}} 
-        {% endif %}
-        </a></li>
-    {% endfor %}
-    </ul>
+    {% if no_history %}
+        <p>该分类下暂无物品</p>
+    {% else %}
+        <ul>
+        {% for obj in context %}
+            {# 超链接 object/20位长度id #}
+            <li><a href="{% url 'object' obj.id %}">
+            {% if obj.tag %}
+                招领信息:【{{obj.name}}】【物品编号：{{obj.id}}】
+            {% else %}
+                失物信息:【{{obj.name}}】【物品编号：{{obj.id}}】
+            {% endif %}
+            </a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
 </body>
 </html>

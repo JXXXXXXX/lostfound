@@ -46,8 +46,13 @@
                 <ul>
                 {% for obj in lostobjs %}
                     {# 超链接 object/20位长度id #}
-                    <li><input type="checkbox" name="object" value={{obj.id}} /><a href={% url 'object' obj.id %}>
-                     失物信息:{{obj.name}}{{obj.id}}</a></li>
+                    <li>
+                        <input type="checkbox" name="object" value={{obj.id}} />
+                        <a href={% url 'object' obj.id %}>
+                        失物信息:【{{obj.name}}】【物品编号：{{obj.id}}】
+                        </a>
+
+                    </li>
                     {% if obj.state == 0%}<p>未审核</p>
                     {% elif obj.state == 1%}<p>未完成</p>
                     {% elif obj.state == 2%}<p>已完成</p>
@@ -70,14 +75,16 @@
                 <ul>
                 {% for obj in foundobjs %}
                     {# 超链接 object/20位长度id #}
-                    <li><input type="checkbox" name="object" value={{obj.id}} /><a href={% url 'object' obj.id %}>
-                    招领信息:{{obj.name}}{{obj.id}}</a>
+                    <li><input type="checkbox" name="object" value={{obj.id}} />
+                        <a href={% url 'object' obj.id %}>
+                            招领信息:【{{obj.name}}】【物品编号：{{obj.id}}】
+                        </a>
+                    </li>
                     {% if obj.state == 0%}未审核
                     {% elif obj.state == 1%}未完成
                     {% elif obj.state == 2%}已完成
                     {% else %}未通过审核
                     {% endif %}
-                    </li>
                 {% endfor %}
                 </ul>
                 <p>--------------------------------------------</p>
@@ -99,6 +106,7 @@
             {% endif %}
         {% endif %}
         <p>--------------------------------------------</p>
+        <a href="../main">返回首页</a>
         <a href="/quit">退出</a>
     {% else %}
         {# 没有用户登陆-提示登陆 #}

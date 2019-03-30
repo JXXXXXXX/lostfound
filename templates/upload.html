@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
+		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
+		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+		<title>信息发布页面</title>
+		<style type="text/css">
+			input{
+				width: 230px;
+			}
+			textarea{
+				width: 230px;
+			}
+			.piece{
+				margin: 20px;
+			}
+		</style>
+	</head>
+	<body background="../static/Wopop_files/login_bgx.gif">
+		<div class="container" style="width: 500px;height: 600px;background: #C6C8CA;margin:150px auto;">
+
+			<h3 align="center">发布信息</h3>
+			<hr >
+			<div id="content" style="margin: 0px 30px auto;">
+
+                {% if user %}
+                    {# 用户已登陆 #}
+                    <form enctype="multipart/form-data" action="upload" method="POST">
+                    <!--上传信息类型选择-->
+                    <div class="piece" >
+                        <label for="categary">选择信息类型：</label>
+                        <select id="categary"style="width: 80px;height: 30px;" name="tag">
+                            <option value="found">失物招领</option>
+                            <option value="lost">寻物启事</option>
+                        </select><br/>
+                    </div>
+                    <!--物品种类选择-->
+                    <div class="piece" >
+                        <label for="categary">选择物品分类：</label>
+                        <select id="categary"style="width: 80px;height: 30px;" name="categary">
+                            <option value="zjxj">证件现金</option>
+                            <option value="sbwj">书本文具</option>
+                            <option value="ywpj">衣物配件</option>
+                            <option value="dzyp">电子用品</option>
+                            <option value="shyp">生活用品</option>
+                            <option value="qt">其他</option>
+                        </select><br/>
+                    </div>
+                    <!--物品名称-->
+                    <div  class="piece" >
+                        <label for="lName">物品名称：</label>
+                        <input type="text"  id="lName" value="" name="name"/><br/>
+                    </div>
+
+                    <div  class="piece" >
+                        <label for="lTime">物品时间：</label>
+                        <input type="date" id="lTime" value="2019-01-01" name="time"/><br/>
+                    </div>
+
+                    <div  class="piece" >
+                        <label for="lLocation">物品地点：</label>
+                        <input type="text" id="lLocation" id="" value="" name="position"/><br/>
+                    </div>
+
+                    <div  class="piece" >
+                        <label for="lDetail" style="float: left;padding-right: 13px;" >细节描述:</label>
+                        <textarea id="lDetail" rows="5" cols="20" name="dscp"></textarea>
+                    </div>
+
+                    <div class="piece">
+                        <label for="lImg" style="float: left;padding-right: 4px;">上传图片：</label>
+                        <input type="file" id="iImg" accept="image/*" value="" name="img"/>
+                    </div>
+
+                    <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">提交</button>
+                    <a href="main">
+                        <p>返回首页</p>
+                    </a>
+                </form>
+                {% else %}
+                    您还未登陆
+                    <a href="/login">
+                        点此登陆
+                    </a>
+                {% endif %}
+
+
+			</div>
+		</div>
+
+		
+	</body>
+</html>

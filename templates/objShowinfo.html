@@ -54,6 +54,9 @@
                 <input type="submit" name='pass' value="通过" />
             </form>
         {% endif %}
+        {% if user_login.tag == 1 and obj.state != 0 %}
+            <a href="../profile/2">返回个人中心</a>
+        {% endif %}
     {% endif %}
 
 
