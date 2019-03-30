@@ -26,13 +26,13 @@
 			<hr >
             {% if show_obj %}
 			<div class="row">
-                <!--物品图片-->
-                {% if obj.img %}
-                    <img src="{{ obj.img.url }}" class="thumbnail" style="width: 250px;height: 250px;"><br/>
-                {% else %}
-                    <img src="../static/images/demo/470x470.gif" alt="图片" class="thumbnail" style="width: 250px;height: 250px;">
-                {% endif %}
 				<div class="col-md-5" >
+                    <!--物品图片-->
+                    {% if obj.img %}
+                        <img src="{{ obj.img.url }}" class="thumbnail" style="width: 250px;height: 250px;"><br/>
+                    {% else %}
+                        <img src="../static/images/demo/470x470.gif" alt="图片" class="thumbnail" style="width: 250px;height: 250px;">
+                    {% endif %}
 
 				</div>
 				<div class="col-md-6">
