@@ -22,7 +22,16 @@
 	<body background="../static/Wopop_files/login_bgx.gif">
 		<div class="container" style="width: 700px;height:560px;background: #C6C8CA;margin:150px auto;">
 
-			<h2 style="text-align: center;">物品详情</h2>
+			<h2 style="text-align: center;">
+                物品详情
+                {% if obj.tag %}
+                    {# tag = True :found #}
+                    - 失物招领
+                {% else %}
+                    {# tag = True :lost  #}
+                    - 寻物启事
+                {% endif %}
+            </h2>
 			<hr >
             {% if show_obj %}
 			<div class="row">
@@ -39,7 +48,11 @@
 					<div id="name">
 						<h4>物品名称：</h4>
 						<p>{{ obj.name }}</p>
-					</div><hr >					
+					</div><hr >
+                    <div id="name">
+						<h4>物品分类：</h4>
+						<p>{{ sort }}</p>
+					</div><hr >
 					<div id="time">
 						<h4>拾物时间：</h4>
 						<p>{{ obj.time }}</p>

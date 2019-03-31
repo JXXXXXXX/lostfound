@@ -168,8 +168,14 @@ def objShowinfo_view(request,object_id):
     context={}
     context['user']=user_db
     context['obj']=obj
-    #contexet为一个字典
 
+    # 确定物品的类别
+    try:
+        sortobj_db = models.SortObject.objects.get(object=obj)
+        sort = sortobj_db.sort
+        context['sort'] = sort.name
+    except models.SortObject.DoesNotExist:
+        HttpResponse("models.SortObject.DoesNotExist")
     # step2
     show_obj=False  # 物品信息显示标记 初始False
     show_user=False # 用户信息显示标记 初始False
@@ -263,7 +269,7 @@ def profile_view(request,nav_id):
         sno_login = request.session["sno"]
     except KeyError:
         # 未登录的情况下，使用session会报错：KeyError
-        return render_to_response("profile.html", context)
+        return render_to_response("personal.html", context)
     # 已登录
     try:
         # step1
@@ -299,7 +305,7 @@ def profile_view(request,nav_id):
     except models.User.DoesNotExist:
             # 数据库没有该用户
         return HttpResponse("The user (id="+request.session["sno"]+") doesn't exist in database.")
-    return render_to_response("profile.html", context)
+    return render_to_response("personal.html", context)
 
 # 退出按钮
 def quit_view(request):
@@ -377,14 +383,29 @@ def sort_view(request,sort_id):
     except models.AllSort.DoesNotExist:
         HttpResponse("models.AllSort.DoesNotExist")
 
-    objs = []
+    objs_lost = []
+    objs_found = []
     for item in sortobj_db:
         # step2
         if item.object.state>0: # 筛选通过审核的
-            objs.append(item.object) # 将所有用户的物品记录放到objs中
-    if len(objs) == 0:
-        context["no_history"] = True
-    else:
-        context["context"] = objs  # 将'记录'加入字典字典
+            if item.object.tag == False:
+                objs_lost.append(item.object) # 将所有用户的物品记录放到objs_lost(寻物表)中
+            else:# tag=True
+                objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
 
-    return render_to_response('objList.html',context)
+    if len(objs_lost) == 0:
+        context["no_lost"] = True
+    else:
+        context["objs_lost"] = objs_lost  # 将'记录'加入字典字典
+    if len(objs_found) == 0:
+        context["no_found"] = True
+    else:
+        context["objs_found"] = objs_found  # 将'记录'加入字典字典
+
+    # 用于导航栏显示用户
+    if 'sno' in request.session:
+        # 用户已登陆
+        user_login = models.User.objects.get(sno=request.session['sno'])
+        context['user_sno']=user_login.sno
+        context['user_name']=user_login.name
+    return render_to_response('second.html',context)

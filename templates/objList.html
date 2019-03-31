@@ -9,7 +9,7 @@
         <p>该分类下暂无物品</p>
     {% else %}
         <ul>
-        {% for obj in context %}
+        {% for obj in objs %}
             {# 超链接 object/20位长度id #}
             <li><a href="{% url 'object' obj.id %}">
             {% if obj.tag %}
