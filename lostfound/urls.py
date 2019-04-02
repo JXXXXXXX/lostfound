@@ -30,7 +30,7 @@ urlpatterns = [
     url(r'^quit$',quit_view), # 退出按钮
     url(r'^main$',main_view), # 主界面
     url(r'^sort/(?P<sort_id>[0-6]{1})$',sort_view,name='sort'), # 物品分类显示
-
+    url(r'^complete_info$',complete_view),# 修改密码并完善个人信息
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # "+static"是显示图片的需要（参考https://blog.csdn.net/c_beautiful/article/details/79755368
 

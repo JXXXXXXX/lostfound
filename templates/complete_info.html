@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
+		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
+		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+		<title>个人信息完善</title>
+		<style type="text/css">
+			input{
+				width: 230px;
+			}
+			textarea{
+				width: 230px;
+			}
+			.piece{
+				margin: 20px;
+			}
+		</style>
+	</head>
+	<body background="../static/Wopop_files/login_bgx.gif">
+		<div class="container" style="width: 500px;height: 600px;background: #C6C8CA;margin:150px auto;">
+
+			<h2 align="center">欢迎登陆</h3>
+			<hr >
+			<div id="content" style="margin: 0px 30px auto;">
+            {% if user %}
+            {# 用户已登陆 #}
+             <form class='form-login' action="" method="POST">
+              <h3 class="text-center">{{user}}请完善个人信息</h2>
+              {% if password_wrong %}      <!--类似if语句-->
+                  <div class="alert alert-warning">两次输入密码内容必须一致,并且不能等于初始密码</div>  <!--使用bootstrap的警示传递message信息-->
+              {% endif %}
+                <div class="form-group">
+                  {{ form.pwd1.label }}
+                  {{ form.pwd1 }}
+                  {%if data.errors.pwd1 %}  <!--如果输入的东西不符合form.py内定义的格式会提示错误信息(也在form.py中定义好了) -->
+                  <span class="error-msg">{{ form.errors.pwd1.0}}</span>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  {{ form.pwd2.label }}
+                  {{ form.pwd2 }}
+                  {%if data.errors.pwd2 %}
+                  <span class="error-msg">{{ form.errors.pwd2.0}}</span>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  {{ form.name.label }}
+                  {{ form.name }}
+                  {%if data.errors.name %}
+                  <span class="error-msg">{{ form.errors.name.0}}</span>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  {{ form.phone.label }}
+                  {{ form.phone }}
+                  {%if data.errors.phone %}
+                  <span class="error-msg">{{ form.errors.phone.0}}</span>
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  {{ form.email.label }}
+                  {{ form.email }}
+                  {%if data.errors.email %}
+                  <span class="error-msg">{{ form.errors.email.0}}</span>
+                  {% endif %}
+                </div>
+
+              <button type="reset" class="btn btn-default pull-left">重置</button>
+              <button type="submit" class="btn btn-primary pull-right">提交</button>
+            </form>
+           {% else %}
+              您还未登陆
+           <a href="/login">
+              点此登陆
+            </a>
+           {% endif %}
+
+
+			</div>
+		</div>
+	</body>
+</html>

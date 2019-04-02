@@ -29,6 +29,9 @@ def login_view(request):
                 if user_db.pwd == password:
                     # 密码正确
                     request.session["sno"]=user_db.sno # 记录用户sno
+                    if user_db.pwd == user_db.sno:
+                        #如果密码为初始密码,则要求用户修改密码并完善个人信息
+                        return redirect('/complete_info')
                     if 'errortype' in request.session:
                         # 若存在错误标记，则删除
                         del request.session['errortype']
@@ -409,3 +412,41 @@ def sort_view(request,sort_id):
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
     return render_to_response('second.html',context)
+
+
+#完善用户信息,当用户使用初始密码登陆后需要修改密码及完善个人信息
+def complete_view(request):
+    context = {}
+    try:
+        sno_login = request.session["sno"]
+    except KeyError:
+    # 未登录的情况下，使用session会报错：KeyError
+        return redirect('/main')
+    if request.method == 'GET':
+        # 已登录
+        form = forms.complete_form()
+        context["form"] = form 
+        context["user"] = sno_login
+        return render_to_response("complete_info.html",context)
+    else:
+        form = forms.complete_form(request.POST)
+        if form.is_valid():
+            context["user"] = sno_login
+            context["form"] = form
+            user = models.User.objects.get(sno=sno_login)
+            newpwd1 = form.cleaned_data['pwd1']
+            newpwd2 = form.cleaned_data['pwd2']
+            if newpwd1 == user.pwd or newpwd1 != newpwd2:#前后两次输入密码不同或者输入密码与原密码相同
+                context['password_wrong']=True
+                return render_to_response('complete_info.html',context)
+            user.pwd = newpwd1
+            user.name = form.cleaned_data['name']
+            user.phone = form.cleaned_data['phone']
+            user.email = form.cleaned_data['email']
+            user.save()
+            return redirect('/main')
+        else:
+            context["form"] = form
+            context["user"] = sno_login
+            return render_to_response('complete_info.html',context)
+
