@@ -22,7 +22,7 @@ class Object(models.Model):
     position = models.CharField(max_length=100)             #捡到/丢失地点
     dscp = models.CharField(max_length=200)                 #描述
     img  = models.ImageField(upload_to="img/object")        #图片
-    tag = models.BooleanField(default=False)                #标识：tag=false lost 发布者丢失物品；tag=true found 发布者捡到物品
+    tag = models.BooleanField(default=False)                #标识：tag=false lost 寻物启事；tag=true found 失物招领
     state = models.IntegerField()                           # state=0:未审核；state=-1:审核不通过
                                                             # state=1 已审核，未被领取/捡到；state=2:已审核，被领取/捡到
 

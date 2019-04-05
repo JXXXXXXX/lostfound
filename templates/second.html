@@ -123,7 +123,11 @@
                     {% else %}
                         <table class="table">
                             {% for obj in objs_lost %}
-                                <tr><td><a href="{% url 'object' obj.id %}">【{{obj.name}}】【物品编号：{{obj.id}}】</a></td></tr>
+                                <a href="{% url 'object' obj.id %}">【{{obj.name}}】【物品编号：{{obj.id}}】
+                                    {% ifequal obj.state 2 %}
+                                        【已完成】
+                                    {% endifequal %}
+                                </a>
                             {% endfor %}
                         </table>
                     {% endif %}

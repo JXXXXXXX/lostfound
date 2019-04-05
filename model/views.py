@@ -356,15 +356,15 @@ def main_view(request):
     except models.Object.DoesNotExist:
         return HttpResponse("DoesNotExist Error")
 
-    context['lost']=lost
-    context['found']=found
+    context['lost']=lost   # 寻物启事
+    context['found']=found # 失物招领
 
     if 'sno' in request.session:
         # 用户已登陆
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
-    return render_to_response("index.html",context)
+    return render_to_response("z_main.html",context)
 
 # 分类显示
 def sort_view(request,sort_id):
