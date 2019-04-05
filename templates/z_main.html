@@ -47,7 +47,15 @@
 				padding-bottom: 100px;
                 font-family: "Microsoft YaHei UI";
 			}
-			
+            #body a{
+                color: #000000;
+            }
+            nav a{
+                color: #FFFFFF;
+            }
+			#welcome{
+                display: inline;
+            }
 
 		</style>
 		
@@ -62,18 +70,21 @@
                 {% if user_sno %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
                     <div id="sign_out" align="right">
-                        你好,
+
                         <a href="/profile/0">
+                            <div id="welcome" style="position:relative;float: bottom;top: 5px">
                             {# 点击此处可以进入用户个人中心 #}
+                            你好,
                             {{ user_name }}({{ user_sno }})
+                            </div>
                         </a>
 
-                        <a href="../quit"><input type="button" class="sub_button" name="quit" id="button" value="退出" style="opacity: 0.7;" ></a>
+                        <a href="../quit"><input type="button" class="btn btn-default btn-sm" name="quit" id="welcome" value="退出" style="opacity: 0.7;margin-top: 10px" ></a>
                     </div>
                 {% else %}
                     {# 若没有登陆：显示登陆按钮 #}
                     <div id="sign_in" align="right">
-                        <a href="login"><input type="button" class="sub_button" name="login" id="button" value="登录" style="opacity: 0.7;" ></a>
+                        <a href="login"><input type="button" class="btn btn-default btn-sm" name="login" id="button" value="登录" style="opacity: 0.7;margin-top: 10px" ></a>
                     </div>
 
                 {% endif %}
@@ -87,7 +98,7 @@
 			</div>	
 		</div>
 
-		<div class="container " style="background: #FFFFFF;border-radius: 1em;box-shadow: #666 0px 0px 4px;min-height: 700px;" >  
+		<div class="container " id="body" style="background: #FFFFFF;border-radius: 1em;box-shadow: #666 0px 0px 4px;min-height: 700px;" >
 			<h2>&nbsp;&nbsp;Lost&Found</h2>
 			<hr >
 			<div class="row">
