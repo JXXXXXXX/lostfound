@@ -22,13 +22,13 @@
 	<body background="../static/Wopop_files/login_bgx.gif">
 		<div class="container" style="width: 500px;height: 600px;background: #C6C8CA;margin:150px auto;">
 
-			<h2 align="center">欢迎登陆</h3>
+			<h3 align="center">欢迎登陆</h3>
 			<hr >
 			<div id="content" style="margin: 0px 30px auto;">
             {% if user %}
             {# 用户已登陆 #}
              <form class='form-login' action="" method="POST">
-              <h3 class="text-center">{{user}}请完善个人信息</h2>
+              <h3 class="text-center">{{user}}请完善个人信息</h3>
               {% if password_wrong %}      <!--类似if语句-->
                   <div class="alert alert-warning">两次输入密码内容必须一致,并且不能等于初始密码</div>  <!--使用bootstrap的警示传递message信息-->
               {% endif %}
