@@ -60,7 +60,7 @@ def login_view(request):
             user_login = models.User.objects.get(sno=request.session['sno'])
             context['user_sno'] = user_login.sno
             context['user_name'] = user_login.name
-            return render_to_response('index.html',context)
+            return render_to_response('main.html', context)
         else:
             # 未登陆
             return render_to_response('log_in.html')
@@ -212,16 +212,6 @@ def objShowinfo_view(request,object_id):
     # -----------------主要部分---------------------
     return render_to_response("detail.html",context)
 
-#物品列表显示
-def objList_view(request):
-    #审核通过的物品,按提交时间(id)降序
-    obj_db = models.Object.objects.filter(state=1).order_by('-id')
-    if len(obj_db)==0:
-        return HttpResponse('no valid information of objects')
-    context={'context':obj_db}
-
-    return render_to_response("objList.html",context)
-
 # 个人中心-用户
 def profile_view(request,nav_id):
     # 1.通过request.session获得登陆用户
@@ -272,7 +262,7 @@ def profile_view(request,nav_id):
         sno_login = request.session["sno"]
     except KeyError:
         # 未登录的情况下，使用session会报错：KeyError
-        return render_to_response("personal.html", context)
+        return render_to_response("profile.html", context)
     # 已登录
     try:
         # step1
@@ -308,7 +298,7 @@ def profile_view(request,nav_id):
     except models.User.DoesNotExist:
             # 数据库没有该用户
         return HttpResponse("The user (id="+request.session["sno"]+") doesn't exist in database.")
-    return render_to_response("personal.html", context)
+    return render_to_response("profile.html", context)
 
 # 退出按钮
 def quit_view(request):
@@ -364,7 +354,7 @@ def main_view(request):
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
-    return render_to_response("z_main.html",context)
+    return render_to_response("main.html", context)
 
 # 分类显示
 def sort_view(request,sort_id):
@@ -411,7 +401,7 @@ def sort_view(request,sort_id):
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
-    return render_to_response('second.html',context)
+    return render_to_response('second.html', context)
 
 
 #完善用户信息,当用户使用初始密码登陆后需要修改密码及完善个人信息
