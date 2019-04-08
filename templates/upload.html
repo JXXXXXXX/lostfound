@@ -28,6 +28,9 @@
 
                 {% if user %}
                     {# 用户已登陆 #}
+                    {% if upload_success %}
+                    <div class="alert alert-success">上传信息成功!</div>
+                    {% endif %}
                     <form enctype="multipart/form-data" action="upload" method="POST">
                     <!--上传信息类型选择-->
                     <div class="piece" >
@@ -76,10 +79,9 @@
                     </div>
 
                     <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">提交</button>
-                    <a href="main">
-                        <p>返回首页</p>
-                    </a>
-                </form>
+
+                    <a href="../main"><p>返回首页</p></a>
+                    </form>
                 {% else %}
                     您还未登陆
                     <a href="/login">

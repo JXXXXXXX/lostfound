@@ -73,7 +73,7 @@ def upload_view(request):
 
         # 获取用户输入后的POST表单
         form=forms.objUpload_form(request.POST,request.FILES)# request.FILES是获取imagefield的要求，否则获取不到图片
-
+        
         # 检查表单的合法性
         if form.is_valid():
             obj=models.Object()             # 创建上传的物品的对象
@@ -112,8 +112,11 @@ def upload_view(request):
                 sort_obj.sort = sort_db
                 sort_obj.object = obj_db
                 sort_obj.save()# 上传 分类-物品记录
-
-                return HttpResponse("Upload successfully.")
+                context = {}
+                context['upload_success'] = True
+                sno_login = request.session["sno"]
+                context['user']=models.User.objects.get(sno=sno_login)
+                return render_to_response('upload.html',context)
             except models.User.DoesNotExist:
                 # 用户不存在
                 return HttpResponse("User dont exist.")
@@ -128,7 +131,7 @@ def upload_view(request):
             return HttpResponse("Input invalid.")
     else:
         # 处理非POST的情况,返回表单页面，用户输入数据
-        context = {}
+        context={}
         try:
             sno_login = request.session["sno"]
         except KeyError:
