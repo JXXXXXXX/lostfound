@@ -26,20 +26,18 @@
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
                 <!--导航栏 登陆按钮-->
-                {% if user_sno %}
+                {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
                     <div id="sign_out" align="right">
 
                         <a href="/profile/0">
                             <div id="welcome" style="position:relative;float: bottom;top: 5px">
                                 你好,
-                            {# 点击此处可以进入用户个人中心 #}
-                            {{ user_name }}({{ user_sno }})
+                                {# 点击此处可以进入用户个人中心 #}
+                                {{ user.name }}({{ user.sno }})
                             </div>
-
-                        </a>
-
-                        <a href="../quit"><input type="button" class="btn btn-default btn-sm" name="quit" id="welcome" value="退出" style="opacity: 0.7;margin-top: 10px" ></a>
+                       </a>
+                       <a href="../quit"><input type="button" class="btn btn-default btn-sm" name="quit" id="welcome" value="退出" style="opacity: 0.7;margin-top: 10px" ></a>
                     </div>
                 {% else %}
                     {# 若没有登陆：显示登陆按钮 #}

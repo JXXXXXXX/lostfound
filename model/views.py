@@ -115,7 +115,7 @@ def upload_view(request):
                 context = {}
                 context['upload_success'] = True
                 sno_login = request.session["sno"]
-                context['user']=models.User.objects.get(sno=sno_login)
+                context['user']=user_db
                 return render_to_response('upload.html',context)
             except models.User.DoesNotExist:
                 # 用户不存在
