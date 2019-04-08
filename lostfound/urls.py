@@ -23,6 +23,7 @@ urlpatterns = [
     url('admin/', admin.site.urls), # django管理员界面
     url(r'^login$',login_view),     # 登陆界面
     url(r'^sort/login$',login_view),
+    url(r'^object/login$',login_view),
     url(r'^upload$',upload_view),  # 物品信息上传界面
     url(r'^object/(?P<object_id>[0-9]{20})$',objShowinfo_view,name='object'), # 物品信息显示页面
     url(r'^profile/(?P<nav_id>[0-2]{1})$',profile_view,name='profile'), # 个人中心-用户
