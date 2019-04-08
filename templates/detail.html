@@ -26,7 +26,7 @@
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
                 <!--导航栏 登陆按钮-->
-                {% if user_sno %}
+                {% if user_login %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
                     <div id="sign_out" align="right">
 
@@ -34,7 +34,7 @@
                             <div id="welcome" style="position:relative;float: bottom;top: 5px">
                             {# 点击此处可以进入用户个人中心 #}
                             你好,
-                            {{ user_name }}({{ user_sno }})
+                            {{ user_login.name }}({{ user_login.sno }})
                             </div>
                         </a>
 
