@@ -46,8 +46,18 @@
 			body{
 				padding-bottom: 100px;
 			}
-			
-
+            #welcome{
+                display: inline;
+            }
+			 #body a{
+                color: #000000;
+            }
+            nav a{
+                color: #FFFFFF;
+            }
+            a:hover{
+				text-decoration: none;
+			}
 		</style>
 		
 	</head>
@@ -61,18 +71,22 @@
                 {% if user_sno %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
                     <div id="sign_out" align="right">
-                        你好,
+
                         <a href="/profile/0">
+                            <div id="welcome" style="position:relative;float: bottom;top: 5px">
+                                你好,
                             {# 点击此处可以进入用户个人中心 #}
                             {{ user_name }}({{ user_sno }})
+                            </div>
+
                         </a>
 
-                        <a href="../quit"><input type="button" class="sub_button" name="quit" id="button" value="退出" style="opacity: 0.7;" ></a>
+                        <a href="../quit"><input type="button" class="btn btn-default btn-sm" name="quit" id="welcome" value="退出" style="opacity: 0.7;margin-top: 10px" ></a>
                     </div>
                 {% else %}
                     {# 若没有登陆：显示登陆按钮 #}
                     <div id="sign_in" align="right">
-                        <a href="login"><input type="button" class="sub_button" name="login" id="button" value="登录" style="opacity: 0.7;" ></a>
+                        <a href="login"><input type="button" class="btn btn-default btn-sm" name="login" id="button" value="登录" style="opacity: 0.7;margin-top: 10px" ></a>
                     </div>
 
                 {% endif %}
@@ -84,7 +98,7 @@
 				<p style="color: #FFFFFF;">欢迎</p>
 			</div>	
 		</div>
-		<div class="container " style="background: #FFFFFF;border-radius: 1em;box-shadow: #666 0px 0px 4px;min-height: 900px;" >  
+		<div class="container " id="body" style="background: #F8F8FF;border-radius: 1em;box-shadow: #666 0px 0px 4px;min-height: 900px;" >
 			<h2>&nbsp;&nbsp;Lost&Found</h2>
 			<hr >
 			<div class="row">

@@ -8,7 +8,7 @@
 		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 		<title>信息发布页面</title>
 		<style type="text/css">
-			input{
+			.piece input{
 				width: 230px;
 			}
 			textarea{
@@ -19,8 +19,38 @@
 			}
 		</style>
 	</head>
-	<body background="../static/Wopop_files/login_bgx.gif">
-		<div class="container" style="width: 500px;height: 600px;background: #C6C8CA;margin:150px auto;">
+	<body background="../static/images/background.jpg">
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="color: #005EED; opacity: 0.9;">
+			<div class="container">
+				<div class="navbar-header">
+					<a href="../main" class="navbar-brand">校园失物招领平台</a>
+				</div>
+                <!--导航栏 登陆按钮-->
+                {% if user_sno %}
+                    {# 若用户已登陆：显示用户名+退出按钮 #}
+                    <div id="sign_out" align="right">
+
+                        <a href="/profile/0">
+                            <div id="welcome" style="position:relative;float: bottom;top: 5px">
+                                你好,
+                            {# 点击此处可以进入用户个人中心 #}
+                            {{ user_name }}({{ user_sno }})
+                            </div>
+
+                        </a>
+
+                        <a href="../quit"><input type="button" class="btn btn-default btn-sm" name="quit" id="welcome" value="退出" style="opacity: 0.7;margin-top: 10px" ></a>
+                    </div>
+                {% else %}
+                    {# 若没有登陆：显示登陆按钮 #}
+                    <div id="sign_in" align="right">
+                        <a href="login"><input type="button" class="btn btn-default btn-sm" name="login" id="button" value="登录" style="opacity: 0.7;margin-top: 10px" ></a>
+                    </div>
+
+                {% endif %}
+			</div>
+		</nav>
+		<div class="container" style="width: 500px;height: 600px;background: #F8F8FF;margin:150px auto;border-radius: 7px">
 
 			<h3 align="center">发布信息</h3>
 			<hr >
@@ -80,7 +110,7 @@
 
                     <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">提交</button>
 
-                    <a href="../main"><p>返回首页</p></a>
+
                     </form>
                 {% else %}
                     您还未登陆
