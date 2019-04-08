@@ -50,7 +50,7 @@
 			</div>
 		</nav>
 
-		<div class="container" style="width: 700px;height:560px;background: #F8F8FF;margin:150px auto;border-radius: 7px">
+		<div class="container" style="width: 700px;height:600px;background: #F8F8FF;margin:150px auto;border-radius: 7px">
 
 			<h2 style="text-align: center;">
                 物品详情
@@ -118,9 +118,12 @@
         {# 按钮功能 #}
         {% if user_login %}
             {% if user_login.tag == 1 and obj.state == 0 %}
-                <form action="" method="POST">
-                    <input type="submit" name='delete' value="未通过" />
-                    <input type="submit" name='pass' value="通过" />
+                <form action="" method="POST" style="text-align: center;margin-top: 10px">
+                    <div style="">
+                        <input class="btn btn-primary" type="submit" name='delete' value="未通过" style="margin: 10px;"/>
+                        <input class="btn btn-primary" type="submit" name='pass' value="通过" style="margin: 10px;"/>
+                    </div>
+
                 </form>
             {% endif %}
 

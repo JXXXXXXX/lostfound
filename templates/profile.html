@@ -83,176 +83,198 @@
 			</div>
 		</div>	
 		
-		<div class="container" style="background-color: #F8F8FF;min-height: 500px; width: 700px;border-radius: 7px">
-			<div class="row clearfix" style="margin-top: 50px;">
-				<div class="col-md-12 ">
-					<ul class="nav nav-tabs">
-						<li class="active">
-							<a href="#">个人信息</a>
-						</li>
-						<li>
-							<a href="#">我的失物招领</a>
-						</li>
-						<li>
-							<a href="#">我的寻物启事</a>
-						</li>
-                        {% if user.tag %}
-                            {# tag = True 用户是管理员 才有审核功能 #}
-						<li>
-							<a href="#">审核</a>
-						</li>
-                        {% endif %}
-					</ul>	
-				</div>	
-			</div>
-            <form action="" method="POST">
-			    <div class="content">
-					<div class="list" >    <!--个人信息-->
-{#						<p>姓名：{{ user.name }}</p>#}
-{#						<p>学号：{{ user.sno }}</p>#}
-{#						<p>电话：{{ user.phone }}</p>#}
-{#						<p>邮箱：{{ user.email }}</p>#}
-                        <table class="table">
-                            <tr>
-                                <td>姓名：</td>
-                                <td>{{ user.name }}</td>
-                            </tr>
-                            <tr>
-                                <td>学号：</td>
-                                <td>{{ user.sno }}</td>
-                            </tr>
-                            <tr>
-                                <td>电话：</td>
-                                <td>{{ user.phone }}</td>
-                            </tr>
-                            <tr>
-                                <td>邮箱：</td>
-                                <td>{{ user.email }}</td>
-                            </tr>
-                        </table>
-					</div>
-					<div class="list" style="display: none;" >    <!--失物信息-->
-                        {% if lost_no_history %}
-                            {# 用户没有失物历史记录 #}
-                            <p>您还没有发布过任何失物信息。</p>
-                        {% else %}
-{#                            <ul>#}
-{#                            {% for obj in lostobjs %}#}
-                                {# 超链接 object/20位长度id #}
-{#                                <li>#}
-{#                                    <input type="checkbox" name="object" value={{obj.id}} />#}
-{#                                    <a href={% url 'object' obj.id %}>#}
-{#                                    失物信息:【{{obj.name}}】【物品编号：{{obj.id}}】#}
-{#                                    </a>#}
-{##}
-{#                                </li>#}
-{#                                {% if obj.state == 0%}<p>未审核</p>#}
-{#                                {% elif obj.state == 1%}<p>未完成</p>#}
-{#                                {% elif obj.state == 2%}<p>已完成</p>#}
-{#                                {% else %}<p>未通过审核</p>#}
-{#                                {% endif %}#}
-{#                            {% endfor %}#}
-{#                            </ul>#}
-                                <table>
-                                    <thead>
+		<div class="container" style="background-color: #F8F8FF;min-height: 500px; border-radius: 7px">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row clearfix" style="margin-top: 50px;">
+			        	<div class="col-md-12 ">
+					        <ul class="nav nav-tabs">
+						        <li class="active"><a href="#">个人信息</a></li>
+						        <li><a href="#">我的失物招领</a></li>
+					        	<li><a href="#">我的寻物启事</a></li>
+                                {% if user.tag %}
+                                {# tag = True 用户是管理员 才有审核功能 #}
+						        <li><a href="#">审核</a></li>
+                                {% endif %}
+					        </ul>
+				        </div>
+			        </div>
+                    <form action="" method="POST">
+                        <div class="content">
+                            <div class="list">    <!--个人信息-->
+                                <table class="table">
+                                    <tr>
+                                        <td>姓名：</td>
+                                        <td>{{ user.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>学号：</td>
+                                        <td>{{ user.sno }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>电话：</td>
+                                        <td>{{ user.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>邮箱：</td>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="list" style="display: none;">    <!--失物信息-->
+                                {% if lost_no_history %}
+                                    {# 用户没有失物历史记录 #}
+                                    <p>您还没有发布过任何失物信息。</p>
+                                {% else %}
+                                    {#                            <ul>#}
+                                    {#                            {% for obj in lostobjs %}#}
+                                    {# 超链接 object/20位长度id #}
+                                    {#                                <li>#}
+                                    {#                                    <input type="checkbox" name="object" value={{obj.id}} />#}
+{#                                                                        <a href={% url 'object' obj.id %}>#}
+                                    {#                                    失物信息:【{{obj.name}}】【物品编号：{{obj.id}}】#}
+                                    {#                                    </a>#}
+                                    {##}
+                                    {#                                </li>#}
+                                    {#                                {% if obj.state == 0%}<p>未审核</p>#}
+                                    {#                                {% elif obj.state == 1%}<p>未完成</p>#}
+                                    {#                                {% elif obj.state == 2%}<p>已完成</p>#}
+                                    {#                                {% else %}<p>未通过审核</p>#}
+                                    {#                                {% endif %}#}
+                                    {#                            {% endfor %}#}
+                                    {#                            </ul>#}
+                                    <table class="table table-hover">
+                                        <thead>
                                         <th>&nbsp;</th>
                                         <th>失物信息</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr><input type="checkbox" name="object" value="#"></tr>
-                                        
-                                    </tbody>
-                                </table>
-                            <div style="margin:180px auto 0 auto;width: 160px;">
-                                <input class="btn btn-default" type="submit" name="delete" value="删除" />
-                                <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">完成</button>
-                            </div>
-                            <!--上面要加上type="button" 不然对话框只是一闪而过 -->
-                        {% endif %}
-                        <!--
-						<div style="margin:180px auto 0 auto;width: 160px;">
-							<button type="button" class="btn btn-default" id="">完成</button>
-							<button type="button" class="btn btn-default" id="">删除</button>
-						</div>
-						-->
-					</div>
-					<div class="list" style="display: none;">     <!--招领信息-->
-                        {% if found_no_history %}
-                            {# 用户没有失物历史记录 #}
-                            <p>您还没有发布过任何失物信息。</p>
-                        {% else %}
-                            <ul>
-                            {% for obj in foundobjs %}
-                                {# 超链接 object/20位长度id #}
-                                <li>
-                                    <input type="checkbox" name="object" value={{obj.id}} />
-                                    <a href={% url 'object' obj.id %}>
-                                    失物信息:【{{obj.name}}】【物品编号：{{obj.id}}】
-                                    </a>
-
-                                </li>
-                                {% if obj.state == 0%}<p>未审核</p>
-                                {% elif obj.state == 1%}<p>未完成</p>
-                                {% elif obj.state == 2%}<p>已完成</p>
-                                {% else %}<p>未通过审核</p>
+                                        </thead>
+                                        <tbody>
+                                        <tr onclick="location.href='#'">
+                                            <td><input type="checkbox" name="object" value="#"></td>
+                                            <td>(物品名称)</td>
+                                            <td>xxxxxxxxxxxxxxxxxx</td>
+                                            <td>通过</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="margin:180px auto 0 auto;width: 160px;">
+                                        <input class="btn btn-default" type="submit" name="delete" value="删除"/>
+                                        <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">完成</button>
+                                    </div>
+                                    <!--上面要加上type="button" 不然对话框只是一闪而过 -->
                                 {% endif %}
-                            {% endfor %}
-                            </ul>
-                            <div style="margin:180px auto 0 auto;width: 160px;">
-                                <input class="btn btn-default" type="submit" name="delete" value="删除" />
-                                <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#myModal">完成</button>
+                                <!--
+                                <div style="margin:180px auto 0 auto;width: 160px;">
+                                    <button type="button" class="btn btn-default" id="">完成</button>
+                                    <button type="button" class="btn btn-default" id="">删除</button>
+                                </div>
+                                -->
                             </div>
-                            <!--上面要加上type="button" 不然对话框只是一闪而过 -->
-                        {% endif %}
-                        <!--
-						<div style="margin:180px auto 0 auto;width: 160px;">
-							<button type="button" class="btn btn-default" id="">完成</button>
-							<button type="button" class="btn btn-default" id="">删除</button>
-						</div>
-						-->
-					</div>
+                            <div class="list" style="display: none;">     <!--招领信息-->
+                                {% if found_no_history %}
+                                    {# 用户没有失物历史记录 #}
+                                    <p>您还没有发布过任何失物信息。</p>
+                                {% else %}
+{#                                    <ul>#}
+{#                                        {% for obj in foundobjs %}#}
+                                            {# 超链接 object/20位长度id #}
+{#                                            <li>#}
+{#                                                <input type="checkbox" name="object" value={{ obj.id }}/>#}
+{#                                                <a href={% url 'object' obj.id %}>#}
+{#                                                    失物信息:【{{ obj.name }}】【物品编号：{{ obj.id }}】#}
+{#                                                </a>#}
+{##}
+{#                                            </li>#}
+{#                                            {% if obj.state == 0 %}<p>未审核</p>#}
+{#                                            {% elif obj.state == 1 %}<p>未完成</p>#}
+{#                                            {% elif obj.state == 2 %}<p>已完成</p>#}
+{#                                            {% else %}<p>未通过审核</p>#}
+{#                                            {% endif %}#}
+{#                                        {% endfor %}#}
+{#                                    </ul>#}
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <th>&nbsp;</th>
+                                        <th>失物信息</th>
+                                        <th>物品编号</th>
+                                        <th>审核状态</th>
+                                        </thead>
+                                        <tbody>
+                                        <tr onclick="location.href='#'">
+                                            <td><input type="checkbox" name="object" value="#"></td>
+                                            <td>(物品名称)</td>
+                                            <td>xxxxxxxxxxxxxxxxxx</td>
+                                            <td>通过</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="margin:180px auto 0 auto;width: 160px;">
+                                        <input class="btn btn-default" type="submit" name="delete" value="删除"/>
+                                        <button class="btn btn-default " type="button" data-toggle="modal" data-target="#myModal">完成</button>
+                                    </div>
+                                    <!--上面要加上type="button" 不然对话框只是一闪而过 -->
+                                {% endif %}
+                                <!--
+                                <div style="margin:180px auto 0 auto;width: 160px;">
+                                    <button type="button" class="btn btn-default" id="">完成</button>
+                                    <button type="button" class="btn btn-default" id="">删除</button>
+                                </div>
+                                -->
+                            </div>
 
-					<div class="list" style="display: none;">      <!--审核-->
-                        {# 审核功能 #}
-                        {% if review_no_history %}
-                            <p>目前无待审核的物品</p>
-                        {% else %}
-                            <table class="table">
-                            {% for obj in obj_review %}
-                            <tr>
-                                <td>
-                                    <a href="{% url 'object' obj.id %}">【{{obj.id}}】【{{obj.name}}】</a>
-                                </td>
-                            </tr>
-                                {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
-                            {% endfor %}
-                            </table>
-                        {% endif %}
-					</div>
+                            <div class="list" style="display: none;">      <!--审核-->
+                                {# 审核功能 #}
+                                {% if review_no_history %}
+                                    <p>目前无待审核的物品</p>
+                                {% else %}
+                                    <table class="table table-hover">
+                                        {% for obj in obj_review %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'object' obj.id %}">【{{ obj.id }}】【{{ obj.name }}】</a>
+                                                </td>
+                                            </tr>
+                                            {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
+                                        {% endfor %}
+{#                                        <tr>#}
+{#                                            <td>五毛钱</td>#}
+{#                                            <td>xxxxxxxxxxxxxxxxxxxx</td>#}
+{#                                            <td>（时间）</td>#}
+{#                                            <td>扩充项</td>#}
+{#                                        </tr>#}
+                                    </table>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- 模态框（Modal） -->
+
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">请输入对方学号</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        学号<input type="text" name="finish_id" value=""/>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <input type="submit" name="finish" class="btn btn-primary" value="提交"/>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
+                    </form>
                 </div>
+            </div>
 
-                <!-- 模态框（Modal） -->
-
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel">请输入对方学号</h4>
-                            </div>
-                            <div class="modal-body">
-                                学号<input type="text" name="finish_id" value="" />
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <input type="submit" name="finish" class="btn btn-primary" value="提交" />
-                            </div>
-                        </div><!-- /.modal-content -->
-                    </div><!-- /.modal -->
-                </div>
-            </form>
 		</div>
 
 		
