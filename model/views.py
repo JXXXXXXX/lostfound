@@ -114,7 +114,6 @@ def upload_view(request):
                 sort_obj.save()# 上传 分类-物品记录
                 context = {}
                 context['upload_success'] = True
-                sno_login = request.session["sno"]
                 context['user']=user_db
                 return render_to_response('upload.html',context)
             except models.User.DoesNotExist:

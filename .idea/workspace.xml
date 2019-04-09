@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="98150d92-a466-451b-b5a0-8fa62c0e62fa" name="Default Changelist" comment="">
+    <list default="true" id="98150d92-a466-451b-b5a0-8fa62c0e62fa" name="Default Changelist" comment="个人中心调整一半">
+      <change afterPath="$PROJECT_DIR$/static/images/demo/noimage.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/lostfound.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/lostfound.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lostfound/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/lostfound/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mydb.db" beforeDir="false" afterPath="$PROJECT_DIR$/mydb.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/images/background.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/static/images/background.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/main.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/second.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/second.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,52 +52,51 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/main.html">
+        <entry file="file://$PROJECT_DIR$/lostfound/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="100" column="138" selection-start-line="100" selection-start-column="138" selection-end-line="100" selection-end-column="138" />
+            <state relative-caret-position="186">
+              <caret line="23" column="42" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
               <folding>
-                <element signature="n#style#0;n#div#0;n#a#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#a#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#a#0;n#div#2;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#633#665#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/profile.html">
+        <entry file="file://$PROJECT_DIR$/templates/detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="239" column="52" selection-start-line="239" selection-start-column="52" selection-end-line="239" selection-end-column="52" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#a#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#a#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#5472#5478#1#HTML" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#9563#9569#1#HTML" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#2;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#3;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="627">
+              <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/main.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="408">
+              <caret line="86" column="36" selection-start-line="86" selection-start-column="36" selection-end-line="86" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/second.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="408">
+              <caret line="89" column="36" selection-start-line="89" selection-start-column="36" selection-end-line="89" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/templates/detail.html">
+        <entry file="file://$PROJECT_DIR$/templates/profile.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="120" column="88" selection-start-line="120" selection-start-column="88" selection-end-line="120" selection-end-column="88" />
+            <state relative-caret-position="288">
+              <caret line="12" column="49" selection-start-line="12" selection-start-column="49" selection-end-line="12" selection-end-column="49" />
               <folding>
-                <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#div#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#1;n#div#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -141,28 +149,28 @@
         <option value="$PROJECT_DIR$/lostfound/settings.py" />
         <option value="$PROJECT_DIR$/templates/objUpload.html" />
         <option value="$PROJECT_DIR$/LOG.md" />
-        <option value="$PROJECT_DIR$/lostfound/urls.py" />
         <option value="$PROJECT_DIR$/model/forms.py" />
         <option value="$PROJECT_DIR$/templates/objShowinfo.html" />
         <option value="$PROJECT_DIR$/templates/objList.html" />
         <option value="$PROJECT_DIR$/model/models.py" />
         <option value="$PROJECT_DIR$/templates/index.html" />
-        <option value="$PROJECT_DIR$/model/views.py" />
         <option value="$PROJECT_DIR$/static/Wopop_files/style_log.css" />
         <option value="$PROJECT_DIR$/templates/log_in.html" />
         <option value="$PROJECT_DIR$/templates/z_main.html" />
         <option value="$PROJECT_DIR$/templates/personal.html" />
         <option value="$PROJECT_DIR$/templates/upload.html" />
-        <option value="$PROJECT_DIR$/templates/second.html" />
+        <option value="$PROJECT_DIR$/model/views.py" />
         <option value="$PROJECT_DIR$/templates/main.html" />
-        <option value="$PROJECT_DIR$/templates/profile.html" />
+        <option value="$PROJECT_DIR$/templates/second.html" />
         <option value="$PROJECT_DIR$/templates/detail.html" />
+        <option value="$PROJECT_DIR$/lostfound/urls.py" />
+        <option value="$PROJECT_DIR$/templates/profile.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="260" />
-    <option name="y" value="150" />
+    <option name="x" value="7" />
+    <option name="y" value="166" />
     <option name="width" value="1585" />
     <option name="height" value="705" />
   </component>
@@ -182,18 +190,12 @@
             <path>
               <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
               <item name="lostfound" type="462c0819:PsiDirectoryNode" />
+              <item name="lostfound" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
+              <item name="lostfound" type="462c0819:PsiDirectoryNode" />
               <item name="model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lostfound" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lostfound" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="images" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
@@ -241,7 +243,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="lostfound.settings" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="E:\GitHub\lostfound\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -292,6 +294,8 @@
       <workItem from="1554465746097" duration="15429000" />
       <workItem from="1554563458761" duration="12419000" />
       <workItem from="1554682687305" duration="10747000" />
+      <workItem from="1554796832790" duration="196000" />
+      <workItem from="1554809397150" duration="3315000" />
     </task>
     <task id="LOCAL-00001" summary="-表单的POST方法引起的csrf错误，通过注释setting中的#'django.middleware.csrf.CsrfViewMiddleware'解决（并没有，只是关闭了django对此的检查，需要后期改进；&#10;-对数据库模型进行了一定的修改；&#10;主要：&#10;-写了一个简单的用户登陆界面；&#10;-完成了简单的用户登陆与数据库的交互操作；">
       <created>1552487008941</created>
@@ -374,7 +378,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="133124000" />
+    <option name="totallyTimeSpent" value="136694000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -389,21 +393,21 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21648793" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23525469" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.18221258" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49463806" weight="0.28611898" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49463806" visible="true" weight="0.21529745" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.4899464" visible="true" weight="0.19688386" />
-      <window_info anchor="bottom" id="Database Changes" order="9" sideWeight="0.49865952" weight="0.19830029" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.51005363" side_tool="true" visible="true" weight="0.19688386" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49946696" weight="0.26203966" />
+      <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.48592493" weight="0.5679887" />
+      <window_info anchor="bottom" id="Database Changes" order="9" sideWeight="0.49798927" weight="0.19830029" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.51407504" side_tool="true" weight="0.9291785" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49865952" weight="0.26203966" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32968238" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.329718" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -601,35 +605,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lostfound/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="29" column="20" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="20" />
-          <folding>
-            <element signature="e#633#665#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/index.html" />
-    <entry file="file://$PROJECT_DIR$/model/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3515">
-          <caret line="358" column="17" selection-start-line="358" selection-start-column="13" selection-end-line="358" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#69#0" expanded="true" />
-            <element signature="e#145#234#0" />
-            <element signature="e#5323#7571#0" />
-            <element signature="e#7612#7871#0" />
-            <element signature="e#7921#11416#0" />
-            <element signature="e#11453#11562#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/images/background.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/Wopop_files/style_log.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
@@ -641,22 +617,8 @@
       <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/objShowinfo.html" />
-    <entry file="file://$PROJECT_DIR$/model/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/apps.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/model/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-212">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/objList.html" />
     <entry file="file://$PROJECT_DIR$/templates/z_main.html" />
@@ -671,74 +633,78 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/static/images/background.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/upload.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="931">
-          <caret line="112" selection-start-line="112" selection-end-line="112" />
+        <state relative-caret-position="-1128">
+          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1024">
+          <caret line="114" column="28" lean-forward="true" selection-start-line="114" selection-start-column="28" selection-end-line="114" selection-end-column="28" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#a#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#a#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#a#0;n#div#2;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#0#69#0" expanded="true" />
+            <element signature="e#145#234#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/second.html">
+    <entry file="file://$PROJECT_DIR$/model/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="59" column="13" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#a#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#a#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#a#0;n#div#2;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
+        <state relative-caret-position="-48">
+          <caret line="7" column="15" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/model/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="456">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="100" column="138" selection-start-line="100" selection-start-column="138" selection-end-line="100" selection-end-column="138" />
+        <state relative-caret-position="408">
+          <caret line="86" column="36" selection-start-line="86" selection-start-column="36" selection-end-line="86" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/second.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="89" column="36" selection-start-line="89" selection-start-column="36" selection-end-line="89" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="627">
+          <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lostfound/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="186">
+          <caret line="23" column="42" selection-start-line="23" selection-start-column="42" selection-end-line="23" selection-end-column="42" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#a#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#a#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#a#0;n#div#2;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#633#665#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/profile.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="239" column="52" selection-start-line="239" selection-start-column="52" selection-end-line="239" selection-end-column="52" />
+        <state relative-caret-position="288">
+          <caret line="12" column="49" selection-start-line="12" selection-start-column="49" selection-end-line="12" selection-end-column="49" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#a#0;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#a#1;n#div#1;n#div#0;n#nav#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#h2#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#5472#5478#1#HTML" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#9563#9569#1#HTML" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#2;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#3;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="120" column="88" selection-start-line="120" selection-start-column="88" selection-end-line="120" selection-end-column="88" />
-          <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#div#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#1;n#div#0;n#form#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

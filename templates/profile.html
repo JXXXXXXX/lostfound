@@ -10,6 +10,7 @@
 		<style type="text/css">
 			body{
 				margin: 100px;
+                font-family: "Microsoft YaHei UI";
 			}
 			.list{
 				margin: 20px;
@@ -90,11 +91,11 @@
 			        	<div class="col-md-12 ">
 					        <ul class="nav nav-tabs">
 						        <li class="active"><a href="#">个人信息</a></li>
-						        <li><a href="#">我的失物招领</a></li>
-					        	<li><a href="#">我的寻物启事</a></li>
+						        <li><a href="#">我的寻物启事</a></li>
+					        	<li><a href="#">我的失物招领</a></li>
                                 {% if user.tag %}
-                                {# tag = True 用户是管理员 才有审核功能 #}
-						        <li><a href="#">审核</a></li>
+                                    {# tag = True 用户是管理员 才有审核功能 #}
+						            <li><a href="#">审核</a></li>
                                 {% endif %}
 					        </ul>
 				        </div>
@@ -121,42 +122,31 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="list" style="display: none;">    <!--失物信息-->
+                            <div class="list" style="display: none;">    <!--寻物启事-->
                                 {% if lost_no_history %}
                                     {# 用户没有失物历史记录 #}
-                                    <p>您还没有发布过任何失物信息。</p>
+                                    <p>您还没有发布过任何寻物启事。</p>
                                 {% else %}
-                                    {#                            <ul>#}
-                                    {#                            {% for obj in lostobjs %}#}
-                                    {# 超链接 object/20位长度id #}
-                                    {#                                <li>#}
-                                    {#                                    <input type="checkbox" name="object" value={{obj.id}} />#}
-{#                                                                        <a href={% url 'object' obj.id %}>#}
-                                    {#                                    失物信息:【{{obj.name}}】【物品编号：{{obj.id}}】#}
-                                    {#                                    </a>#}
-                                    {##}
-                                    {#                                </li>#}
-                                    {#                                {% if obj.state == 0%}<p>未审核</p>#}
-                                    {#                                {% elif obj.state == 1%}<p>未完成</p>#}
-                                    {#                                {% elif obj.state == 2%}<p>已完成</p>#}
-                                    {#                                {% else %}<p>未通过审核</p>#}
-                                    {#                                {% endif %}#}
-                                    {#                            {% endfor %}#}
-                                    {#                            </ul>#}
                                     <table class="table table-hover">
                                         <thead>
                                         <th>&nbsp;</th>
-                                        <th>失物信息</th>
+                                        <th>物品名称</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
                                         </thead>
                                         <tbody>
-                                        <tr onclick="location.href='#'">
-                                            <td><input type="checkbox" name="object" value="#"></td>
-                                            <td>(物品名称)</td>
-                                            <td>xxxxxxxxxxxxxxxxxx</td>
-                                            <td>通过</td>
-                                        </tr>
+                                        {% for obj in lostobjs %}
+                                            <tr>
+                                                <td><input type="checkbox" name="object" value=""></td>
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
+                                                {% if obj.state == 0%}<td>未审核</td>
+                                                {% elif obj.state == 1%}<td>未完成</td>
+                                                {% elif obj.state == 2%}<td>已完成</td>
+                                                {% else %}<td>未通过审核</td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                     <div style="margin:180px auto 0 auto;width: 160px;">
@@ -172,42 +162,31 @@
                                 </div>
                                 -->
                             </div>
-                            <div class="list" style="display: none;">     <!--招领信息-->
+                            <div class="list" style="display: none;">     <!--失物招领-->
                                 {% if found_no_history %}
-                                    {# 用户没有失物历史记录 #}
-                                    <p>您还没有发布过任何失物信息。</p>
+                                    {# 用户没有失物招领记录 #}
+                                    <p>您还没有发布过任何失物招领。</p>
                                 {% else %}
-{#                                    <ul>#}
-{#                                        {% for obj in foundobjs %}#}
-                                            {# 超链接 object/20位长度id #}
-{#                                            <li>#}
-{#                                                <input type="checkbox" name="object" value={{ obj.id }}/>#}
-{#                                                <a href={% url 'object' obj.id %}>#}
-{#                                                    失物信息:【{{ obj.name }}】【物品编号：{{ obj.id }}】#}
-{#                                                </a>#}
-{##}
-{#                                            </li>#}
-{#                                            {% if obj.state == 0 %}<p>未审核</p>#}
-{#                                            {% elif obj.state == 1 %}<p>未完成</p>#}
-{#                                            {% elif obj.state == 2 %}<p>已完成</p>#}
-{#                                            {% else %}<p>未通过审核</p>#}
-{#                                            {% endif %}#}
-{#                                        {% endfor %}#}
-{#                                    </ul>#}
                                     <table class="table table-hover">
                                         <thead>
                                         <th>&nbsp;</th>
-                                        <th>失物信息</th>
+                                        <th>物品名称</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
                                         </thead>
                                         <tbody>
-                                        <tr onclick="location.href='#'">
-                                            <td><input type="checkbox" name="object" value="#"></td>
-                                            <td>(物品名称)</td>
-                                            <td>xxxxxxxxxxxxxxxxxx</td>
-                                            <td>通过</td>
-                                        </tr>
+                                        {% for obj in foundobjs %}
+                                            <tr>
+                                                <td><input type="checkbox" name="object" value=""></td>
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
+                                                {% if obj.state == 0%}<td>未审核</td>
+                                                {% elif obj.state == 1%}<td>未完成</td>
+                                                {% elif obj.state == 2%}<td>已完成</td>
+                                                {% else %}<td>未通过审核</td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                     <div style="margin:180px auto 0 auto;width: 160px;">

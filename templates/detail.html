@@ -30,7 +30,7 @@
                     {# 若用户已登陆：显示用户名+退出按钮 #}
                     <div id="sign_out" align="right">
 
-                        <a href="/profile/0">
+                        <a href="../profile/0">
                             <div id="welcome" style="position:relative;float: bottom;top: 5px">
                             {# 点击此处可以进入用户个人中心 #}
                             你好,
@@ -43,7 +43,7 @@
                 {% else %}
                     {# 若没有登陆：显示登陆按钮 #}
                     <div id="sign_in" align="right">
-                        <a href="login"><input type="button" class="btn btn-default btn-sm" name="login" id="button" value="登录" style="opacity: 0.7;margin-top: 10px" ></a>
+                        <a href="../login"><input type="button" class="btn btn-default btn-sm" name="login" id="button" value="登录" style="opacity: 0.7;margin-top: 10px" ></a>
                     </div>
 
                 {% endif %}
@@ -70,7 +70,7 @@
                     {% if obj.img %}
                         <img src="{{ obj.img.url }}" class="thumbnail" style="width: 250px;height: 250px;"><br/>
                     {% else %}
-                        <img src="../static/images/demo/470x470.gif" alt="图片" class="thumbnail" style="width: 250px;height: 250px;">
+                        <img src="../static/images/demo/noimage.jpg" alt="图片" class="thumbnail" style="width: 250px;height: 250px;">
                     {% endif %}
 
 				</div>
