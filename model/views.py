@@ -28,13 +28,15 @@ def login_view(request):
                 user_db = models.User.objects.get(sno=username)#连接数据库检查密码正确性
                 if user_db.pwd == password:
                     # 密码正确
-                    request.session["sno"] = user_db.sno  # 记录用户sno
                     if user_db.pwd == user_db.sno:
                         #如果密码为初始密码,则要求用户修改密码并完善个人信息
+                        request.session["sno2"] = user_db.sno
                         return redirect('/complete_info')
                     if 'errortype' in request.session:
                         # 若存在错误标记，则删除
                         del request.session['errortype']
+
+                    request.session["sno"] = user_db.sno  # 记录用户sno
 
                     return redirect('/main') # 登陆成功-跳转到主界面
                         # redirect 只能通过session传递参数
@@ -428,15 +430,16 @@ def sort_view(request,sort_id):
 
 # 完善用户信息,当用户使用初始密码登陆后需要修改密码及完善个人信息
 def complete_view(request):
-    context = {}
+    if 'sno' in request.session:
+        del request.session["sno"]  # 删除sno，防止在填写表单时返回上一级页面，用户已经登陆的情况
+
     try:
-        sno_login = request.session["sno"]
+        sno_login = request.session["sno2"]
     except KeyError:
     # 未登录的情况下，使用session会报错：KeyError
         return redirect('/main')
 
-    del request.session["sno"]
-
+    context = {}
     if request.method == 'GET':
         # 已登录
         form = forms.complete_form()
@@ -455,10 +458,11 @@ def complete_view(request):
                 context['password_wrong']=True
                 return render_to_response('complete_info.html',context)
             user.pwd = newpwd1
-            user.name = form.cleaned_data['name']
+            # user.name = form.cleaned_data['name']
             user.phone = form.cleaned_data['phone']
             user.email = form.cleaned_data['email']
             user.save()
+            request.session["sno"] = user.sno   # 重新添加sno
             return redirect('/main')
         else:
             context["form"] = form

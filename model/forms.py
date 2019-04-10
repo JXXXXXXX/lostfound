@@ -38,15 +38,15 @@ class complete_form(forms.Form):
             }),
         min_length=3,
         max_length=20)                                      #第二次输入的密码
-    name = forms.CharField(
-        required = True,
-        label = "姓名",
-        widget = forms.TextInput(
-            attrs={
-                'placeholder':"在此填写姓名",
-                'class':"form-control col-sm4",             #可以设置前端表单的效果
-            }),
-        max_length=10)                                      #姓名
+    # name = forms.CharField(
+    #     required = True,
+    #     label = "姓名",
+    #     widget = forms.TextInput(
+    #         attrs={
+    #             'placeholder':"在此填写姓名",
+    #             'class':"form-control col-sm4",             #可以设置前端表单的效果
+    #         }),
+    #     max_length=10)                                      #姓名
     phone = forms.CharField(
         required = True,
         label = "电话",
