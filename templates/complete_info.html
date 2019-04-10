@@ -8,6 +8,9 @@
 		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 		<title>个人信息完善</title>
 		<style type="text/css">
+            body{
+                font-family: "Microsoft YaHei UI";
+            }
 			input{
 				width: 230px;
 			}
@@ -19,7 +22,7 @@
 			}
 		</style>
 	</head>
-	<body background="../static/Wopop_files/login_bgx.gif">
+	<body background="../static/images/background.jpg">
 		<div class="container" style="width: 500px;height: 600px;background: #C6C8CA;margin:150px auto;">
 
 			<h3 align="center">欢迎登陆</h3>
@@ -46,6 +49,7 @@
                   <span class="error-msg">{{ form.errors.pwd2.0}}</span>
                   {% endif %}
                 </div>
+                <!--
                 <div class="form-group">
                   {{ form.name.label }}
                   {{ form.name }}
@@ -53,6 +57,7 @@
                   <span class="error-msg">{{ form.errors.name.0}}</span>
                   {% endif %}
                 </div>
+                -->
                 <div class="form-group">
                   {{ form.phone.label }}
                   {{ form.phone }}
