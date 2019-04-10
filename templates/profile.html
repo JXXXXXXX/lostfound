@@ -109,6 +109,7 @@
 
                         <div class="content">
                             <!--个人信息-->
+                            <!--TODO(jinxin)这个表格 第一列和第二列相距太远了 调整一下-->
                             <div class="list">
                                 <table class="table">
                                     <tr>
@@ -121,11 +122,27 @@
                                     </tr>
                                     <tr>
                                         <td>电话：</td>
-                                        <td>{{ user.phone }}</td>
+                                        <td>
+                                            <a data-toggle="modal" href="#change_phone_Modal">
+                                                {{ user.phone }} <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>邮箱：</td>
-                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            <a data-toggle="modal" href="#change_email_Modal">
+                                                {{ user.email }} <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>密码：</td>
+                                        <td>
+                                            <a data-toggle="modal" href="#change_pwd_Modal">
+                                            修改密码 <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                            </a>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -243,6 +260,8 @@
                                     <label for="input_user" style="float: left;padding-right: 4px;">上传学生信息</label>
                                     <input type="file" id="input_user" name="file" value="file"/>
                                 </div>
+
+                                <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
                                 <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
                             </div>
                         </div>
@@ -265,6 +284,75 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
                                         <input type="submit" name="finish" class="btn btn-primary" value="提交"/>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
+
+                        <!--修改密码部分-->
+                        <!--Modal(id:change_pwd_Modal)：确认初始密码-->
+                        <div class="modal fade" id="change_pwd_Modal" tabindex="-1" role="dialog" aria-labelledby="change_pwd_ModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                        <h4 class="modal-title" id="change_pwd_ModalLabel">请输入原密码</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        原密码 <input type="password" name="old_pwd_input" value=""/><br>
+                                        新密码 <input type="password" name="new_pwd_input" value=""/><br>
+                                        再次输入新密码 <input type="password" name="new_pwd_input2" value=""/>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <input type="submit" name="pwd" class="btn btn-primary" value="提交"/>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
+
+                        <!--修改手机号-->
+                        <div class="modal fade" id="change_phone_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">修改手机号</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        新手机号 <input type="text" name="phone_input" value="" maxlength="15" minlength="7"/>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <input type="submit" name="phone" class="btn btn-primary" value="提交"/>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
+
+                        <!--修改邮箱-->
+                        <div class="modal fade" id="change_email_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            &times;
+                                        </button>
+                                        <h4 class="modal-title" id="myModalLabel">修改邮箱</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        新邮箱 <input type="email" name="email_input" value="" maxlength="50"/>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                        <input type="submit" name="email" class="btn btn-primary" value="提交"/>
                                     </div>
                                 </div><!-- /.modal-content -->
                             </div><!-- /.modal -->

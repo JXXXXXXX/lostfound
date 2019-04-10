@@ -223,11 +223,15 @@ def profile_view(request,nav_id):
     if request.method == "POST":
         confirm_delete = request.POST.getlist("delete")
         confirm_finish = request.POST.getlist("finish")
-        #确认按钮(删除、完成)哪一个按下,这里的完成是模态对话框中的完成
+        confirm_phone = request.POST.getlist("phone")
+        confirm_email = request.POST.getlist("email")
+        confirm_pwd = request.POST.getlist("pwd")
+        #哪一个模态框按钮按下,这里的完成是模态对话框中的完成
         if len(confirm_delete)>0:
             check_box_list = request.POST.getlist("object")
             for obj_id in check_box_list:
                 models.Object.objects.get(id=str(obj_id)).delete()
+
         elif len(confirm_finish)>0:
             #修改taken表和object表
             another_id = request.POST.get("finish_id")
@@ -256,6 +260,17 @@ def profile_view(request,nav_id):
                     takenrecord.save()
                 except models.User.DoesNotExist:
                     return HttpResponse("The user (id="+another_id+") doesn't exist in database.")
+
+        elif len(confirm_phone)>0:
+            changePhone(request) # 修改手机信息
+
+        elif len(confirm_email)>0:
+            changeEmail(request) # 修改邮箱信息
+
+        elif len(confirm_pwd)>0:
+            changePwd(request)   # 修改密码
+
+
 
 #------------个人用户功能：个人信息、失物招领、寻物启事的信息显示-----------
     # 1.通过request.session获得登陆用户
@@ -303,6 +318,7 @@ def profile_view(request,nav_id):
         return HttpResponse("models.Object.DoesNotExist")
 #------------管理员：上传用户信息------------------------
     upload_user_view(request)
+
 
     return render_to_response("profile.html", context)
 
@@ -410,7 +426,7 @@ def sort_view(request,sort_id):
     return render_to_response('second.html', context)
 
 
-#完善用户信息,当用户使用初始密码登陆后需要修改密码及完善个人信息
+# 完善用户信息,当用户使用初始密码登陆后需要修改密码及完善个人信息
 def complete_view(request):
     context = {}
     try:
@@ -449,7 +465,7 @@ def complete_view(request):
             context["user"] = sno_login
             return render_to_response('complete_info.html',context)
 
-# 管理员批量导入用户信息功能
+# 个人中心--管理员批量导入用户信息功能
 def upload_user_view(request):
     # 读取特定格式的excel文件
     # 要求用户数据在excel的第一个sheet，第一列【学号】第二列【姓名】，第一行是列名
@@ -511,3 +527,39 @@ def search_view(request):
         context['objs_lost'] = objs_lost
 
         return render_to_response('second.html',context)
+
+# 个人中心--修改密码
+def changePwd(request):
+    inputpwd = str(request.POST.get('old_pwd_input'))# 获得用户输入的旧密码
+    sno = request.session['sno']               # 当前用户学号
+    user = models.User.objects.get(sno=sno)    # 当前用户对象
+
+    if user.pwd == inputpwd:
+        # 输入密码正确
+        newpwd1 = str(request.POST.get('new_pwd_input'))
+        newpwd2 = str(request.POST.get('new_pwd_input2'))
+
+        if newpwd1==newpwd2 and newpwd1!=sno:
+            # 新密码两次相同，且与学号不同：执行修改操作
+            user.pwd=newpwd1
+            user.save() # 将修改提交到数据库
+            print("密码修改成功")
+
+        else:
+            # 不能修改
+            print("【两次输入的密码不同】或【输入的密码和初始密码相同（学号）】")
+    else:
+        # 原密码错误
+        print("原密码错误")
+
+# 个人中心--修改手机号
+def changePhone(request):
+    user = models.User.objects.get(sno=request.session['sno'])
+    user.phone = str(request.POST.get('phone_input'))
+    user.save()
+
+# 个人中心--修改邮箱
+def changeEmail(request):
+    user = models.User.objects.get(sno=request.session['sno'])
+    user.email = str(request.POST.get('email_input'))
+    user.save()
