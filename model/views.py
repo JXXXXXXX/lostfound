@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response,HttpResponse,redirect
 from model import forms,models
-import datetime
+import datetime,xlrd
 
 # 分类缩写与sort_id的对应关系字典
 sort={'qt':6,
@@ -28,13 +28,14 @@ def login_view(request):
                 user_db = models.User.objects.get(sno=username)#连接数据库检查密码正确性
                 if user_db.pwd == password:
                     # 密码正确
-                    request.session["sno"]=user_db.sno # 记录用户sno
+                    request.session["sno"] = user_db.sno  # 记录用户sno
                     if user_db.pwd == user_db.sno:
                         #如果密码为初始密码,则要求用户修改密码并完善个人信息
                         return redirect('/complete_info')
                     if 'errortype' in request.session:
                         # 若存在错误标记，则删除
                         del request.session['errortype']
+
                     return redirect('/main') # 登陆成功-跳转到主界面
                         # redirect 只能通过session传递参数
                 else:
@@ -214,12 +215,10 @@ def objShowinfo_view(request,object_id):
     # -----------------主要部分---------------------
     return render_to_response("detail.html",context)
 
-# 个人中心-用户
+# 个人中心
 def profile_view(request,nav_id):
-    # 1.通过request.session获得登陆用户
-    # 2.显示用户得个人信息
-    # 3.利用"二级页面"的逻辑，显示用户发表过的信息记录
-#----------------------------------------------------------------
+#-------------个人用户功能：信息完成与删除------------------
+
     #处理复选框选中的物品
     if request.method == "POST":
         confirm_delete = request.POST.getlist("delete")
@@ -233,6 +232,7 @@ def profile_view(request,nav_id):
             #修改taken表和object表
             another_id = request.POST.get("finish_id")
             check_box_list = request.POST.getlist("object")
+            print(check_box_list)
             for obj_id in check_box_list:
                 #更改物品状态
                 p=models.Object.objects.get(id=str(obj_id))
@@ -257,9 +257,11 @@ def profile_view(request,nav_id):
                 except models.User.DoesNotExist:
                     return HttpResponse("The user (id="+another_id+") doesn't exist in database.")
 
-
-#----------------------------------------------------------------
-    context = {}  # form字典
+#------------个人用户功能：个人信息、失物招领、寻物启事的信息显示-----------
+    # 1.通过request.session获得登陆用户
+    # 2.显示用户得个人信息
+    # 3.利用"二级页面"的逻辑，显示用户发表过的信息记录
+    context = {}
     try:
         sno_login = request.session["sno"]
     except KeyError:
@@ -288,18 +290,20 @@ def profile_view(request,nav_id):
             context["found_no_history"] = True
         else:
             context["foundobjs"] = foundobjs  # 将'记录'加入字典字典
-#-------------------------------------------------------------------
-        context["nav_id"]=nav_id #导航栏序号
-        # step for review 审核功能
+#------------管理员：审核功能------------------------
         obj_review = models.Object.objects.filter(state=0)
         if len(obj_review)==0:
             context["review_no_history"] = True
         else:
             context["obj_review"]=obj_review
-#-------------------------------------------------------------------
     except models.User.DoesNotExist:
             # 数据库没有该用户
         return HttpResponse("The user (id="+request.session["sno"]+") doesn't exist in database.")
+    except models.Object.DoesNotExist:
+        return HttpResponse("models.Object.DoesNotExist")
+#------------管理员：上传用户信息------------------------
+    upload_user_view(request)
+
     return render_to_response("profile.html", context)
 
 # 退出按钮
@@ -414,6 +418,9 @@ def complete_view(request):
     except KeyError:
     # 未登录的情况下，使用session会报错：KeyError
         return redirect('/main')
+
+    del request.session["sno"]
+
     if request.method == 'GET':
         # 已登录
         form = forms.complete_form()
@@ -442,3 +449,65 @@ def complete_view(request):
             context["user"] = sno_login
             return render_to_response('complete_info.html',context)
 
+# 管理员批量导入用户信息功能
+def upload_user_view(request):
+    # 读取特定格式的excel文件
+    # 要求用户数据在excel的第一个sheet，第一列【学号】第二列【姓名】，第一行是列名
+    # 具体格式见 static/images/demo/upload_user_excel_format.png
+    if request.method == 'POST':
+        form = forms.UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            count_all = 0       # 总的导入用户数
+            count_upload = 0    # 导入成功用户数
+            file = request.FILES['file']
+            try:
+                userdata = xlrd.open_workbook(file_contents=file.read())
+            except:
+                # 捕捉xlrd读取excel的出错
+                return HttpResponse("format error")
+            sheet0 = userdata.sheet_by_index(0)   # 选择第一个sheet
+            for i in range(1, sheet0.nrows):
+                count_all=count_all+1 # 导入用户数+1
+                new_user = models.User()
+                new_user.sno = str(int(sheet0.cell(i, 0).value))    # 读学号
+                new_user.name = str(sheet0.cell(i, 1).value)        # 读入姓名
+                new_user.pwd = new_user.sno     # 初始密码同学号
+                new_user.tag = 0                # 用户权限：普通用户
+                new_user.save() # 新用户存入数据库
+
+# 搜索功能
+def search_view(request):
+    # 1.根据keyword，从数据库中搜索出所有的物品objs
+    # 2.将objs分为失物招领(found)和寻物启事(lost)在二级页面上(second.html)显示
+    if 'q' in request.GET:
+        # 对物品（object）的名称、地点、描述进行查找
+        keyword = str(request.GET['q'])     # 获得搜索关键词
+        objs=set()  # 创建一个物品集合（set）,保证物品对象不重复
+        objs.update(models.Object.objects.filter(name__icontains=keyword))      # 对物品名称（name）搜索
+        objs.update(models.Object.objects.filter(dscp__icontains=keyword))      # 对物品描述（dscp）搜索
+        objs.update(models.Object.objects.filter(position__icontains=keyword))  # 对地点（position）搜索
+
+        # 用second.html显示搜索结果
+        context={}
+        no_found=False
+        no_lost=False
+        objs_found=[]
+        objs_lost = []
+        if 'sno' in request.session:
+            context['user_sno']=request.session['sno']
+        for obj in objs:
+            if obj.tag==False:
+                objs_lost.append(obj)
+            else:
+                objs_found.append(obj)
+        if len(objs_found)==0:
+            no_found=True
+        if len(objs_lost)==0:
+            no_lost=True
+
+        context['no_found']=no_found
+        context['no_lost'] = no_lost
+        context['objs_found']=objs_found
+        context['objs_lost'] = objs_lost
+
+        return render_to_response('second.html',context)

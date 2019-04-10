@@ -30,6 +30,9 @@ urlpatterns = [
     url(r'^$',main_view),
     url(r'^sort/(?P<sort_id>[0-6]{1})$',sort_view,name='sort'), # 物品分类显示
     url(r'^complete_info$',complete_view),# 修改密码并完善个人信息
+    url(r'search$',search_view),    # 搜索框
+                                    # 这里(搜索框)的正则表达式取消了开始的尖号(^)，
+                                    # 这样所有以'search/'结尾的url,都能指向search_view
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # "+static"是显示图片的需要（参考https://blog.csdn.net/c_beautiful/article/details/79755368

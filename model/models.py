@@ -11,8 +11,8 @@ class User(models.Model):
     sno = models.CharField(primary_key=True,max_length=10)  #学号-主键
     pwd = models.CharField(max_length=20)                   #密码
     name = models.CharField(max_length=10)                  #姓名
-    phone = models.CharField(max_length=15)                 #电话
-    email = models.EmailField(max_length=50)                #邮箱
+    phone = models.CharField(max_length=15,null=True)       #电话
+    email = models.EmailField(max_length=50,null=True)      #邮箱
     tag = models.BooleanField(default=False)                #标识：tag=True 为管理员；tag=false 为普通用户
 
 class Object(models.Model):

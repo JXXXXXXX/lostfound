@@ -68,4 +68,7 @@ class complete_form(forms.Form):
             }),
         error_messages={'required':"邮箱输入格式有误"},
         max_length=50)                                      #邮箱
-
+    
+class UploadFileForm(forms.Form):
+    # title = forms.CharField(max_length=50)
+    file = forms.FileField()
