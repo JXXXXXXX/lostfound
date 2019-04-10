@@ -25,6 +25,11 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
+                <!--TODO(jinxin)搜索框美化一下-->
+                <form action="/search" method="get">
+                    <input type="text" name="q">
+                    <input type="submit" value="搜索">
+                </form>
                 <!--导航栏 登陆按钮-->
                 {% if user_login %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}

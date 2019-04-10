@@ -28,12 +28,17 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
+                <!--TODO(jinxin)搜索框美化一下-->
+                <form action="/search" method="get">
+                    <input type="text" name="q">
+                    <input type="submit" value="搜索">
+                </form>
                 <!--导航栏 登陆按钮-->
                 {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
                     <div id="sign_out" align="right">
 
-                        <a href="/profile/0">
+                        <a href="../profile/0">
                             <div id="welcome" style="position:relative;float: bottom;top: 5px">
                                 你好,
                                 {# 点击此处可以进入用户个人中心 #}
@@ -45,7 +50,7 @@
                 {% else %}
                     {# 若没有登陆：显示登陆按钮 #}
                     <div id="sign_in" align="right">
-                        <a href="login"><input type="button" class="btn btn-default btn-sm" name="login" id="button" value="登录" style="opacity: 0.7;margin-top: 10px" ></a>
+                        <a href="../login"><input type="button" class="btn btn-default btn-sm" name="login" id="button" value="登录" style="opacity: 0.7;margin-top: 10px" ></a>
                     </div>
 
                 {% endif %}
