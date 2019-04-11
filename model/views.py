@@ -3,12 +3,14 @@ from model import forms,models
 import datetime,xlrd
 
 # 分类缩写与sort_id的对应关系字典
-sort={'qt':6,
-      'shyp':5,
-      'dzyp':4,
-      'ywpj':3,
-      'sbwj':2,
-      'zjxj':1,}
+sort={
+    'qt':6,
+    'shyp':5,
+    'dzyp':4,
+    'ywpj':3,
+    'sbwj':2,
+    'zjxj':1,
+}
 
 # 登陆页面（新）
 def login_view(request):
