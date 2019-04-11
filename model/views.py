@@ -146,13 +146,21 @@ def upload_view(request):
 def objShowinfo_view(request,object_id):
     # 管理员按钮处理
     if request.method == "POST":
-        command1 = request.POST.getlist("feedback")
-        command2 = request.POST.getlist("pass")
+        command1 = request.POST.getlist("feedback") # 物品未通过-提交反馈信息
+        command2 = request.POST.getlist("pass")     # 物品通过
         if len(command1)>0:
             p=models.Object.objects.get(id=str(object_id))
             p.state=-1
-            reason = request.POST.get("reason")
-            # p.save()
+            p.save()    # 修改物品状态
+
+            fb_type_id = request.POST.get('fb_radio')
+            fb_type = models.feedbackType.objects.get(id=fb_type_id)
+            obj_fbType = models.obj_feedbackType()
+            obj_fbType.object=p
+            obj_fbType.feedbackType = fb_type
+            if fb_type_id==0: # 如果反馈信息类型为【其他】则读取管理员输入的提示信息
+                obj_fbType.other_info = request.POST.get('other_info')
+            obj_fbType.save()   # 保存【物品-反馈信息】对象
 
         elif len(command2)>0:
             p=models.Object.objects.get(id=str(object_id))
@@ -162,6 +170,7 @@ def objShowinfo_view(request,object_id):
     # -----------------主要部分---------------------
     # 1.获得【物品】和发布该信息的【用户】
     # 2.根据【登陆情况】【物品是否审核】及【登陆用户的权限】三者来决定信息的显示规则
+    # 3.2019年4月11日 21点17分 增加：当物品未审核通过时，管理员给出的反馈信息
 
     # step1
     obj_db = models.Object.objects.filter(id=object_id)
@@ -177,6 +186,21 @@ def objShowinfo_view(request,object_id):
     context['user']=user_db
     context['obj']=obj
 
+    # 若obj.state=-1 则加入反馈信息
+    feedbackinfo=''
+    try:
+        if obj.state==-1:
+            obj_feedbackType_db = models.obj_feedbackType.objects.get(object=obj)
+            feedbackType = obj_feedbackType_db.feedbackType
+            if feedbackType.id==0:# 反馈的信息类型为【其他】,则返回信息为管理员输入的信息
+                feedbackinfo = obj_feedbackType_db.other_info
+            else:
+                feedbackinfo = feedbackType.type
+            context['feedbackinfo'] = feedbackinfo
+    except models.obj_feedbackType.DoesNotExist:
+        context['feedbackinfo'] = "无"
+
+
     # 确定物品的类别
     try:
         sortobj_db = models.SortObject.objects.get(object=obj)
@@ -187,6 +211,8 @@ def objShowinfo_view(request,object_id):
     # step2
     show_obj=False  # 物品信息显示标记 初始False
     show_user=False # 用户信息显示标记 初始False
+    show_feedbackinfo=False # 显示物品审核未通过的反馈信息 初始false
+
     if 'sno' in request.session:    # 'sno'是当前登陆的用户，是查看这条信息的人
         # 已登录
         user_login = models.User.objects.get(sno=request.session['sno']) # 获得已登录用户信息
@@ -195,6 +221,8 @@ def objShowinfo_view(request,object_id):
             # 显示所有
             show_obj=True
             show_user=True
+            if obj.state==-1:
+                show_feedbackinfo=True
         else:
             # tag==False 普通用户
             # 若上传者和查看者时同一人，也可以直接查看
@@ -203,6 +231,8 @@ def objShowinfo_view(request,object_id):
                 # 显示所有
                 show_obj = True
                 show_user = True
+                if obj.state==-1:
+                    show_feedbackinfo = True
             # else:
             # 未通过审核，都为False
     else:
@@ -213,6 +243,7 @@ def objShowinfo_view(request,object_id):
 
     context['show_obj']  = show_obj
     context['show_user'] = show_user
+    context['show_feedbackinfo'] = show_feedbackinfo
     context['user_login'] = user_login
     # -----------------主要部分---------------------
     return render_to_response("detail.html",context)

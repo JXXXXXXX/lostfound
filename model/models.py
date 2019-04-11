@@ -61,3 +61,19 @@ class TakenRecord(models.Model):#认领记录（认领是双向的
                                                             # tag=true found 捡到的人
     class Meta:
         unique_together=("user1","user2","object")          #用户1、用户2、物品共同作为主键
+
+class feedbackType(models.Model):# 反馈信息类型
+    id = models.AutoField(primary_key=True)                 # 类型编号
+    type = models.CharField(max_length=100)                 # 类型名称
+
+class obj_feedbackType(models.Model):
+    # 物品-反馈类型，每一个审核未通过的物品(object.state=-1)
+    # 都与一个反馈信息的类型相关联，以告知用户为什么审核不通过
+    object = models.ForeignKey(Object,
+                               on_delete=models.CASCADE,)   # 物品(这里加入的物品应该state=-1)
+    feedbackType = models.ForeignKey(feedbackType,
+                            on_delete=models.CASCADE,)      # 反馈信息
+
+    other_info = models.CharField(max_length=100, null=True)# 备注：当类型为'其他'时，管理员可以输入自定义的反馈信息
+    class Meta:
+        unique_together=("object","feedbackType")           # 物品-反馈信息联合主键

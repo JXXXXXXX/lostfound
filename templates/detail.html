@@ -63,7 +63,7 @@
                     {# tag = True :found #}
                     - 失物招领
                 {% else %}
-                    {# tag = True :lost  #}
+                    {# tag = False :lost  #}
                     - 寻物启事
                 {% endif %}
             </h2>
@@ -101,20 +101,28 @@
 						<p>{{ obj.dscp }}</p>
 					</div><hr >
                     <div>
-                       <h4>信息发布者联系方式：</h4>
-                {% if show_user %}
-                    <div id="id_username">
-						<span>姓名：</span><span>{{user.name}}</span>
-					</div>
-                    <div id="id_username">
-						<span>电话：</span><span>{{user.phone}}</span>
-					</div>
-                    <div id="id_username">
-						<span>邮箱：</span><span>{{user.email}}</span>
-					</div>
-                {% else %}
-                    <a href="../login">登陆后可见</a>
-                {% endif %}
+                        <h4>信息发布者联系方式：</h4>
+                    {% if show_user %}
+                        <div id="id_username">
+                            <span>姓名：</span><span>{{user.name}}</span>
+                        </div><hr >
+                        <div id="id_username">
+                            <span>电话：</span><span>{{user.phone}}</span>
+                        </div><hr >
+                        <div id="id_username">
+                            <span>邮箱：</span><span>{{user.email}}</span>
+                        </div><hr >
+                    {% else %}
+                        <a href="../login">登陆后可见</a>
+                    {% endif %}
+
+                    {% if show_feedbackinfo %}
+                        <div>
+                            <h4>物品未通过审核：</h4>
+                            <b >原因：<span style="color: red">{{ feedbackinfo }}</span></b>
+                        </div><hr >
+                    {% endif %}
+
                     </div>
 				</div>
 			</div>
@@ -146,10 +154,11 @@
 
                                     <div class="modal-body">
                                         <!--radio单选/checkbox多选-->
-                                        <input type="radio" value="包含色情/违法等不良信息" name="reason" checked="checked"/>包含色情/违法等不良信息<br>
-                                        <input type="radio" value="信息不全（如缺少图片、缺少描述等）" name="reason" checked="checked"/>信息不全（如缺少图片、缺少描述等）<br>
-                                        <input type="radio" value="信息不合理" name="reason" checked="checked"/>信息不合理<br>
-                                        <input type="radio" value="其他" name="reason" checked="checked"/>其他<br>
+                                        <input type="radio" value="3" name="fb_radio" /> 包含色情/违法等不良信息<br>
+                                        <input type="radio" value="2" name="fb_radio" /> 信息不全（如缺少图片、缺少描述等）<br>
+                                        <input type="radio" value="1" name="fb_radio" /> 信息不合理<br>
+                                        <input type="radio" value="0" name="fb_radio" checked="checked"/> 其他
+                                        <input type="text"  value=""  name="other_info" maxlength="100">
                                     </div>
 
                                     <div class="modal-footer">
