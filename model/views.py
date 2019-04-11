@@ -144,17 +144,15 @@ def upload_view(request):
 
 #物品详细信息显示
 def objShowinfo_view(request,object_id):
-    # 1.获得【物品】和发布该信息的【用户】
-    # 2.根据【登陆情况】【物品是否审核】及【登陆用户的权限】三者来决定信息的显示规则
-
     # 管理员按钮处理
     if request.method == "POST":
-        command1 = request.POST.getlist("delete")
+        command1 = request.POST.getlist("feedback")
         command2 = request.POST.getlist("pass")
         if len(command1)>0:
             p=models.Object.objects.get(id=str(object_id))
             p.state=-1
-            p.save()
+            reason = request.POST.get("reason")
+            # p.save()
 
         elif len(command2)>0:
             p=models.Object.objects.get(id=str(object_id))
@@ -162,6 +160,8 @@ def objShowinfo_view(request,object_id):
             p.save()
 
     # -----------------主要部分---------------------
+    # 1.获得【物品】和发布该信息的【用户】
+    # 2.根据【登陆情况】【物品是否审核】及【登陆用户的权限】三者来决定信息的显示规则
 
     # step1
     obj_db = models.Object.objects.filter(id=object_id)
@@ -578,7 +578,7 @@ def admin_view(request):
                 return HttpResponse("你不是管理员.")
             else:
                 context['user']=user
-                # ----------功能1：审核信息(将待审核的物品信息显示到网页上)---------------
+                # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
                 obj_review = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
                 if len(obj_review) == 0:
                     context["review_no_history"] = True
