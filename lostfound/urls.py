@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^login$',login_view),     # 登陆界面
     url(r'^upload$',upload_view),  # 物品信息上传界面
     url(r'^object/(?P<object_id>[0-9]{20})$',objShowinfo_view,name='object'), # 物品信息显示页面
-    url(r'^profile/(?P<nav_id>[0-2]{1})$',profile_view,name='profile'), # 个人中心-用户
+    url(r'^profile/(?P<nav_id>[0-4]{1})$',profile_view,name='profile'), # 个人中心-用户
     url(r'^quit$',quit_view), # 退出按钮
     url(r'^main$',main_view), # 主界面
     url(r'^$',main_view),
@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'search$',search_view),    # 搜索框
                                     # 这里(搜索框)的正则表达式取消了开始的尖号(^)，
                                     # 这样所有以'search/'结尾的url,都能指向search_view
+    url(r'^admin$',admin_view),# 修改密码并完善个人信息
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # "+static"是显示图片的需要（参考https://blog.csdn.net/c_beautiful/article/details/79755368

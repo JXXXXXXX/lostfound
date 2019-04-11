@@ -307,20 +307,11 @@ def profile_view(request,nav_id):
             context["found_no_history"] = True
         else:
             context["foundobjs"] = foundobjs  # 将'记录'加入字典字典
-#------------管理员：审核功能------------------------
-        obj_review = models.Object.objects.filter(state=0)
-        if len(obj_review)==0:
-            context["review_no_history"] = True
-        else:
-            context["obj_review"]=obj_review
     except models.User.DoesNotExist:
             # 数据库没有该用户
         return HttpResponse("The user (id="+request.session["sno"]+") doesn't exist in database.")
     except models.Object.DoesNotExist:
         return HttpResponse("models.Object.DoesNotExist")
-#------------管理员：上传用户信息------------------------
-    upload_user_view(request)
-
 
     return render_to_response("profile.html", context)
 
@@ -469,31 +460,31 @@ def complete_view(request):
             context["user"] = sno_login
             return render_to_response('complete_info.html',context)
 
-# 个人中心--管理员批量导入用户信息功能
-def upload_user_view(request):
+# 管理员批量导入用户信息功能
+def upload_user(request):
     # 读取特定格式的excel文件
     # 要求用户数据在excel的第一个sheet，第一列【学号】第二列【姓名】，第一行是列名
     # 具体格式见 static/images/demo/upload_user_excel_format.png
-    if request.method == 'POST':
-        form = forms.UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            count_all = 0       # 总的导入用户数
-            count_upload = 0    # 导入成功用户数
-            file = request.FILES['file']
-            try:
-                userdata = xlrd.open_workbook(file_contents=file.read())
-            except:
-                # 捕捉xlrd读取excel的出错
-                return HttpResponse("format error")
-            sheet0 = userdata.sheet_by_index(0)   # 选择第一个sheet
-            for i in range(1, sheet0.nrows):
-                count_all=count_all+1 # 导入用户数+1
-                new_user = models.User()
-                new_user.sno = str(int(sheet0.cell(i, 0).value))    # 读学号
-                new_user.name = str(sheet0.cell(i, 1).value)        # 读入姓名
-                new_user.pwd = new_user.sno     # 初始密码同学号
-                new_user.tag = 0                # 用户权限：普通用户
-                new_user.save() # 新用户存入数据库
+
+    form = forms.UploadFileForm(request.POST, request.FILES)
+    if form.is_valid():
+        count_all = 0       # 总的导入用户数
+        count_upload = 0    # 导入成功用户数
+        file = request.FILES['file']
+        try:
+            userdata = xlrd.open_workbook(file_contents=file.read())
+        except:
+            # 捕捉xlrd读取excel的出错
+            return HttpResponse("format error")
+        sheet0 = userdata.sheet_by_index(0)   # 选择第一个sheet
+        for i in range(1, sheet0.nrows):
+            count_all=count_all+1 # 导入用户数+1
+            new_user = models.User()
+            new_user.sno = str(int(sheet0.cell(i, 0).value))    # 读学号
+            new_user.name = str(sheet0.cell(i, 1).value)        # 读入姓名
+            new_user.pwd = new_user.sno     # 初始密码同学号
+            new_user.tag = 0                # 用户权限：普通用户
+            new_user.save() # 新用户存入数据库
 
 # 搜索功能
 def search_view(request):
@@ -567,3 +558,45 @@ def changeEmail(request):
     user = models.User.objects.get(sno=request.session['sno'])
     user.email = str(request.POST.get('email_input'))
     user.save()
+
+# 管理中心
+def admin_view(request):
+    context = {}
+    if request.method == "POST":
+        confirm_upload_user = request.POST.getlist('upload_user')
+        confirm_delete_obj = request.POST.getlist('delete_obj')
+        if len(confirm_upload_user)>0:
+            # ---------功能：批量上传用户信息--------
+            upload_user(request)
+        if len(confirm_delete_obj)>0:
+            # ---------功能：批量删除物品信息（面向所有物品）--------
+            delete_obj_admin(request)
+    else:
+        if 'sno' in request.session:
+            user = models.User.objects.get(sno=request.session['sno'])
+            if user.tag == False:
+                return HttpResponse("你不是管理员.")
+            else:
+                context['user']=user
+                # ----------功能1：审核信息(将待审核的物品信息显示到网页上)---------------
+                obj_review = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
+                if len(obj_review) == 0:
+                    context["review_no_history"] = True
+                else:
+                    context["obj_review"] = obj_review
+                # 将所有信息，显示到网页上
+                obj_all = models.Object.objects.all()
+                if len(obj_all) == 0:
+                    context["no_obj"] = True
+                else:
+                    context["obj_all"] = obj_all
+                return render_to_response("admin.html",context)
+        else:
+            return redirect('../login')
+
+# 管理中心-所有信息删除
+def delete_obj_admin(request):
+    check_box_list = request.POST.getlist("object")
+    for obj_id in check_box_list:
+        models.Object.objects.get(id=str(obj_id)).delete()
+    return

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
+		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
+		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+		<title>管理中心</title>
+		<style type="text/css">
+			body{
+				margin: 100px;
+                font-family: "Microsoft YaHei UI";
+			}
+			.list{
+				margin: 20px;
+			}
+			ul{
+				padding: 0;
+			}
+			li{
+				list-style-type: none;
+				margin: 10px ;
+				padding: 0;
+			}
+			a{
+				text-decoration: none;
+				color: #000000;
+			}
+			a:hover{
+				text-decoration: none;
+			}
+            nav a{
+                color: #F8F8FF;
+            }
+			td{
+				border-bottom-width: 1px;
+				border-top-style: none;
+				border-bottom-style: solid;
+				border-bottom-color: #FFFFFF;
+			}
+			#welcome{
+				display: inline;
+			}
+
+		</style>
+
+	</head>
+	<body background="../static/images/background.jpg">
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!--导航栏-->
+			<div class="container">
+				<div class="navbar-header">
+					<a href="../main" class="navbar-brand">校园失物招领平台</a>
+				</div>
+                <!--TODO(jinxin)搜索框美化一下-->
+                <form action="/search" method="get">
+                    <input type="text" name="q">
+                    <input type="submit" value="搜索">
+                </form>
+                <!-- 登陆按钮-->
+                {% if user %}
+                    {# 若用户已登陆：显示用户名+退出按钮 #}
+                    <div id="sign_out" align="right" >
+                        <a href="../profile/0" >
+                            <div id="welcome" style="position:relative;float: bottom;top: 5px">
+                                你好,
+                                {# 点击此处可以进入用户个人中心 #}
+                                {{ user.name }}({{ user.sno }})
+                            </div>
+                        </a>
+                        <a href="../quit"><input type="button" class="btn btn-default btn-sm" name="quit" id="welcome" value="退出" style="opacity: 0.7;margin-top: 10px" ></a>
+                    </div>
+                {% else %}
+                    {# 若没有登陆：显示登陆按钮 #}
+                    <div id="sign_in" align="right">
+                        <a href="../login"><input type="button" class="sub_button" name="login" id="button" value="登录" style="opacity: 0.7;" ></a>
+                    </div>
+
+                {% endif %}
+
+			</div>
+		</nav>
+
+		<div class="container">
+			<div class="start" style="text-align: center;">
+				<h2 style="color: #F8F8FF">管理中心</h2>
+			</div>
+		</div>
+
+		<div class="container" style="background-color: #F8F8FF;min-height: 500px; border-radius: 7px">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row clearfix" style="margin-top: 50px;">
+			        	<div class="col-md-12 ">
+					        <ul class="nav nav-tabs">
+                                <li class="active"><a href="#">审核信息</a></li>
+                                <li><a href="#">用户管理</a></li>
+                                <li><a href="#">信息管理</a></li>
+					        </ul>
+				        </div>
+			        </div>
+
+                    <!--TODO(jinxin)：把这个放到合适的位置-->
+                    <a href="../profile/0">返回个人中心</a>
+
+                    <form action="" method="POST" enctype="multipart/form-data">
+
+                        <div class="content">
+                            <!--审核-->
+                            <div class="list">
+                                {# 审核功能 #}
+                                {% if review_no_history %}
+                                    <p>目前无待审核的物品</p>
+                                {% else %}
+                                    <table class="table table-hover">
+                                        {% for obj in obj_review %}
+                                            <tr>
+                                                <td>
+                                                    <a href="{% url 'object' obj.id %}">
+                                                        {{ obj.name }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="{% url 'object' obj.id %}">
+                                                        {{ obj.id }}
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
+                                        {% endfor %}
+                                    </table>
+                                {% endif %}
+                            </div>
+
+                            <!-- 用户管理 -->
+                            <div class="list" style="display: none;">
+                                <div class="data">
+                                    <label for="input_user" style="float: left;padding-right: 4px;">批量上传学生信息</label>
+                                    <input type="file" id="input_user" name="file" value="file"/>
+                                </div>
+
+                                <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
+                                <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
+                            </div>
+
+                            <!-- 信息管理（对信息的批量删除） -->
+                            <div class="list" style="display: none;">
+                                {% if no_obj %}
+                                    <p>暂无信息。</p>
+                                {% else %}
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <th>&nbsp;</th>
+                                        <th>物品名称</th>
+                                        <th>物品编号</th>
+                                        <th>审核状态</th>
+                                        </thead>
+                                        <tbody>
+                                        {% for obj in obj_all %}
+                                            <tr>
+                                                <td><input type="checkbox" name="object" value={{ obj.id }}></td>
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
+                                                {% if obj.state == 0%}<td>未审核</td>
+                                                {% elif obj.state == 1%}<td>未完成</td>
+                                                {% elif obj.state == 2%}<td>已完成</td>
+                                                {% else %}<td>未通过审核</td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+
+                                    <div style="margin:180px auto 0 auto;width: 160px;">
+                                        <input class="btn btn-default" type="submit" name="delete_obj" value="删除"/>
+                                    </div>
+                                    <!--上面要加上type="button" 不然对话框只是一闪而过 -->
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+		</div>
+
+
+		<script type="text/javascript">
+ 			$(function(){
+ 				$(".nav-tabs li").click(function(){
+ 					var divShow = $(".content").children('.list');
+ 					if(!$(this).hasClass('active')){
+ 						var index=$(this).index();
+ 						$(this).addClass('active').siblings('li').removeClass('active');
+ 						$(divShow[index]).show();
+ 						$(divShow[index]).siblings('.list').hide();
+ 					}
+ 				});
+ 			});
+		</script>
+
+
+	</body>
+</html>

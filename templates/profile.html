@@ -97,14 +97,15 @@
 						        <li class="active"><a href="#">个人信息</a></li>
 						        <li><a href="#">我的寻物启事</a></li>
 					        	<li><a href="#">我的失物招领</a></li>
-                                {% if user.tag %}
-                                    {# tag = True 用户是管理员 才有审核功能 #}
-						            <li><a href="#">审核</a></li>
-                                    <li><a href="#">管理中心</a></li>
-                                {% endif %}
 					        </ul>
 				        </div>
 			        </div>
+
+                    {% if user.tag %}
+                        {# TODO(jinxin)：把这个放到合适的位置 #}
+                        <a href="../admin">进入管理中心</a>
+                    {% endif %}
+
                     <form action="" method="POST" enctype="multipart/form-data">
 
                         <div class="content">
@@ -229,41 +230,6 @@
                                 -->
                             </div>
 
-                            <!--审核-->
-                            <div class="list" style="display: none;">
-                                {# 审核功能 #}
-                                {% if review_no_history %}
-                                    <p>目前无待审核的物品</p>
-                                {% else %}
-                                    <table class="table table-hover">
-                                        {% for obj in obj_review %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{% url 'object' obj.id %}">
-                                                        {{ obj.name }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="{% url 'object' obj.id %}">
-                                                        {{ obj.id }}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
-                                        {% endfor %}
-                                    </table>
-                                {% endif %}
-                            </div>
-                            <!-- 管理中心 -->
-                            <div class="list" style="display: none;">
-                                <div class="data">
-                                    <label for="input_user" style="float: left;padding-right: 4px;">上传学生信息</label>
-                                    <input type="file" id="input_user" name="file" value="file"/>
-                                </div>
-
-                                <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
-                                <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
-                            </div>
                         </div>
 
                         <!-- 模态框（Modal） -->
