@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render_to_response,HttpResponse,redirect
 from model import forms,models
 import datetime,xlrd
@@ -359,42 +360,60 @@ def quit_view(request):
 
 # 主界面
 def main_view(request):
+    objnum_one_page = 6
     context={}
-    # 选择最近的【失物招领】和【寻物启事】各8条
+    # 初始化【寻物启事】和【失物招领】板块的显示页数
+    if 'page_lost' in request.session:
+        page_lost  = request.session['page_lost']
+    else:
+        page_lost  = 1
+
+    if 'page_found' in request.session:
+        page_found = request.session['page_found']
+    else:
+        page_found = 1
+
+    if request.POST:
+        lost_pervious = request.POST.getlist('lost_pervious')
+        lost_next = request.POST.getlist('lost_next')
+        found_pervious = request.POST.getlist('found_pervious')
+        found_next = request.POST.getlist('found_next')
+        if len(lost_pervious)>0:
+            page_lost=page_lost-1
+            if page_lost<1:     # 页面越过下界的处理
+                page_lost=1
+        if len(lost_next)>0:
+            page_lost=page_lost+1
+        if len(found_pervious)>0:
+            page_found=page_lost-1
+            if page_found<1:    # 页面越过下界的处理
+                page_found=1
+        if len(found_next)>0:
+            page_found=page_lost+1
+
     try:
-        lost_db = models.Object.objects.filter(tag=False)
-        found_db = models.Object.objects.filter(tag=True)
-        # 首页每个部分最多显示8个物品
-        if len(lost_db)>8:
-            num_lost = 8
-        else:
-            num_lost = len(lost_db)
-        if len(found_db)>8:
-            num_found = 8
-        else:
-            num_found = len(found_db)
-
-        lost=[]
-        found=[]
-
-        # 将经过审核的物品信息显示
-        if num_lost!=0:
-            for obj in lost_db:
-                if obj.state==1:# state=1表示审核过，未完成
-                    lost.append(obj)
-                    num_lost=num_lost-1
-                if num_lost==0:
-                    break
-        if num_found!=0:
-            for obj in found_db:
-                if obj.state==1:# state=1表示审核过，未完成
-                    found.append(obj)
-                    num_found=num_found-1
-                if num_found==0:
-                    break
+        lost_db = models.Object.objects.filter(tag=False,state=1)   # 通过审核的寻物启事
+        found_db = models.Object.objects.filter(tag=True,state=1)   # 通过审核的失物招领
 
     except models.Object.DoesNotExist:
         return HttpResponse("DoesNotExist Error")
+
+    paginator_lost = Paginator(lost_db,objnum_one_page)
+    paginator_found = Paginator(found_db, objnum_one_page)
+
+
+    # 页数越过上界的处理
+    if page_lost>paginator_lost.num_pages:
+        page_lost=paginator_lost.num_pages
+    if page_found>paginator_found.num_pages:
+        page_found = paginator_found.num_pages
+
+    # 修改显示的页数
+    lost = paginator_lost.page(page_lost)
+    found = paginator_found.page(page_found)
+    # 修改控制页数的session
+    request.session['page_lost'] = page_lost
+    request.session['page_found'] = page_found
 
     context['lost']=lost   # 寻物启事
     context['found']=found # 失物招领
