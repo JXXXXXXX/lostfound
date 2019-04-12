@@ -25,6 +25,8 @@ class Object(models.Model):
     tag = models.BooleanField(default=False)                #标识：tag=false lost 寻物启事；tag=true found 失物招领
     state = models.IntegerField()                           # state=0:未审核；state=-1:审核不通过
                                                             # state=1 已审核，未被领取/捡到；state=2:已审核，被领取/捡到
+    class Meta:
+        ordering = ['id']
 
 class UserObject(models.Model):
     object = models.ForeignKey(Object,
