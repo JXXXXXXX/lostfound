@@ -374,10 +374,10 @@ def main_view(request):
         page_found = 1
 
     if request.POST:
-        lost_pervious = request.POST.getlist('lost_pervious')
-        lost_next = request.POST.getlist('lost_next')
-        found_pervious = request.POST.getlist('found_pervious')
-        found_next = request.POST.getlist('found_next')
+        lost_pervious = request.POST.getlist('lost_pervious')   # 寻物启事 上一页
+        lost_next = request.POST.getlist('lost_next')           # 寻物启事 下一页
+        found_pervious = request.POST.getlist('found_pervious') # 失物招领 上一页
+        found_next = request.POST.getlist('found_next')         # 失物招领 下一页
         if len(lost_pervious)>0:
             page_lost=page_lost-1
             if page_lost<1:     # 页面越过下界的处理
