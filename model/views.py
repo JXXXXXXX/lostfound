@@ -362,6 +362,7 @@ def quit_view(request):
 def main_view(request):
     objnum_one_page = 6
     context={}
+    # todo(jinxin):这个session的设置以后优化一下，当浏览器关闭后，自动删除关于页数的session
     # 初始化【寻物启事】和【失物招领】板块的显示页数
     if 'page_lost' in request.session:
         page_lost  = request.session['page_lost']
