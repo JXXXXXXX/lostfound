@@ -65,6 +65,7 @@
                 {% if user %}
                     {# 用户已登陆 #}
                     {% if upload_success %}
+                        <!--todo(jinxin)这里显示成功的提示信息后，下面的按钮会被挤出板块，加长一下-->
                     <div class="alert alert-success">上传信息成功!</div>
                     {% endif %}
                     <form enctype="multipart/form-data" action="upload" method="POST">
@@ -115,7 +116,7 @@
                     </div>
 
                         <!--todo(jinxin)下面两个按钮的位置修改一下-->
-                    <button onclick="history.go(-1)" type="button" class="btn btn-default">返回</button>
+                    <a href="../main"><button type="button" class="btn btn-default">返回首页</button></a>
                     <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">提交</button>
 
 

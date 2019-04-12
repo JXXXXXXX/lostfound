@@ -120,7 +120,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# django的目录下，django/conf/locale，这个目录下，看有什么语言包，zh_Hans代表中文简体，zh_Hant代表中文繁体，设置即可
+LANGUAGE_CODE = 'zh_Hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -141,4 +142,4 @@ STATICFILES_DIRS = (
 
 #参考：https://blog.csdn.net/c_beautiful/article/details/79755368
 MEDIA_ROOT = os.path.join(BASE_DIR,'upload')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/upload/'

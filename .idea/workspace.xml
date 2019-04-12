@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="98150d92-a466-451b-b5a0-8fa62c0e62fa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/error.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lostfound/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/lostfound/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mydb.db" beforeDir="false" afterPath="$PROJECT_DIR$/mydb.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/upload.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/pip-selfcheck.json" beforeDir="false" afterPath="$PROJECT_DIR$/venv/pip-selfcheck.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,35 +43,52 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/model/views.py">
+        <entry file="file://$PROJECT_DIR$/templates/upload.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="24">
-              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+            <state relative-caret-position="-34">
+              <caret line="66" column="40" selection-start-line="66" selection-start-column="26" selection-end-line="66" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/profile.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2822">
+              <caret line="325" selection-start-line="325" selection-end-line="325" />
               <folding>
-                <element signature="e#0#69#0" expanded="true" />
-                <element signature="e#150#245#0" />
-                <element signature="e#280#2394#0" />
+                <element signature="n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#div#2;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/error.html">
+        <entry file="file://$PROJECT_DIR$/templates/main.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="8" column="17" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="17" />
+            <state relative-caret-position="72">
+              <caret line="112" column="45" lean-forward="true" selection-start-line="112" selection-start-column="45" selection-end-line="112" selection-end-column="108" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/upload.html">
+        <entry file="file://$PROJECT_DIR$/model/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="365">
-              <caret line="117" column="102" lean-forward="true" selection-start-line="117" selection-start-column="20" selection-end-line="117" selection-end-column="102" />
+            <state relative-caret-position="528">
+              <caret line="308" column="47" lean-forward="true" selection-start-line="308" selection-start-column="47" selection-end-line="308" selection-end-column="47" />
+              <folding>
+                <element signature="e#0#69#0" expanded="true" />
+                <element signature="e#276#2390#0" />
+                <element signature="e#2444#5462#0" />
+                <element signature="e#5519#9100#0" />
+                <element signature="e#12744#12853#0" />
+                <element signature="e#12889#14255#0" />
+                <element signature="e#14300#15822#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -104,6 +122,7 @@
       <find>change_pwd_Modal</find>
       <find>myModal</find>
       <find>HttpResponse</find>
+      <find>上传信息成功</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -143,7 +162,6 @@
         <option value="$PROJECT_DIR$/templates/log_in.html" />
         <option value="$PROJECT_DIR$/templates/z_main.html" />
         <option value="$PROJECT_DIR$/templates/personal.html" />
-        <option value="$PROJECT_DIR$/lostfound/settings.py" />
         <option value="$PROJECT_DIR$/templates/second.html" />
         <option value="$PROJECT_DIR$/templates/main.html" />
         <option value="$PROJECT_DIR$/static/js/jquery-3.3.1.js" />
@@ -151,19 +169,21 @@
         <option value="$PROJECT_DIR$/templates/complete_info.html" />
         <option value="$PROJECT_DIR$/lostfound/urls.py" />
         <option value="$PROJECT_DIR$/templates/admin.html" />
-        <option value="$PROJECT_DIR$/templates/profile.html" />
         <option value="$PROJECT_DIR$/model/models.py" />
-        <option value="$PROJECT_DIR$/templates/upload.html" />
         <option value="$PROJECT_DIR$/templates/detail.html" />
         <option value="$PROJECT_DIR$/templates/error.html" />
+        <option value="$PROJECT_DIR$/lostfound/settings.py" />
+        <option value="$PROJECT_DIR$/templates/upload.html" />
         <option value="$PROJECT_DIR$/model/views.py" />
+        <option value="$PROJECT_DIR$/templates/profile.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="952" />
-    <option name="width" value="977" />
-    <option name="height" value="1038" />
+    <option name="x" value="87" />
+    <option name="y" value="122" />
+    <option name="width" value="1585" />
+    <option name="height" value="705" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -178,11 +198,6 @@
             <path>
               <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
               <item name="lostfound" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
-              <item name="lostfound" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="lostfound" type="b2602c69:ProjectViewProjectNode" />
@@ -295,7 +310,8 @@
       <workItem from="1554941955935" duration="734000" />
       <workItem from="1554942929724" duration="3674000" />
       <workItem from="1554965484165" duration="9127000" />
-      <workItem from="1554985891175" duration="8165000" />
+      <workItem from="1554985891175" duration="8305000" />
+      <workItem from="1555031932755" duration="6192000" />
     </task>
     <task id="LOCAL-00001" summary="-表单的POST方法引起的csrf错误，通过注释setting中的#'django.middleware.csrf.CsrfViewMiddleware'解决（并没有，只是关闭了django对此的检查，需要后期改进；&#10;-对数据库模型进行了一定的修改；&#10;主要：&#10;-写了一个简单的用户登陆界面；&#10;-完成了简单的用户登陆与数据库的交互操作；">
       <created>1552487008941</created>
@@ -458,11 +474,18 @@
       <option name="project" value="LOCAL" />
       <updated>1554990531236</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="加了几个返回按钮和链接">
+      <created>1554994270506</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1554994270506</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="193789000" />
+    <option name="totallyTimeSpent" value="200121000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -477,13 +500,13 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17024128" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17292225" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.18130311" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49329758" visible="true" weight="0.28611898" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49329758" weight="0.34560907" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39943343" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.49597856" weight="0.3286119" />
@@ -598,7 +621,8 @@
     <MESSAGE value="1.将管理员的【管理功能】同【普通用户功能】分开,前者在admin.html页面&#10;2.为管理员添加了信息删除功能（面向所有信息）" />
     <MESSAGE value="常规性保存一下" />
     <MESSAGE value="增加物品审核未通过时的信息反馈功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="增加物品审核未通过时的信息反馈功能" />
+    <MESSAGE value="加了几个返回按钮和链接" />
+    <option name="LAST_COMMIT_MESSAGE" value="加了几个返回按钮和链接" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/lostfound$forms.coverage" NAME="forms Coverage Results" MODIFIED="1554816781390" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/model" />
@@ -698,16 +722,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lostfound/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="122" column="22" selection-start-line="122" selection-start-column="17" selection-end-line="122" selection-end-column="22" />
-          <folding>
-            <element signature="e#310#319#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/Lib/site-packages/django/forms/fields.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1422">
@@ -778,13 +792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/profile.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="247" column="76" selection-start-line="247" selection-start-column="67" selection-end-line="247" selection-end-column="76" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/model/tests.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -798,20 +805,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/main.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="112" column="45" lean-forward="true" selection-start-line="112" selection-start-column="45" selection-end-line="112" selection-end-column="108" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/upload.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="117" column="102" lean-forward="true" selection-start-line="117" selection-start-column="20" selection-end-line="117" selection-end-column="102" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/error.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
@@ -819,15 +812,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lostfound/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="122" column="2" selection-start-line="122" selection-start-column="2" selection-end-line="122" selection-end-column="2" />
+          <folding>
+            <element signature="e#310#319#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/model/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24">
-          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+        <state relative-caret-position="528">
+          <caret line="308" column="47" lean-forward="true" selection-start-line="308" selection-start-column="47" selection-end-line="308" selection-end-column="47" />
           <folding>
             <element signature="e#0#69#0" expanded="true" />
-            <element signature="e#150#245#0" />
-            <element signature="e#280#2394#0" />
+            <element signature="e#276#2390#0" />
+            <element signature="e#2444#5462#0" />
+            <element signature="e#5519#9100#0" />
+            <element signature="e#12744#12853#0" />
+            <element signature="e#12889#14255#0" />
+            <element signature="e#14300#15822#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/main.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="112" column="45" lean-forward="true" selection-start-line="112" selection-start-column="45" selection-end-line="112" selection-end-column="108" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/profile.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2822">
+          <caret line="325" selection-start-line="325" selection-end-line="325" />
+          <folding>
+            <element signature="n#div#1;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#2;n#div#0;n#form#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/upload.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-34">
+          <caret line="66" column="40" selection-start-line="66" selection-start-column="26" selection-end-line="66" selection-end-column="40" />
         </state>
       </provider>
     </entry>

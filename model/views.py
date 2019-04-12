@@ -253,7 +253,7 @@ def objShowinfo_view(request,object_id):
 # 个人中心
 def profile_view(request,nav_id):
 #-------------个人用户功能：信息完成与删除------------------
-
+    context = {}
     #处理复选框选中的物品
     if request.method == "POST":
         confirm_delete = request.POST.getlist("delete")
@@ -298,12 +298,15 @@ def profile_view(request,nav_id):
 
         elif len(confirm_phone)>0:
             changePhone(request) # 修改手机信息
+            context['changePhone_success']=True
 
         elif len(confirm_email)>0:
             changeEmail(request) # 修改邮箱信息
+            context['changeEmail_success'] = True
 
         elif len(confirm_pwd)>0:
             changePwd(request)   # 修改密码
+            context['changePwd_success'] = True
 
 
 
@@ -311,7 +314,6 @@ def profile_view(request,nav_id):
     # 1.通过request.session获得登陆用户
     # 2.显示用户得个人信息
     # 3.利用"二级页面"的逻辑，显示用户发表过的信息记录
-    context = {}
     try:
         sno_login = request.session["sno"]
     except KeyError:
@@ -428,7 +430,7 @@ def sort_view(request,sort_id):
     objs_found = []
     for item in sortobj_db:
         # step2
-        if item.object.state>0: # 筛选通过审核的
+        if item.object.state == 1: # 筛选通过审核且未完成的
             if item.object.tag == False:
                 objs_lost.append(item.object) # 将所有用户的物品记录放到objs_lost(寻物表)中
             else:# tag=True
