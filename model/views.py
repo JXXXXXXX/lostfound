@@ -428,6 +428,36 @@ def main_view(request):
 
 # 分类显示
 def sort_view(request,sort_id):
+    objnum_one_page = 6
+    # 初始化【寻物启事】和【失物招领】板块的显示页数
+    if 'page_lost_second' in request.session:
+        page_lost  = request.session['page_lost_second']
+    else:
+        page_lost  = 1
+
+    if 'page_found_second' in request.session:
+        page_found = request.session['page_found_second']
+    else:
+        page_found = 1
+
+    if request.POST:
+        lost_pervious = request.POST.getlist('lost_pervious')   # 寻物启事 上一页
+        lost_next = request.POST.getlist('lost_next')           # 寻物启事 下一页
+        found_pervious = request.POST.getlist('found_pervious') # 失物招领 上一页
+        found_next = request.POST.getlist('found_next')         # 失物招领 下一页
+        if len(lost_pervious)>0:
+            page_lost=page_lost-1
+            if page_lost<1:     # 页面越过下界的处理
+                page_lost=1
+        if len(lost_next)>0:
+            page_lost=page_lost+1
+        if len(found_pervious)>0:
+            page_found=page_lost-1
+            if page_found<1:    # 页面越过下界的处理
+                page_found=1
+        if len(found_next)>0:
+            page_found=page_lost+1
+
     # 1.根据传递的url sort/(sort_id：一位！字符！),选出所有的物品
     # 2.把通过审核的物品加入显示list
 
@@ -456,14 +486,31 @@ def sort_view(request,sort_id):
             else:# tag=True
                 objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
 
+    paginator_lost = Paginator(objs_lost,objnum_one_page)
+    paginator_found = Paginator(objs_found, objnum_one_page)
+
+
+    # 页数越过上界的处理
+    if page_lost>paginator_lost.num_pages:
+        page_lost=paginator_lost.num_pages
+    if page_found>paginator_found.num_pages:
+        page_found = paginator_found.num_pages
+
+    # 修改显示的页数
+    lost = paginator_lost.page(page_lost)
+    found = paginator_found.page(page_found)
+    # 修改控制页数的session
+    request.session['page_lost_second'] = page_lost
+    request.session['page_found_second'] = page_found
+
     if len(objs_lost) == 0:
         context["no_lost"] = True
     else:
-        context["objs_lost"] = objs_lost  # 将'记录'加入字典字典
+        context["objs_lost"] = lost  # 将'记录'加入字典字典
     if len(objs_found) == 0:
         context["no_found"] = True
     else:
-        context["objs_found"] = objs_found  # 将'记录'加入字典字典
+        context["objs_found"] = found  # 将'记录'加入字典字典
 
     # 用于导航栏显示用户
     if 'sno' in request.session:
