@@ -315,6 +315,14 @@ def profile_view(request,nav_id):
     # 1.通过request.session获得登陆用户
     # 2.显示用户得个人信息
     # 3.利用"二级页面"的逻辑，显示用户发表过的信息记录
+
+#----------分页显示设置---------------
+    num_one_page = 6
+    button_lost_p='lost_pervious'   # 寻物启事 上一页按钮名
+    button_lost_n = 'lost_next'     # 寻物启事 下一页按钮名
+    button_found_p='found_pervious' # 失物招领 上一页按钮名
+    button_found_n = 'found_next'   # 失物招领 下一页按钮名
+#-----------------------
     try:
         sno_login = request.session["sno"]
     except KeyError:
@@ -338,11 +346,15 @@ def profile_view(request,nav_id):
         if len(lostobjs) == 0:
             context["lost_no_history"] = True
         else:
-            context["lostobjs"] = lostobjs
+            # context["lostobjs"] = lostobjs
+            context["lostobjs"] = Pagination(request,lostobjs,num_one_page,
+                                             'page_lost_profile',button_lost_p,button_lost_n)
         if len(foundobjs) == 0:
             context["found_no_history"] = True
         else:
-            context["foundobjs"] = foundobjs  # 将'记录'加入字典字典
+            # context["foundobjs"] = foundobjs  # 将'记录'加入字典字典
+            context["foundobjs"] = Pagination(request,foundobjs,num_one_page,
+                                             'page_found_profile',button_found_p,button_found_n)
     except models.User.DoesNotExist:
             # 数据库没有该用户
         return HttpResponse("The user (id="+request.session["sno"]+") doesn't exist in database.")
