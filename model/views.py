@@ -164,11 +164,14 @@ def objShowinfo_view(request,object_id):
             if fb_type_id==0: # 如果反馈信息类型为【其他】则读取管理员输入的提示信息
                 obj_fbType.other_info = request.POST.get('other_info')
             obj_fbType.save()   # 保存【物品-反馈信息】对象
+            return redirect('../admin')
 
         elif len(command2)>0:
             p=models.Object.objects.get(id=str(object_id))
             p.state=1
             p.save()
+            return redirect('../admin')
+
 
     # -----------------主要部分---------------------
     # 1.获得【物品】和发布该信息的【用户】
