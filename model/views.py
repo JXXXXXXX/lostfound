@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render_to_response,HttpResponse,redirect
 from model import forms,models
-import datetime,xlrd
+import datetime,xlrd,re
 
 # 分类缩写与sort_id的对应关系字典
 sort={
@@ -441,7 +441,6 @@ def sort_view(request,sort_id):
             else:# tag=True
                 objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
 
-
     if len(objs_lost) == 0:
         context["no_lost"] = True
     else:
@@ -688,3 +687,87 @@ def Pagination(request,obj,k,page_index,button_p,button_n):
     request.session[page_index] = index
 
     return obj_return   # 返回分页后的数据集
+
+def searchByKeyword(input_objs, keyword):
+    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    if keyword.type==str:
+        for obj in input_objs:
+            searchByName = re.search(keyword,obj.name)
+            searchByDscp = re.search(keyword, obj.dscp)
+            searchByPosition = re.search(keyword, obj.position)
+            if(searchByName or searchByDscp or searchByPosition ):
+                objs.add(obj)
+    elif keyword.type==list:
+        for word in keyword:
+            for obj in input_objs:
+                searchByName = re.search(word, obj.name)
+                searchByDscp = re.search(word, obj.dscp)
+                searchByPosition = re.search(word, obj.position)
+                if (searchByName or searchByDscp or searchByPosition):
+                    objs.add(obj)
+    return objs
+
+def searchBySortID(input_objs,SortID):
+    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    if (SortID.type() == str):
+        try:
+            # 注意返回的sort_id 是个字符，不是数字
+            if (SortID=='0'):  # 总览：显示所有分类的object
+                sortobj_db=models.SortObject.objects.all().order_by('-object__id')
+            else:  # 选出特点类型的物品
+                sort_for_search = models.AllSort.objects.get(id=SortID)
+                sortobj_db = models.SortObject.objects.filter(sort=sort_for_search).order_by('-object__id')
+        except models.SortObject.DoesNotExist:
+            HttpResponse("models.SortObject.DoesNotExist")
+        except models.AllSort.DoesNotExist:
+            HttpResponse("models.AllSort.DoesNotExist")
+
+        for obj in input_objs:
+            for sortobj in sortobj_db:
+                if obj.id == sortobj.object.id:
+                    objs.add(obj)
+                    break
+
+    return objs
+
+def searchByTimeType(input_objs,timeType):
+    # 根据【提交时间类型】返回物品
+    # 所有 timeType=0
+    # 最近三天 timeType=1
+    # 最近两周 timeType=2
+    # 最近30天 timeType=3
+    # 更早 timeType=4
+    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    objs3 = set()   # 最近三天集合
+    objs14 = set()  # 最近两周集合
+    objs30 = set()  # 最近30天集合
+    objsGT30 = set() # 更早集合
+    nowtime = datetime.datetime.now()
+    # 要先获得物品的提交时间 userobject.time
+    for obj in input_objs:
+        try:
+            userobject = models.UserObject.objects.get(object=obj)
+            daysdelta = (nowtime-userobject.time).days # 计算记录与当前的天数差
+            if daysdelta>=0 and daysdelta<=3:
+                objs3.add(obj)
+            elif daysdelta>=0 and daysdelta<=14:
+                objs14.add(obj)
+            elif daysdelta>=0 and daysdelta<=30:
+                objs30.add(obj)
+            elif daysdelta>30:
+                objsGT30.add(obj)
+        except models.UserObject.DoesNotExist:
+            continue
+
+    if timeType==0:
+        objs.update(input_objs)
+    elif timeType==1:
+        objs=objs3
+    elif timeType == 2:
+        objs = objs14
+    elif timeType==3:
+        objs=objs30
+    elif timeType==4:
+        objs=objsGT30
+
+    return objs

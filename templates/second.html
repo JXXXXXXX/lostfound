@@ -68,11 +68,7 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>
+
                 <!--导航栏 登陆按钮-->
                 {% if user_sno %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -106,6 +102,26 @@
 		</div>
 		<div class="container " id="body" style="background: #F8F8FF;border-radius: 1em;box-shadow: #666 0px 0px 4px;min-height: 900px;" >
 			<h2>&nbsp;&nbsp;Lost&Found</h2>
+
+            <!--按时间过滤-->
+
+            <div class="form-group">
+                <select class="selectpicker show-tick"  data-live-search="true" data-size="5">
+                    <option>-按提交时间筛选-</option>
+                    <option>最近三天</option>
+                    <option>最近两周</option>
+                    <option>最近一个月</option>
+                    <option>更早</option>
+                </select>
+            </div>
+
+            <!--TODO(jinxin)搜索框美化一下-->
+            <form action="/search" method="get">
+                <input type="text" name="q">
+                <input type="submit" value="搜索">
+            </form>
+
+
 			<hr >
 			<div class="row">
 				<div class="col-md-2" >
