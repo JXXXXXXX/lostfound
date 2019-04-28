@@ -421,7 +421,7 @@ def sort_view(request,sort_id):
     objs_found = []
 
     objs_all = set()
-    objs_all.update(models.Object.objects.all().order_by('-id'))
+    objs_all.update(models.Object.objects.all().order_by('id'))
     objs_all = searchBySortID(objs_all,sort_id) # 筛选所有SortID=sort_id的物品
     for obj in objs_all:
         # 筛选state=1，并进行 失物和寻物的分类
@@ -549,9 +549,26 @@ def search_view(request):
         # 对物品（object）的名称、地点、描述进行查找
         keyword = str(request.GET['q'])     # 获得搜索关键词
         objs=set()  # 创建一个物品集合（set）,保证物品对象不重复
-        objs.update(models.Object.objects.filter(name__icontains=keyword))      # 对物品名称（name）搜索
-        objs.update(models.Object.objects.filter(dscp__icontains=keyword))      # 对物品描述（dscp）搜索
-        objs.update(models.Object.objects.filter(position__icontains=keyword))  # 对地点（position）搜索
+        objs.update(models.Object.objects.all().order_by('id'))
+
+        if re.search(' ',keyword):
+            keyword_set=set()
+            word=""
+            for i in range(len(keyword)):
+                if(keyword[i]!=' '):
+                    word=word+keyword[i]
+                else:
+                    # 读入空格
+                    if(word!=""):
+                        # 若word不为空,则加入keyword_list
+                        keyword_set.add(word)
+                        word="" # 重置word
+                if i+1>=len(keyword) and word!="":
+                    keyword_set.add(word)
+
+            objs = searchByKeyword(objs, keyword_set)
+        else:
+            objs=searchByKeyword(objs,keyword)
 
         # 用second.html显示搜索结果
         context={}
@@ -716,7 +733,7 @@ def searchByKeyword(input_objs, keyword):
             searchByPosition = re.search(keyword, obj.position)
             if(searchByName or searchByDscp or searchByPosition ):
                 objs.add(obj)
-    elif keyword.__class__==list:
+    elif keyword.__class__==set:
         for word in keyword:
             for obj in input_objs:
                 searchByName = re.search(word, obj.name)
@@ -737,10 +754,10 @@ def searchBySortID(input_objs,SortID):
         try:
             # 注意返回的sort_id 是个字符，不是数字
             if (SortID=='0'):  # 总览：显示所有分类的object
-                sortobj_db=models.SortObject.objects.all().order_by('-object__id')
+                sortobj_db=models.SortObject.objects.all().order_by('object__id')
             else:  # 选出特点类型的物品
                 sort_for_search = models.AllSort.objects.get(id=SortID)
-                sortobj_db = models.SortObject.objects.filter(sort=sort_for_search).order_by('-object__id')
+                sortobj_db = models.SortObject.objects.filter(sort=sort_for_search).order_by('object__id')
         except models.SortObject.DoesNotExist:
             HttpResponse("models.SortObject.DoesNotExist")
         except models.AllSort.DoesNotExist:
