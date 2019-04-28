@@ -417,29 +417,42 @@ def sort_view(request,sort_id):
 
     # step1
     context={}
-    try:
-        # 注意返回的sort_id 是个字符，不是数字
-        # print(sort_id.__class__)
-        if (sort_id=='0'):  # 总览：显示所有分类的object
-            sortobj_db = models.SortObject.objects.all()
-        else:  # 选出特点类型的物品
-            sort_for_search = models.AllSort.objects.get(id=sort_id)
-            sortobj_db = models.SortObject.objects.filter(sort=sort_for_search)
-    except models.SortObject.DoesNotExist:
-        context["no_history"] = True
-    except models.AllSort.DoesNotExist:
-        HttpResponse("models.AllSort.DoesNotExist")
-
     objs_lost = []
     objs_found = []
 
-    for item in sortobj_db:
-        # step2
-        if item.object.state == 1: # 筛选通过审核且未完成的
-            if item.object.tag == False:
-                objs_lost.append(item.object) # 将所有用户的物品记录放到objs_lost(寻物表)中
-            else:# tag=True
-                objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
+    objs_all = set()
+    objs_all.update(models.Object.objects.all().order_by('-id'))
+    objs_all = searchBySortID(objs_all,sort_id) # 筛选所有SortID=sort_id的物品
+    for obj in objs_all:
+        # 筛选state=1，并进行 失物和寻物的分类
+        if obj.state == 1:  # 筛选通过审核且未完成的
+            if obj.tag == False:
+                objs_lost.append(obj)  # 将所有用户的物品记录放到objs_lost(寻物表)中
+            else:  # tag=True
+                objs_found.append(obj)  # 将所有用户的物品记录放到objs_found(失物表)中
+
+
+    # try:
+    #     # 注意返回的sort_id 是个字符，不是数字
+    #     # print(sort_id.__class__)
+    #     if (sort_id=='0'):  # 总览：显示所有分类的object
+    #         sortobj_db = models.SortObject.objects.all()
+    #     else:  # 选出特点类型的物品
+    #         sort_for_search = models.AllSort.objects.get(id=sort_id)
+    #         sortobj_db = models.SortObject.objects.filter(sort=sort_for_search)
+    # except models.SortObject.DoesNotExist:
+    #     context["no_history"] = True
+    # except models.AllSort.DoesNotExist:
+    #     HttpResponse("models.AllSort.DoesNotExist")
+    #
+    #
+    # for item in sortobj_db:
+    #     # step2
+    #     if item.object.state == 1: # 筛选通过审核且未完成的
+    #         if item.object.tag == False:
+    #             objs_lost.append(item.object) # 将所有用户的物品记录放到objs_lost(寻物表)中
+    #         else:# tag=True
+    #             objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
 
     if len(objs_lost) == 0:
         context["no_lost"] = True
@@ -689,15 +702,21 @@ def Pagination(request,obj,k,page_index,button_p,button_n):
     return obj_return   # 返回分页后的数据集
 
 def searchByKeyword(input_objs, keyword):
+    '''
+    :param input_objs: 待检索的物品集合
+    :param keyword: 检索关键词
+    :return: 检索后的物品集合
+    '''
     objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
-    if keyword.type==str:
+    if keyword.__class__==str:
         for obj in input_objs:
+            # re.search(str1,str2)函数: 在str2中找是否含有str1
             searchByName = re.search(keyword,obj.name)
             searchByDscp = re.search(keyword, obj.dscp)
             searchByPosition = re.search(keyword, obj.position)
             if(searchByName or searchByDscp or searchByPosition ):
                 objs.add(obj)
-    elif keyword.type==list:
+    elif keyword.__class__==list:
         for word in keyword:
             for obj in input_objs:
                 searchByName = re.search(word, obj.name)
@@ -708,8 +727,13 @@ def searchByKeyword(input_objs, keyword):
     return objs
 
 def searchBySortID(input_objs,SortID):
+    '''
+    :param input_objs: 待过滤的物品集合
+    :param SortID: 过滤条件：物品分类号
+    :return: 过滤后的物品集合
+    '''
     objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
-    if (SortID.type() == str):
+    if (SortID.__class__ == str):
         try:
             # 注意返回的sort_id 是个字符，不是数字
             if (SortID=='0'):  # 总览：显示所有分类的object
@@ -731,31 +755,38 @@ def searchBySortID(input_objs,SortID):
     return objs
 
 def searchByTimeType(input_objs,timeType):
-    # 根据【提交时间类型】返回物品
-    # 所有 timeType=0
-    # 最近三天 timeType=1
-    # 最近两周 timeType=2
-    # 最近30天 timeType=3
-    # 更早 timeType=4
+    '''
+    根据【提交时间类型】返回物品
+    :param input_objs: 待过滤的物品集合
+    :param timeType:timeType=0:所有;timeType=1:最近三天 ;
+                    timeType=2:最近两周;timeType=3:最近30天;timeType=4:更早
+    :return: 过滤后的物品集合
+    '''
+
     objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
-    objs3 = set()   # 最近三天集合
-    objs14 = set()  # 最近两周集合
-    objs30 = set()  # 最近30天集合
-    objsGT30 = set() # 更早集合
+    objs3 = set()       # 最近三天集合
+    objs14 = set()      # 最近两周集合
+    objs30 = set()      # 最近30天集合
+    objsGT30 = set()    # 更早集合
+
     nowtime = datetime.datetime.now()
     # 要先获得物品的提交时间 userobject.time
     for obj in input_objs:
         try:
             userobject = models.UserObject.objects.get(object=obj)
+            userobject.time=userobject.time.replace(tzinfo=None) #!! 数据库中的时间是有时区（tzinfo）属性的（=UTC）
             daysdelta = (nowtime-userobject.time).days # 计算记录与当前的天数差
-            if daysdelta>=0 and daysdelta<=3:
-                objs3.add(obj)
-            elif daysdelta>=0 and daysdelta<=14:
-                objs14.add(obj)
-            elif daysdelta>=0 and daysdelta<=30:
-                objs30.add(obj)
-            elif daysdelta>30:
-                objsGT30.add(obj)
+
+            if daysdelta >= 0:
+                if daysdelta <= 3:
+                    objs3.add(obj)
+                elif daysdelta <= 14:
+                    objs14.add(obj)
+                elif daysdelta <= 30:
+                    objs30.add(obj)
+                else:  # >30
+                    objsGT30.add(obj)
+
         except models.UserObject.DoesNotExist:
             continue
 
