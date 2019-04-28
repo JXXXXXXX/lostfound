@@ -165,7 +165,8 @@
                         <nav aria-label="...">
                           <ul class="pager">
                             <li><button type="submit" name="found_pervious">上一页</button></li>
-                            <li><button type="submit" name="found_next">下一页</button></li>
+                            <p>第 {{ page_found }}/{{ page_found_all }} 页</p>
+                              <li><button type="submit" name="found_next">下一页</button></li>
                           </ul>
                         </nav>
                     </form>
@@ -193,7 +194,8 @@
                         <nav aria-label="...">
                           <ul class="pager">
                             <li><button type="submit" name="lost_pervious">上一页</button></li>
-                            <li><button type="submit" name="lost_next">下一页</button></li>
+                            <p>第 {{ page_lost }}/{{ page_lost_all }} 页</p>
+                              <li><button type="submit" name="lost_next">下一页</button></li>
                           </ul>
                         </nav>
                     </form>

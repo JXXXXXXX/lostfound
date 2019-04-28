@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render_to_response,HttpResponse,redirect
 from model import forms,models
-import datetime,xlrd,re
+import datetime,xlrd,re,math
 
 # 分类缩写与sort_id的对应关系字典
 sort={
@@ -375,13 +375,14 @@ def quit_view(request):
 
 # 主界面
 def main_view(request):
+    context = {}
+
     num_one_page = 6
     button_lost_p='lost_pervious'   # 寻物启事 上一页按钮名
     button_lost_n = 'lost_next'     # 寻物启事 下一页按钮名
     button_found_p='found_pervious' # 失物招领 上一页按钮名
     button_found_n = 'found_next'   # 失物招领 下一页按钮名
 
-    context={}
 
     try:
         lost = models.Object.objects.filter(tag=False,state=1)   # 通过审核的寻物启事
@@ -396,11 +397,18 @@ def main_view(request):
     context['found'] = Pagination(request,found,num_one_page,
                                      'page_found',button_found_p,button_found_n)  # 失物招领
 
+    # 页数显示设置
+    context['page_lost']=request.session['page_lost']
+    context['page_found']=request.session['page_found']
+    context['page_lost_all']=math.ceil(len(lost)/num_one_page)
+    context['page_found_all']=math.ceil(len(found)/num_one_page)
+
     if 'sno' in request.session:
         # 用户已登陆
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
+
     return render_to_response("main.html", context)
 
 # 分类显示
@@ -457,13 +465,20 @@ def sort_view(request,sort_id):
     if len(objs_lost) == 0:
         context["no_lost"] = True
     else:
-        context["objs_lost"] = Pagination(request,objs_lost,num_one_page,
-                                     'page_lost',button_lost_p,button_lost_n)  # 寻物启事
+        objs_lost = Pagination(request,objs_lost,num_one_page,
+                                     'page_second_lost',button_lost_p,button_lost_n)  # 寻物启事
     if len(objs_found) == 0:
         context["no_found"] = True
     else:
-        context["objs_found"] = Pagination(request,objs_found,num_one_page,
-                                     'page_found',button_found_p,button_found_n)  # 失物招领
+        objs_found = Pagination(request,objs_found,num_one_page,
+                                     'page_second_found',button_found_p,button_found_n)  # 失物招领
+    context['objs_lost']=objs_lost
+    context['objs_found'] = objs_found
+
+    context['page_lost']=request.session['page_second_lost']
+    context['page_found'] = request.session['page_second_found']
+    context['page_lost_all']=math.ceil(len(objs_lost)/num_one_page)
+    context['page_found_all']=math.ceil(len(objs_found)/num_one_page)
 
     # 用于导航栏显示用户
     if 'sno' in request.session:
@@ -579,10 +594,11 @@ def search_view(request):
         if 'sno' in request.session:
             context['user_sno']=request.session['sno']
         for obj in objs:
-            if obj.tag==False:
-                objs_lost.append(obj)
-            else:
-                objs_found.append(obj)
+            if obj.state>0:# 过滤"未审核""审核未通过"的物品
+                if obj.tag==False:
+                    objs_lost.append(obj)
+                else:
+                    objs_found.append(obj)
         if len(objs_found)==0:
             no_found=True
         if len(objs_lost)==0:
