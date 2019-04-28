@@ -68,11 +68,7 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>
+
                 <!--导航栏 登陆按钮-->
                 {% if user_sno %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -106,12 +102,32 @@
 		</div>
 		<div class="container " id="body" style="background: #F8F8FF;border-radius: 1em;box-shadow: #666 0px 0px 4px;min-height: 900px;" >
 			<h2>&nbsp;&nbsp;Lost&Found</h2>
+
+            <!--按时间过滤-->
+
+            <div class="form-group">
+                <select class="selectpicker show-tick"  data-live-search="true" data-size="5">
+                    <option>-按提交时间筛选-</option>
+                    <option>最近三天</option>
+                    <option>最近两周</option>
+                    <option>最近一个月</option>
+                    <option>更早</option>
+                </select>
+            </div>
+
+            <!--TODO(jinxin)搜索框美化一下-->
+            <form action="/search" method="get">
+                <input type="text" name="q">
+                <input type="submit" value="搜索">
+            </form>
+
+
 			<hr >
 			<div class="row">
 				<div class="col-md-2" >
 					
 					<ul id="left" class="nav nav-tabs nav-stacked ">
-						<li><a href="../sort/0"><span class="glyphicon glyphicon-th" aria-hidden="true"></span>&nbsp;&nbsp;总览</a></li>
+						<li><a href="../main"><span class="glyphicon glyphicon-th" aria-hidden="true"></span>&nbsp;&nbsp;总览</a></li>
 						<li><a href="../sort/1"><span class="glyphicon glyphicon-yen" aria-hidden="true"></span>&nbsp;&nbsp;证件现金</a></li>
 						<li><a href="../sort/2"><span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>&nbsp;&nbsp;书本文具</a></li>
 						<li><a href="../sort/3"><span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span>&nbsp;&nbsp;衣物配件</a></li>
@@ -119,7 +135,10 @@
 						<li><a href="../sort/5"><span class="glyphicon glyphicon-tent" aria-hidden="true"></span>&nbsp;&nbsp;生活用品</a></li>
 						<li><a href="../sort/6"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span>&nbsp;&nbsp;其他</a></li>
 					</ul>
-					
+
+                    <a href="../upload">
+                        <button type="button" class="btn btn-primary" style="margin:50px 40px;">信息上传</button>
+                    </a>
 				</div>
 				
 				
@@ -174,7 +193,8 @@
                         <nav aria-label="...">
                           <ul class="pager">
                             <li><button type="submit" name="found_pervious">上一页</button></li>
-                            <li><button type="submit" name="found_next">下一页</button></li>
+                            <p>第 {{ page_found }}/{{ page_found_all }} 页</p>
+                              <li><button type="submit" name="found_next">下一页</button></li>
                           </ul>
                         </nav>
                     </form>
@@ -217,7 +237,8 @@
                         <nav aria-label="...">
                           <ul class="pager">
                             <li><button type="submit" name="lost_pervious">上一页</button></li>
-                            <li><button type="submit" name="lost_next">下一页</button></li>
+                            <p>第 {{ page_lost }}/{{ page_lost_all }} 页</p>
+                              <li><button type="submit" name="lost_next">下一页</button></li>
                           </ul>
                         </nav>
                     </form>

@@ -1,7 +1,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render_to_response,HttpResponse,redirect
 from model import forms,models
-import datetime,xlrd
+import datetime,xlrd,re,math
 
 # 分类缩写与sort_id的对应关系字典
 sort={
@@ -375,13 +375,14 @@ def quit_view(request):
 
 # 主界面
 def main_view(request):
+    context = {}
+
     num_one_page = 6
     button_lost_p='lost_pervious'   # 寻物启事 上一页按钮名
     button_lost_n = 'lost_next'     # 寻物启事 下一页按钮名
     button_found_p='found_pervious' # 失物招领 上一页按钮名
     button_found_n = 'found_next'   # 失物招领 下一页按钮名
 
-    context={}
 
     try:
         lost = models.Object.objects.filter(tag=False,state=1)   # 通过审核的寻物启事
@@ -396,11 +397,18 @@ def main_view(request):
     context['found'] = Pagination(request,found,num_one_page,
                                      'page_found',button_found_p,button_found_n)  # 失物招领
 
+    # 页数显示设置
+    context['page_lost']=request.session['page_lost']
+    context['page_found']=request.session['page_found']
+    context['page_lost_all']=math.ceil(len(lost)/num_one_page)
+    context['page_found_all']=math.ceil(len(found)/num_one_page)
+
     if 'sno' in request.session:
         # 用户已登陆
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
+
     return render_to_response("main.html", context)
 
 # 分类显示
@@ -417,41 +425,60 @@ def sort_view(request,sort_id):
 
     # step1
     context={}
-    try:
-        # 注意返回的sort_id 是个字符，不是数字
-        # print(sort_id.__class__)
-        if (sort_id=='0'):  # 总览：显示所有分类的object
-            sortobj_db = models.SortObject.objects.all()
-        else:  # 选出特点类型的物品
-            sort_for_search = models.AllSort.objects.get(id=sort_id)
-            sortobj_db = models.SortObject.objects.filter(sort=sort_for_search)
-    except models.SortObject.DoesNotExist:
-        context["no_history"] = True
-    except models.AllSort.DoesNotExist:
-        HttpResponse("models.AllSort.DoesNotExist")
-
     objs_lost = []
     objs_found = []
 
-    for item in sortobj_db:
-        # step2
-        if item.object.state == 1: # 筛选通过审核且未完成的
-            if item.object.tag == False:
-                objs_lost.append(item.object) # 将所有用户的物品记录放到objs_lost(寻物表)中
-            else:# tag=True
-                objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
+    objs_all = set()
+    objs_all.update(models.Object.objects.all().order_by('id'))
+    objs_all = searchBySortID(objs_all,sort_id) # 筛选所有SortID=sort_id的物品
+    for obj in objs_all:
+        # 筛选state=1，并进行 失物和寻物的分类
+        if obj.state == 1:  # 筛选通过审核且未完成的
+            if obj.tag == False:
+                objs_lost.append(obj)  # 将所有用户的物品记录放到objs_lost(寻物表)中
+            else:  # tag=True
+                objs_found.append(obj)  # 将所有用户的物品记录放到objs_found(失物表)中
 
+
+    # try:
+    #     # 注意返回的sort_id 是个字符，不是数字
+    #     # print(sort_id.__class__)
+    #     if (sort_id=='0'):  # 总览：显示所有分类的object
+    #         sortobj_db = models.SortObject.objects.all()
+    #     else:  # 选出特点类型的物品
+    #         sort_for_search = models.AllSort.objects.get(id=sort_id)
+    #         sortobj_db = models.SortObject.objects.filter(sort=sort_for_search)
+    # except models.SortObject.DoesNotExist:
+    #     context["no_history"] = True
+    # except models.AllSort.DoesNotExist:
+    #     HttpResponse("models.AllSort.DoesNotExist")
+    #
+    #
+    # for item in sortobj_db:
+    #     # step2
+    #     if item.object.state == 1: # 筛选通过审核且未完成的
+    #         if item.object.tag == False:
+    #             objs_lost.append(item.object) # 将所有用户的物品记录放到objs_lost(寻物表)中
+    #         else:# tag=True
+    #             objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
 
     if len(objs_lost) == 0:
         context["no_lost"] = True
     else:
-        context["objs_lost"] = Pagination(request,objs_lost,num_one_page,
-                                     'page_lost',button_lost_p,button_lost_n)  # 寻物启事
+        objs_lost = Pagination(request,objs_lost,num_one_page,
+                                     'page_second_lost',button_lost_p,button_lost_n)  # 寻物启事
     if len(objs_found) == 0:
         context["no_found"] = True
     else:
-        context["objs_found"] = Pagination(request,objs_found,num_one_page,
-                                     'page_found',button_found_p,button_found_n)  # 失物招领
+        objs_found = Pagination(request,objs_found,num_one_page,
+                                     'page_second_found',button_found_p,button_found_n)  # 失物招领
+    context['objs_lost']=objs_lost
+    context['objs_found'] = objs_found
+
+    context['page_lost']=request.session['page_second_lost']
+    context['page_found'] = request.session['page_second_found']
+    context['page_lost_all']=math.ceil(len(objs_lost)/num_one_page)
+    context['page_found_all']=math.ceil(len(objs_found)/num_one_page)
 
     # 用于导航栏显示用户
     if 'sno' in request.session:
@@ -537,9 +564,26 @@ def search_view(request):
         # 对物品（object）的名称、地点、描述进行查找
         keyword = str(request.GET['q'])     # 获得搜索关键词
         objs=set()  # 创建一个物品集合（set）,保证物品对象不重复
-        objs.update(models.Object.objects.filter(name__icontains=keyword))      # 对物品名称（name）搜索
-        objs.update(models.Object.objects.filter(dscp__icontains=keyword))      # 对物品描述（dscp）搜索
-        objs.update(models.Object.objects.filter(position__icontains=keyword))  # 对地点（position）搜索
+        objs.update(models.Object.objects.all().order_by('id'))
+
+        if re.search(' ',keyword):
+            keyword_set=set()
+            word=""
+            for i in range(len(keyword)):
+                if(keyword[i]!=' '):
+                    word=word+keyword[i]
+                else:
+                    # 读入空格
+                    if(word!=""):
+                        # 若word不为空,则加入keyword_list
+                        keyword_set.add(word)
+                        word="" # 重置word
+                if i+1>=len(keyword) and word!="":
+                    keyword_set.add(word)
+
+            objs = searchByKeyword(objs, keyword_set)
+        else:
+            objs=searchByKeyword(objs,keyword)
 
         # 用second.html显示搜索结果
         context={}
@@ -550,10 +594,11 @@ def search_view(request):
         if 'sno' in request.session:
             context['user_sno']=request.session['sno']
         for obj in objs:
-            if obj.tag==False:
-                objs_lost.append(obj)
-            else:
-                objs_found.append(obj)
+            if obj.state>0:# 过滤"未审核""审核未通过"的物品
+                if obj.tag==False:
+                    objs_lost.append(obj)
+                else:
+                    objs_found.append(obj)
         if len(objs_found)==0:
             no_found=True
         if len(objs_lost)==0:
@@ -688,3 +733,105 @@ def Pagination(request,obj,k,page_index,button_p,button_n):
     request.session[page_index] = index
 
     return obj_return   # 返回分页后的数据集
+
+def searchByKeyword(input_objs, keyword):
+    '''
+    :param input_objs: 待检索的物品集合
+    :param keyword: 检索关键词
+    :return: 检索后的物品集合
+    '''
+    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    if keyword.__class__==str:
+        for obj in input_objs:
+            # re.search(str1,str2)函数: 在str2中找是否含有str1
+            searchByName = re.search(keyword,obj.name)
+            searchByDscp = re.search(keyword, obj.dscp)
+            searchByPosition = re.search(keyword, obj.position)
+            if(searchByName or searchByDscp or searchByPosition ):
+                objs.add(obj)
+    elif keyword.__class__==set:
+        for word in keyword:
+            for obj in input_objs:
+                searchByName = re.search(word, obj.name)
+                searchByDscp = re.search(word, obj.dscp)
+                searchByPosition = re.search(word, obj.position)
+                if (searchByName or searchByDscp or searchByPosition):
+                    objs.add(obj)
+    return objs
+
+def searchBySortID(input_objs,SortID):
+    '''
+    :param input_objs: 待过滤的物品集合
+    :param SortID: 过滤条件：物品分类号
+    :return: 过滤后的物品集合
+    '''
+    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    if (SortID.__class__ == str):
+        try:
+            # 注意返回的sort_id 是个字符，不是数字
+            if (SortID=='0'):  # 总览：显示所有分类的object
+                sortobj_db=models.SortObject.objects.all().order_by('object__id')
+            else:  # 选出特点类型的物品
+                sort_for_search = models.AllSort.objects.get(id=SortID)
+                sortobj_db = models.SortObject.objects.filter(sort=sort_for_search).order_by('object__id')
+        except models.SortObject.DoesNotExist:
+            HttpResponse("models.SortObject.DoesNotExist")
+        except models.AllSort.DoesNotExist:
+            HttpResponse("models.AllSort.DoesNotExist")
+
+        for obj in input_objs:
+            for sortobj in sortobj_db:
+                if obj.id == sortobj.object.id:
+                    objs.add(obj)
+                    break
+
+    return objs
+
+def searchByTimeType(input_objs,timeType):
+    '''
+    根据【提交时间类型】返回物品
+    :param input_objs: 待过滤的物品集合
+    :param timeType:timeType=0:所有;timeType=1:最近三天 ;
+                    timeType=2:最近两周;timeType=3:最近30天;timeType=4:更早
+    :return: 过滤后的物品集合
+    '''
+
+    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    objs3 = set()       # 最近三天集合
+    objs14 = set()      # 最近两周集合
+    objs30 = set()      # 最近30天集合
+    objsGT30 = set()    # 更早集合
+
+    nowtime = datetime.datetime.now()
+    # 要先获得物品的提交时间 userobject.time
+    for obj in input_objs:
+        try:
+            userobject = models.UserObject.objects.get(object=obj)
+            userobject.time=userobject.time.replace(tzinfo=None) #!! 数据库中的时间是有时区（tzinfo）属性的（=UTC）
+            daysdelta = (nowtime-userobject.time).days # 计算记录与当前的天数差
+
+            if daysdelta >= 0:
+                if daysdelta <= 3:
+                    objs3.add(obj)
+                elif daysdelta <= 14:
+                    objs14.add(obj)
+                elif daysdelta <= 30:
+                    objs30.add(obj)
+                else:  # >30
+                    objsGT30.add(obj)
+
+        except models.UserObject.DoesNotExist:
+            continue
+
+    if timeType==0:
+        objs.update(input_objs)
+    elif timeType==1:
+        objs=objs3
+    elif timeType == 2:
+        objs = objs14
+    elif timeType==3:
+        objs=objs30
+    elif timeType==4:
+        objs=objsGT30
+
+    return objs
