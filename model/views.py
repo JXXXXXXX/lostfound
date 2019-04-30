@@ -835,3 +835,12 @@ def searchByTimeType(input_objs,timeType):
         objs=objsGT30
 
     return objs
+
+def sortObjectByUploadtime(input_objs):
+    userobj = models.UserObject.objects.all().order_by("-time") # 时间倒序排序 从现在往前显示
+    output_objs = set()
+    for item in userobj:
+        for obj in input_objs:
+            if item.object==obj:
+                output_objs.add(obj)
+    return output_objs
