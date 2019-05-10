@@ -66,7 +66,7 @@ def login_view(request):
             user_login = models.User.objects.get(sno=request.session['sno'])
             context['user_sno'] = user_login.sno
             context['user_name'] = user_login.name
-            return render_to_response('main.html', context)
+            return redirect('/main')
         else:
             # 未登陆
             return render_to_response('log_in.html')
