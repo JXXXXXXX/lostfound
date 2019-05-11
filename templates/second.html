@@ -149,6 +149,33 @@
                     {% if no_found %}
                         <p>该分类下暂无物品</p>
                     {% else %}
+                                   <table class="table table-hover">
+                                        <thead>
+                                        <th>物品名称</th>
+                                        <th>拾获地点</th>
+                                        <th>拾获时间</th>
+                                        <th>物品状态</th>
+                                        <th>信息上传时间</th>
+                                        </thead>
+                                        <tbody>
+                                        {% for obj in objs_found %}
+                                            <tr>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.name}}</a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.position}}</a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.time|date:"Y-m-d"}}</a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">
+                                                 {% if obj.state == 2 %}
+                                                 【已认领】
+                                                 {% else %}
+                                                 【未认领】
+                                                 {% endif %}
+                                                 </a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.id|slice:"0:8"}}</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                     <!--原来的列表显示内容
                         <table class="table">
                             {% for obj in objs_found %}
                                 <tr><td>
@@ -160,6 +187,7 @@
                                 </td></tr>
                             {% endfor %}
                         </table>
+                     -->
                     {% endif %}
                     <form action="" method="POST">
                         <nav aria-label="...">
@@ -178,17 +206,32 @@
                     {% if no_lost %}
                         <p>该分类下暂无物品</p>
                     {% else %}
-                        <table class="table">
-                            {% for obj in objs_lost %}
-                                <tr><td>
-                                    <a href="{% url 'object' obj.id %}">【{{obj.name}}】【物品编号：{{obj.id}}】
-                                    {% ifequal obj.state 2 %}
-                                        【已完成】
-                                    {% endifequal %}
-                                    </a>
-                                </td></tr>
-                            {% endfor %}
-                        </table>
+                                   <table class="table table-hover">
+                                        <thead>
+                                        <th>物品名称</th>
+                                        <th>丢失地点</th>
+                                        <th>丢失时间</th>
+                                        <th>物品状态</th>
+                                        <th>信息上传时间</th>
+                                        </thead>
+                                        <tbody>
+                                        {% for obj in objs_lost %}
+                                            <tr>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.name}}</a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.position}}</a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.time|date:"Y-m-d"}}</a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">
+                                                 {% if obj.state == 2 %}
+                                                 【已找回】
+                                                 {% else %}
+                                                 【未找回】
+                                                 {% endif %}
+                                                 </a></td>
+                                                 <td><a href="{% url 'object' obj.id %}">{{obj.id|slice:"0:8"}}</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
                     {% endif %}
                     <form action="" method="POST">
                         <nav aria-label="...">
