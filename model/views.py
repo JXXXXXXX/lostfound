@@ -419,7 +419,6 @@ def sort_view(request,sort_id,Timetype=0):
     button_found_p = 'found_pervious'  # 失物招领 上一页按钮名
     button_found_n = 'found_next'  # 失物招领 下一页按钮名
 
-
     # 1.根据传递的url sort/(sort_id：一位！字符！),选出所有的物品
     # 2.把通过审核的物品加入显示list
 

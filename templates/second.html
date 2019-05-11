@@ -110,11 +110,12 @@
                 -按提交时间筛选-<span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                  <li><a href="#">所有时间</a></li>
-                <li><a href="#">最近三天</a></li>
-                <li><a href="#">最近两周</a></li>
-                <li><a href="#">最近一个月</a></li>
-                <li><a href="#">更早</a></li>
+                  {% comment %}todo 怎么保留sort/sort_id的sort_id{% endcomment %}
+                  <li><a href="/Timetype0">所有时间</a></li>
+                <li><a href="/Timetype1">最近三天</a></li>
+                <li><a href="/Timetype2">最近两周</a></li>
+                <li><a href="/Timetype3">最近一个月</a></li>
+                <li><a href="/Timetype4">更早</a></li>
               </ul>
             </div>
 
