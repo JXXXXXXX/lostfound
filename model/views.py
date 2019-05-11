@@ -412,7 +412,7 @@ def main_view(request):
     return render_to_response("main.html", context)
 
 # 分类显示
-def sort_view(request,sort_id,timeType=0):
+def sort_view(request,sort_id,Timetype=0):
     num_one_page = 6
     button_lost_p = 'lost_pervious'  # 寻物启事 上一页按钮名
     button_lost_n = 'lost_next'  # 寻物启事 下一页按钮名
@@ -429,7 +429,7 @@ def sort_view(request,sort_id,timeType=0):
     objs_found = []
 
     objs_all = set()
-    objs_all.update(models.Object.objects.all().order_by('id'))
+    objs_all.update(models.Object.objects.all())
     objs_all = searchBySortID(objs_all,sort_id) # 筛选所有SortID=sort_id的物品
     for obj in objs_all:
         # 筛选state=1，并进行 失物和寻物的分类
@@ -439,17 +439,17 @@ def sort_view(request,sort_id,timeType=0):
             else:  # tag=True
                 objs_found.append(obj)  # 将所有用户的物品记录放到objs_found(失物表)中
 
-    if timeType:
+    if Timetype:
         # 按时间类型进行筛选
         # 注意 这里输入的timeType是str类型的
-        int_timeType = int(timeType)
-        if int_timeType>=0 and int_timeType<=4:
-            objs_lost  = searchByTimeType(input_objs=objs_lost,timeType=int_timeType)
-            objs_found = searchByTimeType(input_objs=objs_found, timeType=int_timeType)
+        int_Timetype = int(Timetype)
+        if int_Timetype>=0 and int_Timetype<=4:
+            objs_lost  = searchByTimeType(input_objs=objs_lost,timeType=int_Timetype)
+            objs_found = searchByTimeType(input_objs=objs_found, timeType=int_Timetype)
 
     # 对返回数据按【上传时间】进行排序
-    objs_lost=sortObjectByUploadtime(input_objs=objs_lost)
-    objs_found = sortObjectByUploadtime(input_objs=objs_found)
+    objs_lost.sort(key=lambda obj:obj.id,reverse=True)
+    objs_found.sort(key=lambda obj: obj.id,reverse=True)
 
     if len(objs_lost) == 0:
         context["no_lost"] = True
@@ -825,13 +825,3 @@ def searchByTimeType(input_objs,timeType):
         objs=list(objsGT30)
 
     return objs
-
-def sortObjectByUploadtime(input_objs):
-    # todo:修改排序函数
-    userobj = models.UserObject.objects.all().order_by("-time") # 时间倒序排序 从现在往前显示
-    output_objs = set()
-    for item in userobj:
-        for obj in input_objs:
-            if item.object==obj:
-                output_objs.add(obj)
-    return list(output_objs)
