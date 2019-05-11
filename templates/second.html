@@ -3,10 +3,11 @@
 	<head>
 		<meta charset="utf-8">
 		<title>失物招领平台</title>
-		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
-		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
-		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+        {% load static %}
+		<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static "css/own.css" %}"/>
+		<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
 		
 		<style type="text/css">
 			 #left li{
@@ -62,7 +63,7 @@
 		</style>
 		
 	</head>
-	<body background="../static/images/background.jpg">
+	<body background="{% static "images/background.jpg" %}">
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="color: #005EED; opacity: 0.9;">
 			<div class="container">
 				<div class="navbar-header">
@@ -104,15 +105,17 @@
 			<h2>&nbsp;&nbsp;Lost&Found</h2>
 
             <!--按时间过滤-->
-
-            <div class="form-group">
-                <select class="selectpicker show-tick"  data-live-search="true" data-size="5">
-                    <option>-按提交时间筛选-</option>
-                    <option>最近三天</option>
-                    <option>最近两周</option>
-                    <option>最近一个月</option>
-                    <option>更早</option>
-                </select>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                -按提交时间筛选-<span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                  <li><a href="#">所有时间</a></li>
+                <li><a href="#">最近三天</a></li>
+                <li><a href="#">最近两周</a></li>
+                <li><a href="#">最近一个月</a></li>
+                <li><a href="#">更早</a></li>
+              </ul>
             </div>
 
             <!--TODO(jinxin)搜索框美化一下-->
@@ -160,17 +163,17 @@
                                         <tbody>
                                         {% for obj in objs_found %}
                                             <tr>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.name}}</a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.position}}</a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.time|date:"Y-m-d"}}</a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">
+                                                 <td><a href="object/{{ obj.id }}">{{obj.name}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">{{obj.position}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">{{obj.time|date:"Y-m-d"}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">
                                                  {% if obj.state == 2 %}
                                                  【已认领】
                                                  {% else %}
                                                  【未认领】
                                                  {% endif %}
                                                  </a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.id|slice:"0:8"}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">{{obj.id|slice:"0:8"}}</a></td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
@@ -179,7 +182,7 @@
                         <table class="table">
                             {% for obj in objs_found %}
                                 <tr><td>
-                                    <a href="{% url 'object' obj.id %}">【{{obj.name}}】【物品编号：{{obj.id}}】
+                                    <a href="object/{{ obj.id }}">【{{obj.name}}】【物品编号：{{obj.id}}】
                                     {% ifequal obj.state 2 %}
                                         【已完成】
                                     {% endifequal %}
@@ -217,17 +220,17 @@
                                         <tbody>
                                         {% for obj in objs_lost %}
                                             <tr>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.name}}</a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.position}}</a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.time|date:"Y-m-d"}}</a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">
+                                                 <td><a href="object/{{ obj.id }}">{{obj.name}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">{{obj.position}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">{{obj.time|date:"Y-m-d"}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">
                                                  {% if obj.state == 2 %}
                                                  【已找回】
                                                  {% else %}
                                                  【未找回】
                                                  {% endif %}
                                                  </a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">{{obj.id|slice:"0:8"}}</a></td>
+                                                 <td><a href="object/{{ obj.id }}">{{obj.id|slice:"0:8"}}</a></td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>

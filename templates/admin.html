@@ -117,12 +117,12 @@
                                         {% for obj in obj_review %}
                                             <tr>
                                                 <td>
-                                                    <a href="{% url 'object' obj.id %}">
+                                                    <a href="object/{{ obj.id }}">
                                                         {{ obj.name }}
                                                     </a>
                                                 </td>
                                                 <td>
-                                                    <a href="{% url 'object' obj.id %}">
+                                                    <a href="object/{{ obj.id }}">
                                                         {{ obj.id }}
                                                     </a>
                                                 </td>

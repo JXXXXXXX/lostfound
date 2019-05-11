@@ -412,7 +412,7 @@ def main_view(request):
     return render_to_response("main.html", context)
 
 # 分类显示
-def sort_view(request,sort_id):
+def sort_view(request,sort_id,timeType=0):
     num_one_page = 6
     button_lost_p = 'lost_pervious'  # 寻物启事 上一页按钮名
     button_lost_n = 'lost_next'  # 寻物启事 下一页按钮名
@@ -439,28 +439,17 @@ def sort_view(request,sort_id):
             else:  # tag=True
                 objs_found.append(obj)  # 将所有用户的物品记录放到objs_found(失物表)中
 
+    if timeType:
+        # 按时间类型进行筛选
+        # 注意 这里输入的timeType是str类型的
+        int_timeType = int(timeType)
+        if int_timeType>=0 and int_timeType<=4:
+            objs_lost  = searchByTimeType(input_objs=objs_lost,timeType=int_timeType)
+            objs_found = searchByTimeType(input_objs=objs_found, timeType=int_timeType)
 
-    # try:
-    #     # 注意返回的sort_id 是个字符，不是数字
-    #     # print(sort_id.__class__)
-    #     if (sort_id=='0'):  # 总览：显示所有分类的object
-    #         sortobj_db = models.SortObject.objects.all()
-    #     else:  # 选出特点类型的物品
-    #         sort_for_search = models.AllSort.objects.get(id=sort_id)
-    #         sortobj_db = models.SortObject.objects.filter(sort=sort_for_search)
-    # except models.SortObject.DoesNotExist:
-    #     context["no_history"] = True
-    # except models.AllSort.DoesNotExist:
-    #     HttpResponse("models.AllSort.DoesNotExist")
-    #
-    #
-    # for item in sortobj_db:
-    #     # step2
-    #     if item.object.state == 1: # 筛选通过审核且未完成的
-    #         if item.object.tag == False:
-    #             objs_lost.append(item.object) # 将所有用户的物品记录放到objs_lost(寻物表)中
-    #         else:# tag=True
-    #             objs_found.append(item.object) # 将所有用户的物品记录放到objs_found(失物表)中
+    # 对返回数据按【上传时间】进行排序
+    objs_lost=sortObjectByUploadtime(input_objs=objs_lost)
+    objs_found = sortObjectByUploadtime(input_objs=objs_found)
 
     if len(objs_lost) == 0:
         context["no_lost"] = True
@@ -749,7 +738,7 @@ def searchByKeyword(input_objs, keyword):
             searchByPosition = re.search(keyword, obj.position)
             if(searchByName or searchByDscp or searchByPosition ):
                 objs.add(obj)
-    elif keyword.__class__==set:
+    elif keyword.__class__==set or keyword.__class__==list:
         for word in keyword:
             for obj in input_objs:
                 searchByName = re.search(word, obj.name)
@@ -757,7 +746,8 @@ def searchByKeyword(input_objs, keyword):
                 searchByPosition = re.search(word, obj.position)
                 if (searchByName or searchByDscp or searchByPosition):
                     objs.add(obj)
-    return objs
+
+    return list(objs)
 
 def searchBySortID(input_objs,SortID):
     '''
@@ -785,7 +775,7 @@ def searchBySortID(input_objs,SortID):
                     objs.add(obj)
                     break
 
-    return objs
+    return list(objs)
 
 def searchByTimeType(input_objs,timeType):
     '''
@@ -796,7 +786,7 @@ def searchByTimeType(input_objs,timeType):
     :return: 过滤后的物品集合
     '''
 
-    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    objs = []
     objs3 = set()       # 最近三天集合
     objs14 = set()      # 最近两周集合
     objs30 = set()      # 最近30天集合
@@ -824,23 +814,24 @@ def searchByTimeType(input_objs,timeType):
             continue
 
     if timeType==0:
-        objs.update(input_objs)
+        objs=list(input_objs)
     elif timeType==1:
-        objs=objs3
+        objs=list(objs3)
     elif timeType == 2:
-        objs = objs14
+        objs=list(objs14)
     elif timeType==3:
-        objs=objs30
+        objs=list(objs30)
     elif timeType==4:
-        objs=objsGT30
+        objs=list(objsGT30)
 
     return objs
 
 def sortObjectByUploadtime(input_objs):
+    # todo:修改排序函数
     userobj = models.UserObject.objects.all().order_by("-time") # 时间倒序排序 从现在往前显示
     output_objs = set()
     for item in userobj:
         for obj in input_objs:
             if item.object==obj:
                 output_objs.add(obj)
-    return output_objs
+    return list(output_objs)
