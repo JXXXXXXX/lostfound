@@ -2,10 +2,11 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
-		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
-		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+        {% load static %}
+		<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static "css/own.css" %}"/>
+		<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
+		<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
 		<title>个人中心</title>
 		<style type="text/css">
 			body{
@@ -46,18 +47,18 @@
 		</style>
 		
 	</head>
-	<body background="../static/images/background.jpg">
+	<body background="{% static "images/background.jpg" %}">
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <!--导航栏-->
 			<div class="container">
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
+{% comment %}                <!--TODO(jinxin)搜索框美化一下-->
                 <form action="/search" method="get">
                     <input type="text" name="q">
                     <input type="submit" value="搜索">
-                </form>
+                </form>{% endcomment %}
                 <!-- 登陆按钮-->
                 {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
