@@ -105,19 +105,21 @@
 			<h2>&nbsp;&nbsp;Lost&Found</h2>
 
             <!--按时间过滤-->
+        <form action="" method="post">
             <div class="btn-group">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 -按提交时间筛选-<span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                  {% comment %}todo 怎么保留sort/sort_id的sort_id{% endcomment %}
-                  <li><a href="/Timetype0">所有时间</a></li>
-                <li><a href="/Timetype1">最近三天</a></li>
-                <li><a href="/Timetype2">最近两周</a></li>
-                <li><a href="/Timetype3">最近一个月</a></li>
-                <li><a href="/Timetype4">更早</a></li>
+                  <li><button type="submit" name="Timetype0">所有时间</button></li>
+                  <li><button type="submit" name="Timetype1">最近三天</button></li>
+                  <li><button type="submit" name="Timetype2">最近两周</button></li>
+                  <li><button type="submit" name="Timetype3">最近一个月</button></li>
+                  <li><button type="submit" name="Timetype4">更早</button></li>
               </ul>
             </div>
+        </form>
+
 
             <!--TODO(jinxin)搜索框美化一下-->
             <form action="/search" method="get">

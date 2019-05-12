@@ -412,7 +412,26 @@ def main_view(request):
     return render_to_response("main.html", context)
 
 # 分类显示
-def sort_view(request,sort_id,Timetype=0):
+def sort_view(request,sort_id):
+
+    Timetype=0
+    if request.POST:
+        confirm_tt0 = request.POST.getlist('Timetype0')
+        confirm_tt1=request.POST.getlist('Timetype1')
+        confirm_tt2 = request.POST.getlist('Timetype2')
+        confirm_tt3 = request.POST.getlist('Timetype3')
+        confirm_tt4 = request.POST.getlist('Timetype4')
+        if len(confirm_tt0)>0:
+            Timetype=0
+        elif len(confirm_tt1)>0:
+            Timetype=1
+        elif len(confirm_tt2)>0:
+            Timetype=2
+        elif len(confirm_tt3)>0:
+            Timetype=3
+        elif len(confirm_tt4)>0:
+            Timetype=4
+
     num_one_page = 6
     button_lost_p = 'lost_pervious'  # 寻物启事 上一页按钮名
     button_lost_n = 'lost_next'  # 寻物启事 下一页按钮名
@@ -440,11 +459,9 @@ def sort_view(request,sort_id,Timetype=0):
 
     if Timetype:
         # 按时间类型进行筛选
-        # 注意 这里输入的timeType是str类型的
-        int_Timetype = int(Timetype)
-        if int_Timetype>=0 and int_Timetype<=4:
-            objs_lost  = searchByTimeType(input_objs=objs_lost,timeType=int_Timetype)
-            objs_found = searchByTimeType(input_objs=objs_found, timeType=int_Timetype)
+        if Timetype>=0 and Timetype<=4:
+            objs_lost  = searchByTimeType(input_objs=objs_lost,timeType=Timetype)
+            objs_found = searchByTimeType(input_objs=objs_found, timeType=Timetype)
 
     # 对返回数据按【上传时间】进行排序
     objs_lost.sort(key=lambda obj:obj.id,reverse=True)
@@ -463,10 +480,11 @@ def sort_view(request,sort_id,Timetype=0):
     context['objs_lost']=objs_lost
     context['objs_found'] = objs_found
 
+    # todo: 在没有物品的时候，会显示：1/0页
     context['page_lost']=request.session['page_second_lost']
     context['page_found'] = request.session['page_second_found']
-    context['page_lost_all']=math.ceil(len(objs_lost)/num_one_page)
-    context['page_found_all']=math.ceil(len(objs_found)/num_one_page)
+    context['page_lost_all']=int((len(objs_lost)/num_one_page)+1)
+    context['page_found_all']=int((len(objs_found)/num_one_page)+1)
 
     # 用于导航栏显示用户
     if 'sno' in request.session:
