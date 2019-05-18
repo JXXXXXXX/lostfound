@@ -133,7 +133,16 @@ def upload_view(request):
                 return HttpResponse("Upload error.")
         else:
             #表单不合法
-            return HttpResponse("Input invalid.")
+            context={}
+            try:
+                sno_login = request.session["sno"]
+            except KeyError:
+                return render_to_response('upload.html', context)
+            # 已经登陆
+            context['user']=models.User.objects.get(sno=sno_login)
+            context['upload_fail'] = True
+            return render_to_response('upload.html',context)
+            #return HttpResponse("Input invalid.")
     else:
         # 处理非POST的情况,返回表单页面，用户输入数据
         context={}
