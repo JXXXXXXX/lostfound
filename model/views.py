@@ -691,9 +691,11 @@ def admin_view(request):
 # 管理中心-所有信息删除
 def delete_obj_admin(request):
     check_box_list = request.POST.getlist("object")
-    for obj_id in check_box_list:
-        models.Object.objects.get(id=str(obj_id)).delete()
-    return
+    try:
+        for obj_id in check_box_list:
+            models.Object.objects.get(id=str(obj_id)).delete()
+    except models.Object.DoesNotExist:
+        print("errror:管理员，信息删除错误。")
 
 # 分页函数
 def Pagination(request,obj,k,page_index,button_p,button_n):
