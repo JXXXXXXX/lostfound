@@ -665,28 +665,28 @@ def admin_view(request):
         if len(confirm_delete_obj)>0:
             # ---------功能：批量删除物品信息（面向所有物品）--------
             delete_obj_admin(request)
-    else:
-        if 'sno' in request.session:
-            user = models.User.objects.get(sno=request.session['sno'])
-            if user.tag == False:
-                return HttpResponse("你不是管理员.")
-            else:
-                context['user']=user
-                # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
-                obj_review = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
-                if len(obj_review) == 0:
-                    context["review_no_history"] = True
-                else:
-                    context["obj_review"] = obj_review
-                # 将所有信息，显示到网页上
-                obj_all = models.Object.objects.all()
-                if len(obj_all) == 0:
-                    context["no_obj"] = True
-                else:
-                    context["obj_all"] = obj_all
-                return render_to_response("admin.html",context)
+    if 'sno' in request.session:
+        user = models.User.objects.get(sno=request.session['sno'])
+        if user.tag == False:
+            return HttpResponse("你不是管理员.")
         else:
-            return redirect('../login')
+            context['user'] = user
+            # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
+            obj_review = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
+            if len(obj_review) == 0:
+                context["review_no_history"] = True
+            else:
+                context["obj_review"] = obj_review
+            # 将所有信息，显示到网页上
+            obj_all = models.Object.objects.all()
+            if len(obj_all) == 0:
+                context["no_obj"] = True
+            else:
+                context["obj_all"] = obj_all
+            return render_to_response("admin.html", context)
+    else:
+        return redirect('../login')
+
 
 # 管理中心-所有信息删除
 def delete_obj_admin(request):
