@@ -179,6 +179,8 @@
                                         <th>物品名称</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
+                                        <th>删除</th>
+                                        <th>完成</th>
                                         </thead>
                                         <tbody>
                                         {% for obj in lostobjs %}
@@ -186,6 +188,7 @@
                                                 <td><input type="checkbox" name="object" value={{ obj.id }}></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
+
                                                 {% if obj.state == 0%}<td>未审核</td>
                                                 {% elif obj.state == 1%}<td>未完成</td>
                                                 {% elif obj.state == 2%}<td>已完成</td>
@@ -202,11 +205,12 @@
                                             <li><button type="submit" name="lost_next">下一页</button></li>
                                         </ul>
                                     </nav>
-
+                                    <!--
                                     <div style="margin:180px auto 0 auto;width: 160px;">
                                         <input class="btn btn-default" type="submit" name="delete" value="删除"/>
                                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#myModal">完成</button>
                                     </div>
+                                    -->
                                     <!--上面要加上type="button" 不然对话框只是一闪而过 -->
                                 {% endif %}
                                 <!--
@@ -232,6 +236,8 @@
                                         <th>物品名称</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
+                                        <th>删除</th>
+                                        <th>完成</th>
                                         </thead>
                                         <tbody>
                                         {% for obj in foundobjs %}
@@ -244,6 +250,13 @@
                                                 {% elif obj.state == 2%}<td>已完成</td>
                                                 {% else %}<td>未通过审核</td>
                                                 {% endif %}
+                                                <td><button type="submit" class="btn btn-default btn-xs" name="button_delete" value="{{ obj.id }}">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                </button></td>
+                                                <td><button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#myModal" name="button_finish" onclick="Values('{{ obj.id }}')">
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                                </button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
@@ -255,11 +268,12 @@
                                             <li><button type="submit" name="found_next">下一页</button></li>
                                         </ul>
                                     </nav>
-
+                                    <!--
                                     <div style="margin:180px auto 0 auto;width: 160px;">
                                         <input class="btn btn-default" type="submit" name="delete" value="删除"/>
                                         <button class="btn btn-default " type="button" data-toggle="modal" data-target="#myModal">完成</button>
                                     </div>
+                                    -->
                                     <!--上面要加上type="button" 不然对话框只是一闪而过 -->
                                 {% endif %}
                                 <!--
@@ -272,7 +286,7 @@
 
                         </div>
 
-                        <!-- 模态框（Modal） -->
+                        <!-- 模态框（Modal） 用于完成交互-->
 
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                              aria-hidden="true">
@@ -285,7 +299,9 @@
                                         <h4 class="modal-title" id="myModalLabel">请输入对方学号</h4>
                                     </div>
                                     <div class="modal-body">
-                                        学号<input type="text" name="finish_id" value=""/>
+                                        学号<input type="text" name="finish_id" value="" />
+                                        <!--设置隐藏属性进行参数传递 -->
+                                        <input type="hidden" id="finish_obj_id" name="finish_obj_id" value="" />
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -294,7 +310,12 @@
                                 </div><!-- /.modal-content -->
                             </div><!-- /.modal -->
                         </div>
-
+                        <script type="text/javascript">
+                        $("#myModal").model("hide");
+                        function Values(obj_id){
+                            $("#finish_obj_id").val(obj_id);
+                        }
+                        </script>
                         <!--修改密码部分-->
                         <!--Modal(id:change_pwd_Modal)：确认初始密码-->
                         <div class="modal fade" id="change_pwd_Modal" tabindex="-1" role="dialog" aria-labelledby="change_pwd_ModalLabel"

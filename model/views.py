@@ -275,9 +275,11 @@ def profile_view(request,nav_id):
     context = {}
     context["show"]="info" # 默认显示个人信息页面
     #处理复选框选中的物品
+    print(request.POST)
     if request.method == "POST":
-        confirm_delete = request.POST.getlist("delete")
-        confirm_finish = request.POST.getlist("finish")
+        confirm_delete = request.POST.getlist("button_delete")
+        confirm_finish_id = request.POST.getlist("finish_id")
+        confirm_finish_obj_id = request.POST.getlist("finish_obj_id")
         confirm_phone = request.POST.getlist("phone")
         confirm_email = request.POST.getlist("email")
         confirm_pwd = request.POST.getlist("pwd")
@@ -286,39 +288,37 @@ def profile_view(request,nav_id):
         confirm_found_p = request.POST.getlist(button_found_p)
         confirm_found_n = request.POST.getlist(button_found_n)
         #哪一个模态框按钮按下,这里的完成是模态对话框中的完成
+        print(confirm_finish_id)
         if len(confirm_delete)>0:
-            check_box_list = request.POST.getlist("object")
-            for obj_id in check_box_list:
-                models.Object.objects.get(id=str(obj_id)).delete()
+            models.Object.objects.get(id=str(confirm_delete[0])).delete()
+            #check_box_list = request.POST.getlist("object")
+            #for obj_id in check_box_list:
+            #    models.Object.objects.get(id=str(obj_id)).delete()
 
-        elif len(confirm_finish)>0:
+        elif len(confirm_finish_id)>0:
             #修改taken表和object表
-            another_id = request.POST.get("finish_id")
-            check_box_list = request.POST.getlist("object")
-            print(check_box_list)
-            for obj_id in check_box_list:
+            p=models.Object.objects.get(id=str(confirm_finish_obj_id[0]))
+            if p.state == 0 or p.state == -1:
+                pass
+            else:
                 #更改物品状态
-                p=models.Object.objects.get(id=str(obj_id))
-                if p.state == 0 or p.state == -1:
-                    continue
                 p.state=2
                 p.save()
-                #创建Taken表记录
                 try:
                     takenrecord = models.TakenRecord()
                     user1 = models.User.objects.get(sno=request.session["sno"])
-                    user2 = models.User.objects.get(sno=another_id)
-                    obj = models.Object.objects.get(id=obj_id)
+                    user2 = models.User.objects.get(sno=confirm_finish_id[0])
+                    obj = models.Object.objects.get(id=confirm_finish_obj_id[0])
                     takenrecord.user1 = user1
                     takenrecord.user2 = user2
                     takenrecord.object = obj
-                    if obj.tag:#招领物品
-                        takenrecord.tag = False #用户2来认领
+                    if obj.tag:  # 招领物品
+                        takenrecord.tag = False  # 用户2来认领
                     else:
-                        takenrecord.tag = True #用户2提供失物
+                        takenrecord.tag = True  # 用户2提供失物
                     takenrecord.save()
                 except models.User.DoesNotExist:
-                    return HttpResponse("The user (id="+another_id+") doesn't exist in database.")
+                    return HttpResponse("The user (id=" + confirm_finish_id[0] + ") doesn't exist in database.")
 
         elif len(confirm_phone)>0:
             changePhone(request) # 修改手机信息
