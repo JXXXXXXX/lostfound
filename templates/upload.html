@@ -68,7 +68,13 @@
                     {% if upload_success %}
                         <!--todo(jinxin)这里显示成功的提示信息后，下面的按钮会被挤出板块，加长一下-->
                     <div class="alert alert-success">上传信息成功!</div>
+
                     {% endif %}
+                    {% if upload_fail %}
+                    <div class="alert alert-warning">请填写完整!</div>
+                    {% endif %}
+
+
                     <form enctype="multipart/form-data" action="upload" method="POST">
                     <!--上传信息类型选择-->
                     <div class="piece" >
