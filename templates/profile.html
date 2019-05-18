@@ -90,9 +90,12 @@
 		</div>	
 		
 		<div class="container" style="background-color: #F8F8FF;min-height: 500px; border-radius: 7px">
+            {% if user.tag %}
+                <a href="../admin" style="font-weight: bolder;float: right;margin: 20px;">进入管理中心 <span class="badge badge-danger">{{ num_state0 }}</span><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+            {% endif %}
             <div class="row">
                 <div class="col-md-12">
-                    <div class="row clearfix" style="margin-top: 50px;">
+                    <div class="row clearfix" style="">
 			        	<div class="col-md-12 ">
 					        <ul class="nav nav-tabs">
 						        <li class="active"><a href="#">个人信息</a></li>
@@ -101,11 +104,6 @@
 					        </ul>
 				        </div>
 			        </div>
-
-                    {% if user.tag %}
-                        {# TODO(jinxin)：把这个放到合适的位置 #}
-                        <a href="../admin">进入管理中心 <span class="badge badge-danger">{{ num_state0 }}</span></a>
-                    {% endif %}
 
                     <form action="" method="POST" enctype="multipart/form-data">
 
