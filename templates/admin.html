@@ -2,11 +2,10 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-        {% load static %}
-		<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}"/>
-		<link rel="stylesheet" type="text/css" href="{% static "css/own.css" %}"/>
-		<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
-		<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
+		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
+		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 		<title>管理中心</title>
 		<style type="text/css">
 			body{
@@ -47,18 +46,13 @@
 		</style>
 
 	</head>
-	<body background="{% static "images/background.jpg" %}">
+	<body background="../static/images/background.jpg">
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <!--导航栏-->
 			<div class="container">
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>
                 <!-- 登陆按钮-->
                 {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -90,9 +84,12 @@
 		</div>
 
 		<div class="container" style="background-color: #F8F8FF;min-height: 500px; border-radius: 7px">
+            <div style="font-weight: bolder;float:right;margin: 20px;">
+                <a href="../profile/0"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>返回个人中心</a>
+            </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="row clearfix" style="margin-top: 50px;">
+                    <div class="row clearfix" style="margin-top: 0px;">
 			        	<div class="col-md-12 ">
 					        <ul class="nav nav-tabs">
                                 <li class="active"><a href="#">审核信息</a></li>
@@ -102,8 +99,6 @@
 				        </div>
 			        </div>
 
-                    <!--TODO(jinxin)：把这个放到合适的位置-->
-                    <a href="../profile/0">返回个人中心</a>
 
                     <form action="" method="POST" enctype="multipart/form-data">
 
@@ -136,13 +131,11 @@
 
                             <!-- 用户管理 -->
                             <div class="list" style="display: none;">
-                                <div class="data">
-                                    <label for="input_user" style="float: left;padding-right: 4px;">批量上传学生信息</label>
-                                    <input type="file" id="input_user" name="file" value="file"/>
+                                <div class="data" style="">
+                                    <label for="input_user" style="float: left;padding-right: 4px;display: inline">批量上传学生信息</label>
+                                    <input style="display: inline" type="file" id="input_user" name="file" value="file"/>
+                                    <button type="submit" name="upload_user" class="btn btn-default" style="display: inline;">上传</button>
                                 </div>
-
-                                <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
-                                <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
                             </div>
 
                             <!-- 信息管理（对信息的批量删除） -->
@@ -152,37 +145,21 @@
                                 {% else %}
                                     <table class="table table-hover">
                                         <thead>
-                                        <th>&nbsp;</th>
-                                        <th>物品编号</th>
+                                        <th><input type="checkbox" id="select_all"><span id="cktext">全选</span></th>
                                         <th>物品名称</th>
-                                        <th>用户1</th>
-                                        <th>用户2</th>
-                                        <th>状态</th>
+                                        <th>物品编号</th>
+                                        <th>审核状态</th>
                                         </thead>
                                         <tbody>
                                         {% for obj in obj_all %}
                                             <tr>
                                                 <td><input type="checkbox" name="object" value={{ obj.id }}></td>
-                                                <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
-
-                                                {% if obj.state == 2 %}
-                                                    {% for item in record %}
-                                                        {% if item.object.id == obj.id%}
-                                                            {% comment %}如果在record里有obj，则显示用户1和用户2{% endcomment %}
-                                                            <td>{{ item.user1.name }}({{ item.user1.sno }})</td>
-                                                            <td>{{ item.user2.name }}({{ item.user2.sno }})</td>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% else %}
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                {% endif %}
-
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
                                                 {% if obj.state == 0%}<td>未审核</td>
                                                 {% elif obj.state == 1%}<td>未完成</td>
-                                                {% elif obj.state == 2%}<td>完成</td>
-                                                {% else %}<td>未通过</td>
+                                                {% elif obj.state == 2%}<td>已完成</td>
+                                                {% else %}<td>未通过审核</td>
                                                 {% endif %}
                                             </tr>
                                         {% endfor %}
@@ -217,6 +194,25 @@
  					}
  				});
  			});
+ 			window.onload=function() {
+                var checkboxs=document.getElementsByName("object");
+                var select_all=document.getElementById("select_all");
+                select_all.onclick=function() {
+                    if(this.checked==true){
+                        for(var i=0;i<checkboxs.length;i++){
+                            checkboxs[i].checked=true;
+                        }
+                        document.getElementById("cktext").innerHTML="取消"
+                    }
+                    else {
+                        for(var i=0;i<checkboxs.length;i++){
+                            checkboxs[i].checked=false;
+                        }
+                        document.getElementById("cktext").innerHTML="全选"
+                    }
+                }
+            }
+
 		</script>
 
 

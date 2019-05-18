@@ -101,32 +101,36 @@
 				<p style="color: #FFFFFF;">欢迎</p>
 			</div>	
 		</div>
-		<div class="container " id="body" style="background: #F8F8FF;border-radius: 1em;box-shadow: #666 0px 0px 4px;min-height: 900px;" >
-			<h2>&nbsp;&nbsp;Lost&Found</h2>
+		<div class="container " id="body" style="background: #F8F8FF;border-radius: 1em;box-shadow: #666 0px 0px 4px;height:1150px;" >
 
+			<span style="font-size: 40px;margin-top: 10px;display: inline;">&nbsp;&nbsp;Lost&Found</span>
+            <div class="col-md-3" style="float: right;margin-top: 15px">
+                    <form action="/search" method="get">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search for...">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit" value="搜索">搜索</button>
+                    </span>
+                    </div><!-- /input-group -->
+                    </form>
+            </div><!-- /.col-lg-6 -->
             <!--按时间过滤-->
-        <form action="" method="post">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                -按提交时间筛选-<span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu">
-                  <li><button type="submit" name="Timetype0">所有时间</button></li>
-                  <li><button type="submit" name="Timetype1">最近三天</button></li>
-                  <li><button type="submit" name="Timetype2">最近两周</button></li>
-                  <li><button type="submit" name="Timetype3">最近一个月</button></li>
-                  <li><button type="submit" name="Timetype4">更早</button></li>
-              </ul>
-            </div>
-        </form>
-
-
-            <!--TODO(jinxin)搜索框美化一下-->
-            <form action="/search" method="get">
-                <input type="text" name="q">
-                <input type="submit" value="搜索">
+        <div style="display:inline;float: right;margin-top: 15px">
+             <form action="" method="post">
+                 <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        &nbsp;&nbsp;按提交时间筛选<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button class="btn btn-default btn-block" type="submit" name="Timetype0">所有时间</button></li>
+                        <li><button class="btn btn-default btn-block" type="submit" name="Timetype1">最近三天</button></li>
+                        <li><button class="btn btn-default btn-block" type="submit" name="Timetype2">最近两周</button></li>
+                        <li><button class="btn btn-default btn-block" type="submit" name="Timetype3">最近一个月</button></li>
+                        <li><button class="btn btn-default btn-block" type="submit" name="Timetype4">更早</button></li>
+                    </ul>
+                 </div>
             </form>
-
+        </div>
 
 			<hr >
 			<div class="row">
@@ -149,7 +153,7 @@
 				
 				
 				<!--TODO(jinxin)这里的【结果显示】也用表格美化一下-->
-				<div class="col-md-10">
+				<div class="col-md-10" style="height: 480px;">
 					<h3 style="margin-top: 8px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;失物招领</h3>
 					<hr style="margin: 10px;">
                     {% if no_found %}
@@ -181,32 +185,29 @@
                                         {% endfor %}
                                         </tbody>
                                     </table>
-                     <!--原来的列表显示内容
-                        <table class="table">
-                            {% for obj in objs_found %}
-                                <tr><td>
-                                    <a href="{% url 'object' obj.id %}">【{{obj.name}}】【物品编号：{{obj.id}}】
-                                    {% ifequal obj.state 2 %}
-                                        【已完成】
-                                    {% endifequal %}
-                                    </a>
-                                </td></tr>
-                            {% endfor %}
-                        </table>
-                     -->
+
+                            <div style="position: absolute;bottom: 0;padding-left: 30%">
+                                <form action="" method="post">
+                                    <button type="submit" class="btn btn-default btn-sm" name="found_pervious">上一页
+                                    </button>
+                                    <span>第 {{ page_found }}/{{ page_found_all }} 页</span>
+                                    <button type="submit" class="btn btn-default btn-sm" name="found_next">下一页</button>
+                                </form>
+                            </div>
+
                     {% endif %}
-                    <form action="" method="POST">
-                        <nav aria-label="...">
-                          <ul class="pager">
-                            <li><button type="submit" name="found_pervious">上一页</button></li>
-                            <p>第 {{ page_found }}/{{ page_found_all }} 页</p>
-                              <li><button type="submit" name="found_next">下一页</button></li>
-                          </ul>
-                        </nav>
-                    </form>
+{#                    <form action="" method="POST">#}
+{#                        <nav aria-label="...">#}
+{#                          <ul class="pager">#}
+{#                            <li><button type="submit" name="found_pervious">上一页</button></li>#}
+{#                            <p>第 {{ page_found }}/{{ page_found_all }} 页</p>#}
+{#                              <li><button type="submit" name="found_next">下一页</button></li>#}
+{#                          </ul>#}
+{#                        </nav>#}
+{#                    </form>#}
 				</div>
 				
-				<div class="col-md-10 col-md-offset-2" style="padding-bottom: 100px;">
+				<div class="col-md-10 col-md-offset-2" style="padding-bottom: 100px;height: 480px">
 					<h3 style="margin-top:50px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;寻物启事</h3>
 					<hr style="margin: 10px;">
                     {% if no_lost %}
@@ -238,16 +239,24 @@
                                         {% endfor %}
                                         </tbody>
                                     </table>
+                        <div style="position: absolute;bottom: 0;padding-left: 30%">
+                            <form action="" method="post">
+                                <button type="submit" class="btn btn-default btn-sm" name="lost_pervious">上一页
+                                </button>
+                                <span>第 {{ page_lost }}/{{ page_lost_all }} 页</span>
+                                <button type="submit" class="btn btn-default btn-sm" name="lost_next">下一页</button>
+                            </form>
+                        </div>
                     {% endif %}
-                    <form action="" method="POST">
-                        <nav aria-label="...">
-                          <ul class="pager">
-                            <li><button type="submit" name="lost_pervious">上一页</button></li>
-                            <p>第 {{ page_lost }}/{{ page_lost_all }} 页</p>
-                              <li><button type="submit" name="lost_next">下一页</button></li>
-                          </ul>
-                        </nav>
-                    </form>
+{#                    <form action="" method="POST">#}
+{#                        <nav aria-label="...">#}
+{#                          <ul class="pager">#}
+{#                            <li><button type="submit" name="lost_pervious">上一页</button></li>#}
+{#                            <p>第 {{ page_lost }}/{{ page_lost_all }} 页</p>#}
+{#                              <li><button type="submit" name="lost_next">下一页</button></li>#}
+{#                          </ul>#}
+{#                        </nav>#}
+{#                    </form>#}
 
 				</div>
 				

@@ -18,6 +18,12 @@
 			p{
 				margin-bottom: 0;
 			}
+            #welcome{
+                display: inline;
+            }
+            nav a{
+                color: #FFFFFF;
+            }
 		</style>
 	</head>
 	<body background="{% static "images/background.jpg" %}">
@@ -26,11 +32,6 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>
                 <!--导航栏 登陆按钮-->
                 {% if user_login %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -56,12 +57,7 @@
 			</div>
 		</nav>
 
-		<div class="container" style="width: 700px;height:600px;background: #F8F8FF;margin:150px auto;border-radius: 7px">
-            <!--todo(jinxin)返回，放到合适的位置-->
-            <a href="javascript:history.go(-1)">
-                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>返回
-            </a>
-
+		<div class="container" style="width: 700px;min-height:600px;background: #F8F8FF;margin:150px auto;border-radius: 7px">
 			<h2 style="text-align: center;">
                 物品详情
                 {% if obj.tag %}
@@ -82,7 +78,6 @@
                     {% else %}
                         <img src="../static/images/demo/noimage.jpg" alt="图片" class="thumbnail" style="width: 250px;height: 250px;">
                     {% endif %}
-
 				</div>
 				<div class="col-md-6">
 					<div id="name">
@@ -138,13 +133,28 @@
             {# 按钮功能 #}
             {% if user_login %}
                 {% if user_login.tag == 1 and obj.state == 0 %}
-                    <form action="" method="POST" >
+
                         <div style="text-align: center;margin-top: 10px">
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#feedback_Modal">未通过</button>
-                            <!--<input class="btn btn-primary" type="submit" name='delete' value="未通过" style="margin: 10px;"/>-->
-                            <input class="btn btn-primary" type="submit" name='pass' value="通过" style="margin: 10px;"/>
+                            <table style="margin-left: 30%">
+                                <tr>
+                                    <td>
+                                         <form action="" method="POST" >
+                                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#feedback_Modal" style="width: 66px;">未通过</button>
+                                        <!--<input class="btn btn-primary" type="submit" name='delete' value="未通过" style="margin: 10px;"/>-->
+                                        <input class="btn btn-default" type="submit" name='pass' value="通过" style="margin: 10px;width: 66px;"/>
+                                         </form>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default " style="width: 66px;">
+                                            <a href="javascript:history.go(-1)" style="color: #000000;text-decoration: none;">返回</a>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+
                         </div>
 
+                    <form action="" method="post">
                         <div class="modal fade" id="feedback_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                                  aria-hidden="true">
                             <div class="modal-dialog">
@@ -176,7 +186,15 @@
                         </div>
 
                     </form>
+                {% else %}
+                    <button class="btn btn-default " style="width: 66px;margin-left: 40%;margin-top: 20px;margin-bottom: 20px">
+                        <a href="javascript:history.go(-1)" style="color: #000000;text-decoration: none;">返回</a>
+                    </button>
                 {% endif %}
+            {% else %}
+                <button class="btn btn-default " style="width: 66px;margin-left: 40%;margin-top: 20px;margin-bottom: 20px">
+                    <a href="javascript:history.go(-1)" style="color: #000000;text-decoration: none;">返回</a>
+                </button>
             {% endif %}
 
 

@@ -2,11 +2,10 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-        {% load static %}
-		<link rel="stylesheet" type="text/css" href="{% static "css/bootstrap.min.css" %}"/>
-		<link rel="stylesheet" type="text/css" href="{% static "css/own.css" %}"/>
-		<script type="text/javascript" src="{% static "js/jquery-3.3.1.js" %}"></script>
-		<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+		<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../static/css/own.css"/>
+		<script type="text/javascript" src="../static/js/jquery-3.3.1.js"></script>
+		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 		<title>信息发布页面</title>
 		<style type="text/css">
 			.piece input{
@@ -21,19 +20,20 @@
 			body{
                 font-family: "Microsoft YaHei UI";
 			}
+            #welcome{
+                display: inline;
+            }
+            nav a{
+                color: #FFFFFF;
+            }
 		</style>
 	</head>
-	<body background="{% static "images/background.jpg" %}">
+	<body background="../static/images/background.jpg">
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="color: #005EED; opacity: 0.9;">
 			<div class="container">
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>
                 <!--导航栏 登陆按钮-->
                 {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -57,7 +57,7 @@
                 {% endif %}
 			</div>
 		</nav>
-		<div class="container" style="width: 500px;height: 650px;background: #F8F8FF;margin:150px auto;border-radius: 7px">
+		<div class="container" style="width: 500px;min-height: 600px;background: #F8F8FF;margin:150px auto;border-radius: 7px">
 
 			<h3 align="center">发布信息</h3>
 			<hr >
@@ -66,15 +66,8 @@
                 {% if user %}
                     {# 用户已登陆 #}
                     {% if upload_success %}
-                        <!--todo(jinxin)这里显示成功的提示信息后，下面的按钮会被挤出板块，加长一下-->
                     <div class="alert alert-success">上传信息成功!</div>
-
                     {% endif %}
-                    {% if upload_fail %}
-                    <div class="alert alert-warning">请填写完整!</div>
-                    {% endif %}
-
-
                     <form enctype="multipart/form-data" action="upload" method="POST">
                     <!--上传信息类型选择-->
                     <div class="piece" >
@@ -122,9 +115,10 @@
                         <input type="file" id="iImg" accept="image/*" value="" name="img"/>
                     </div>
 
-                        <!--todo(jinxin)下面两个按钮的位置修改一下-->
-                    <a href="../main"><button type="button" class="btn btn-default">返回首页</button></a>
-                    <button type="submit" class="btn btn-default" style="display: block;margin: 0 auto;">提交</button>
+                    <div style="text-align: center;margin-bottom: 20px">
+                        <a href="../main"><button type="button" class="btn btn-default" style="display: inline">返回首页</button></a>
+                        <button type="submit" class="btn btn-default" style="display: inline;width: 80px;">提交</button>
+                    </div>
 
 
                     </form>
