@@ -53,11 +53,6 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>
                 <!-- 登陆按钮-->
                 {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -89,9 +84,12 @@
 		</div>	
 		
 		<div class="container" style="background-color: #F8F8FF;min-height: 500px; border-radius: 7px">
+            {% if user.tag %}
+                <a href="../admin" style="font-weight: bolder;float: right;margin: 20px;">进入管理中心<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a>
+            {% endif %}
             <div class="row">
                 <div class="col-md-12">
-                    <div class="row clearfix" style="margin-top: 50px;">
+                    <div class="row clearfix" style="">
 			        	<div class="col-md-12 ">
 					        <ul class="nav nav-tabs">
 						        <li class="active"><a href="#">个人信息</a></li>
@@ -101,21 +99,21 @@
 				        </div>
 			        </div>
 
-                    {% if user.tag %}
-                        {# TODO(jinxin)：把这个放到合适的位置 #}
-                        <a href="../admin">进入管理中心</a>
-                    {% endif %}
+
 
                     <form action="" method="POST" enctype="multipart/form-data">
 
                         <div class="content">
                             <!--个人信息-->
-                            <!--TODO(jinxin)这个表格 第一列和第二列相距太远了 调整一下-->
                             <div class="list">
                                 <table class="table">
                                     <tr>
                                         <td>姓名：</td>
                                         <td>{{ user.name }}</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
+                                        <td>&nbsp;</td>
                                     </tr>
                                     <tr>
                                         <td>学号：</td>
