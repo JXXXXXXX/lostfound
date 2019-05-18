@@ -98,9 +98,21 @@
                     <div class="row clearfix" style="">
 			        	<div class="col-md-12 ">
 					        <ul class="nav nav-tabs">
-						        <li class="active"><a href="#">个人信息</a></li>
-						        <li><a href="#">我的寻物启事</a></li>
-					        	<li><a href="#">我的失物招领</a></li>
+                                {% if show == "info" %}
+                                    <li class="active"><a href="#">个人信息</a></li>
+						            <li><a href="#">我的寻物启事</a></li>
+					        	    <li><a href="#">我的失物招领</a></li>
+                                {% endif %}
+                                {% if show == "lost" %}
+                                    <li><a href="#">个人信息</a></li>
+						            <li class="active"><a href="#">我的寻物启事</a></li>
+					        	    <li><a href="#">我的失物招领</a></li>
+                                {% endif %}
+                                {% if show == "found" %}
+                                    <li><a href="#">个人信息</a></li>
+						            <li><a href="#">我的寻物启事</a></li>
+					        	    <li class="active"><a href="#">我的失物招领</a></li>
+                                {% endif %}
 					        </ul>
 				        </div>
 			        </div>
@@ -110,7 +122,12 @@
                         <div class="content">
                             <!--个人信息-->
                             <!--TODO(jinxin)这个表格 第一列和第二列相距太远了 调整一下-->
+                        {% if show == "info" %}
                             <div class="list">
+                        {% else %}
+                            <div class="list" style="display: none">
+                        {% endif %}
+
                                 <table class="table">
                                     <tr>
                                         <td>姓名：</td>
@@ -147,7 +164,11 @@
                                 </table>
                             </div>
                             <!--寻物启事-->
-                            <div class="list" style="display: none;">
+                        {% if show == "lost" %}
+                            <div class="list">
+                        {% else %}
+                            <div class="list" style="display: none">
+                        {% endif %}
                                 {% if lost_no_history %}
                                     {# 用户没有失物历史记录 #}
                                     <p>您还没有发布过任何寻物启事。</p>
@@ -196,7 +217,11 @@
                                 -->
                             </div>
                             <!--失物招领-->
-                            <div class="list" style="display: none;">
+                        {% if show == "found" %}
+                            <div class="list">
+                        {% else %}
+                            <div class="list" style="display: none">
+                        {% endif %}
                                 {% if found_no_history %}
                                     {# 用户没有失物招领记录 #}
                                     <p>您还没有发布过任何失物招领。</p>

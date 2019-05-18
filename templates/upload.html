@@ -67,6 +67,10 @@
                     {# 用户已登陆 #}
                     {% if upload_success %}
                     <div class="alert alert-success">上传信息成功!</div>
+
+                    {% endif %}
+                    {% if upload_fail %}
+                    <div class="alert alert-warning">请填写完整!</div>
                     {% endif %}
                     <form enctype="multipart/form-data" action="upload" method="POST">
                     <!--上传信息类型选择-->

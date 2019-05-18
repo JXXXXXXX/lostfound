@@ -265,8 +265,15 @@ def objShowinfo_view(request,object_id):
 
 # 个人中心
 def profile_view(request,nav_id):
+#----------分页显示设置---------------
+    num_one_page = 6
+    button_lost_p='lost_pervious'   # 寻物启事 上一页按钮名
+    button_lost_n = 'lost_next'     # 寻物启事 下一页按钮名
+    button_found_p='found_pervious' # 失物招领 上一页按钮名
+    button_found_n = 'found_next'   # 失物招领 下一页按钮名
 #-------------个人用户功能：信息完成与删除------------------
     context = {}
+    context["show"]="info" # 默认显示个人信息页面
     #处理复选框选中的物品
     if request.method == "POST":
         confirm_delete = request.POST.getlist("delete")
@@ -274,6 +281,10 @@ def profile_view(request,nav_id):
         confirm_phone = request.POST.getlist("phone")
         confirm_email = request.POST.getlist("email")
         confirm_pwd = request.POST.getlist("pwd")
+        confirm_lost_p = request.POST.getlist(button_lost_p)
+        confirm_lost_n = request.POST.getlist(button_lost_n)
+        confirm_found_p = request.POST.getlist(button_found_p)
+        confirm_found_n = request.POST.getlist(button_found_n)
         #哪一个模态框按钮按下,这里的完成是模态对话框中的完成
         if len(confirm_delete)>0:
             check_box_list = request.POST.getlist("object")
@@ -321,20 +332,18 @@ def profile_view(request,nav_id):
             changePwd(request)   # 修改密码
             context['changePwd_success'] = True
 
-
+        elif len(confirm_lost_p)>0 or len(confirm_lost_n):
+            # 如果是lost页按下，则显示lost页
+            context["show"] ="lost"
+        elif len(confirm_found_p) > 0 or len(confirm_found_n):
+            # 如果是found页按下，则显示found页
+            context["show"] ="found"
 
 #------------个人用户功能：个人信息、失物招领、寻物启事的信息显示-----------
     # 1.通过request.session获得登陆用户
     # 2.显示用户得个人信息
     # 3.利用"二级页面"的逻辑，显示用户发表过的信息记录
 
-#----------分页显示设置---------------
-    num_one_page = 6
-    button_lost_p='lost_pervious'   # 寻物启事 上一页按钮名
-    button_lost_n = 'lost_next'     # 寻物启事 下一页按钮名
-    button_found_p='found_pervious' # 失物招领 上一页按钮名
-    button_found_n = 'found_next'   # 失物招领 下一页按钮名
-#-----------------------
     try:
         sno_login = request.session["sno"]
     except KeyError:
