@@ -385,12 +385,17 @@ def main_view(request):
 
 
     try:
-        lost = models.Object.objects.filter(tag=False,state=1)   # 通过审核的寻物启事
-        found = models.Object.objects.filter(tag=True,state=1)   # 通过审核的失物招领
-
+        lost_db = models.Object.objects.filter(tag=False,state=1)   # 通过审核的寻物启事
+        found_db = models.Object.objects.filter(tag=True,state=1)   # 通过审核的失物招领
     except models.Object.DoesNotExist:
         return HttpResponse("DoesNotExist Error")
 
+    lost=list(lost_db)
+    found=list(found_db)
+
+    # 物品按时间倒序显示（最近时间优先
+    lost.sort(key=lambda obj: obj.id, reverse=True)
+    found.sort(key=lambda obj: obj.id, reverse=True)
 
     context['lost'] = Pagination(request,lost,num_one_page,
                                      'page_lost',button_lost_p,button_lost_n)  # 寻物启事
@@ -400,8 +405,8 @@ def main_view(request):
     # 页数显示设置
     context['page_lost']=request.session['page_lost']
     context['page_found']=request.session['page_found']
-    context['page_lost_all']=math.ceil(len(lost)/num_one_page)
-    context['page_found_all']=math.ceil(len(found)/num_one_page)
+    context['page_lost_all']=int((len(lost)/num_one_page)+1)
+    context['page_found_all']=int((len(found)/num_one_page)+1)
 
     if 'sno' in request.session:
         # 用户已登陆
@@ -432,7 +437,7 @@ def sort_view(request,sort_id):
         elif len(confirm_tt4)>0:
             Timetype=4
 
-    num_one_page = 6
+    num_one_page = 6 # 一页显示的物品数量
     button_lost_p = 'lost_pervious'  # 寻物启事 上一页按钮名
     button_lost_n = 'lost_next'  # 寻物启事 下一页按钮名
     button_found_p = 'found_pervious'  # 失物招领 上一页按钮名
@@ -673,6 +678,8 @@ def admin_view(request):
             context['user'] = user
             # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
             obj_review = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
+            obj_review.sort(key=lambda obj: obj.id, reverse=True)
+
             if len(obj_review) == 0:
                 context["review_no_history"] = True
             else:
