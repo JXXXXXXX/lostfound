@@ -349,12 +349,14 @@ def profile_view(request,nav_id):
         userobject_db = models.UserObject.objects.filter(user=user_login)
         lostobjs = []
         foundobjs = []
-        for item in userobject_db:
+        for item in userobject_db:# 将所有用户的物品记录放到objs中
             if item.object.tag==False:
                 lostobjs.append(item.object)
             elif item.object.tag==True:
                 foundobjs.append(item.object)
-            # 将所有用户的物品记录放到objs中
+        lostobjs.sort(key=lambda obj: obj.id, reverse=True)
+        foundobjs.sort(key=lambda obj: obj.id, reverse=True)
+
         if len(lostobjs) == 0:
             context["lost_no_history"] = True
         else:
