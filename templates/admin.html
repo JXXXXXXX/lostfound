@@ -95,7 +95,14 @@
                     <div class="row clearfix" style="margin-top: 50px;">
 			        	<div class="col-md-12 ">
 					        <ul class="nav nav-tabs">
-                                <li class="active"><a href="#">审核信息</a></li>
+                                <li class="active">
+                                    <a href="#">
+                                        信息审核
+                                        {% if num_state0 %}
+                                            <span class="badge">{{ num_state0 }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
                                 <li><a href="#">用户管理</a></li>
                                 <li><a href="#">信息管理</a></li>
 					        </ul>

@@ -104,7 +104,7 @@
 
                     {% if user.tag %}
                         {# TODO(jinxin)：把这个放到合适的位置 #}
-                        <a href="../admin">进入管理中心</a>
+                        <a href="../admin">进入管理中心 <span class="badge badge-danger">{{ num_state0 }}</span></a>
                     {% endif %}
 
                     <form action="" method="POST" enctype="multipart/form-data">
