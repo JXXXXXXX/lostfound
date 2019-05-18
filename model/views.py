@@ -345,16 +345,23 @@ def profile_view(request,nav_id):
         # step1
         user_login = models.User.objects.get(sno=sno_login)
         context["user"] = user_login  # 将'用户'加入字典中
+        if user_login.tag:
+            # 如果为管理员，计算未审核的信息数
+            num_state0 = len(models.Object.objects.filter(state=0))
+            context["num_state0"]=num_state0
+
         # step2
         userobject_db = models.UserObject.objects.filter(user=user_login)
         lostobjs = []
         foundobjs = []
-        for item in userobject_db:
+        for item in userobject_db:# 将所有用户的物品记录放到objs中
             if item.object.tag==False:
                 lostobjs.append(item.object)
             elif item.object.tag==True:
                 foundobjs.append(item.object)
-            # 将所有用户的物品记录放到objs中
+        lostobjs.sort(key=lambda obj: obj.id, reverse=True)
+        foundobjs.sort(key=lambda obj: obj.id, reverse=True)
+
         if len(lostobjs) == 0:
             context["lost_no_history"] = True
         else:
@@ -422,6 +429,12 @@ def main_view(request):
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
+
+        if user_login.tag:
+            # 如果为管理员，计算未审核的信息数
+            num_state0 = len(models.Object.objects.filter(state=0))
+            context["num_state0"] = num_state0
+
 
     return render_to_response("main.html", context)
 
@@ -684,6 +697,9 @@ def admin_view(request):
         if user.tag == False:
             return HttpResponse("你不是管理员.")
         else:
+            num_state0 = len(models.Object.objects.filter(state=0))
+            context["num_state0"] = num_state0
+
             context['user'] = user
             # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
             obj_review_db = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0

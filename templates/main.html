@@ -76,7 +76,7 @@
                             <div id="welcome" style="position:relative;float: bottom;top: 5px">
                             {# 点击此处可以进入用户个人中心 #}
                             你好,
-                            {{ user_name }}({{ user_sno }})
+                            {{ user_name }} {% if num_state0 %}<span class="badge">{{ num_state0 }}</span>{% endif %}
                             </div>
                         </a>
 
