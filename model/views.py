@@ -677,7 +677,8 @@ def admin_view(request):
         else:
             context['user'] = user
             # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
-            obj_review = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
+            obj_review_db = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
+            obj_review=list(obj_review_db)
             obj_review.sort(key=lambda obj: obj.id, reverse=True)
 
             if len(obj_review) == 0:
@@ -685,7 +686,14 @@ def admin_view(request):
             else:
                 context["obj_review"] = obj_review
             # 将所有信息，显示到网页上
-            obj_all = models.Object.objects.all()
+            obj_all = models.Object.objects.all().order_by('-id')
+
+            # 添加认领记录
+            record_db = models.TakenRecord.objects.all();
+
+            if len(record_db)>0:
+                context["record"]=record_db
+
             if len(obj_all) == 0:
                 context["no_obj"] = True
             else:

@@ -153,20 +153,36 @@
                                     <table class="table table-hover">
                                         <thead>
                                         <th>&nbsp;</th>
-                                        <th>物品名称</th>
                                         <th>物品编号</th>
-                                        <th>审核状态</th>
+                                        <th>物品名称</th>
+                                        <th>用户1</th>
+                                        <th>用户2</th>
+                                        <th>状态</th>
                                         </thead>
                                         <tbody>
                                         {% for obj in obj_all %}
                                             <tr>
                                                 <td><input type="checkbox" name="object" value={{ obj.id }}></td>
-                                                <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
+                                                <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
+
+                                                {% if obj.state == 2 %}
+                                                    {% for item in record %}
+                                                        {% if item.object.id == obj.id%}
+                                                            {% comment %}如果在record里有obj，则显示用户1和用户2{% endcomment %}
+                                                            <td>{{ item.user1.name }}({{ item.user1.sno }})</td>
+                                                            <td>{{ item.user2.name }}({{ item.user2.sno }})</td>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                {% endif %}
+
                                                 {% if obj.state == 0%}<td>未审核</td>
                                                 {% elif obj.state == 1%}<td>未完成</td>
-                                                {% elif obj.state == 2%}<td>已完成</td>
-                                                {% else %}<td>未通过审核</td>
+                                                {% elif obj.state == 2%}<td>完成</td>
+                                                {% else %}<td>未通过</td>
                                                 {% endif %}
                                             </tr>
                                         {% endfor %}
