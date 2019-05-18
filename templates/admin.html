@@ -145,7 +145,7 @@
                                 {% else %}
                                     <table class="table table-hover">
                                         <thead>
-                                        <th>&nbsp;</th>
+                                        <th><input type="checkbox" id="select_all"><span id="cktext">全选</span></th>
                                         <th>物品名称</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
@@ -194,6 +194,25 @@
  					}
  				});
  			});
+ 			window.onload=function() {
+                var checkboxs=document.getElementsByName("object");
+                var select_all=document.getElementById("select_all");
+                select_all.onclick=function() {
+                    if(this.checked==true){
+                        for(var i=0;i<checkboxs.length;i++){
+                            checkboxs[i].checked=true;
+                        }
+                        document.getElementById("cktext").innerHTML="取消"
+                    }
+                    else {
+                        for(var i=0;i<checkboxs.length;i++){
+                            checkboxs[i].checked=false;
+                        }
+                        document.getElementById("cktext").innerHTML="全选"
+                    }
+                }
+            }
+
 		</script>
 
 
