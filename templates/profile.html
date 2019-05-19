@@ -175,7 +175,6 @@
                                 {% else %}
                                     <table class="table table-hover">
                                         <thead>
-                                        <th>&nbsp;</th>
                                         <th>物品名称</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
@@ -185,7 +184,6 @@
                                         <tbody>
                                         {% for obj in lostobjs %}
                                             <tr>
-                                                <td><input type="checkbox" name="object" value={{ obj.id }}></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
 
@@ -194,6 +192,13 @@
                                                 {% elif obj.state == 2%}<td>已完成</td>
                                                 {% else %}<td>未通过审核</td>
                                                 {% endif %}
+                                                <td><button type="submit" class="btn btn-default btn-xs" name="button_delete" value="{{ obj.id }}">
+                                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                                </button></td>
+                                                <td><button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#myModal" name="button_finish" onclick="Values('{{ obj.id }}')">
+                                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                                </button>
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                         </tbody>
@@ -232,7 +237,6 @@
                                 {% else %}
                                     <table class="table table-hover">
                                         <thead>
-                                        <th>&nbsp;</th>
                                         <th>物品名称</th>
                                         <th>物品编号</th>
                                         <th>审核状态</th>
@@ -242,7 +246,6 @@
                                         <tbody>
                                         {% for obj in foundobjs %}
                                             <tr>
-                                                <td><input type="checkbox" name="object" value={{ obj.id }}></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
                                                 {% if obj.state == 0%}<td>未审核</td>
