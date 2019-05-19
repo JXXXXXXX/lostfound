@@ -85,13 +85,11 @@
 		</div>
 
 		<div class="container" style="background-color: #F8F8FF;min-height: 500px; border-radius: 7px">
-            <div style="font-weight: bolder;float:right;margin: 20px;">
-                <a href="../profile/0"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>返回个人中心</a>
-            </div>
             <div class="row">
+
                 <div class="col-md-12">
                     <div class="row clearfix" style="margin-top: 0px;">
-                        <div class="col-md-12 ">
+                        <div class="col-md-10 "><!--nav-tabs-->
 					        <ul class="nav nav-tabs">
                             {% if show == "review" %}
                                 <li class="active">
@@ -131,8 +129,11 @@
                             {% endif %}
 					        </ul>
 				        </div>
-
-
+                        <div class="col-md-2 "><!--返回个人中心-->
+                            <div style="font-weight: bolder;float:right;margin: 20px;">
+                                <a href="../profile/0"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>返回个人中心</a>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="content">
