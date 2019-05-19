@@ -15,6 +15,19 @@ sort={
     'zjxj':1,
 }
 
+# 404
+def page_not_found(request):
+    '''404页面处理'''
+    response = render_to_response('404.html')
+    response.status_code = 404
+    return response
+
+# 500
+def server_error(request):
+    '''500页面处理'''
+    response = render_to_response('500.html')
+    response.status_code = 500
+    return response
 
 # 登陆页面（新）
 def login_view(request):
@@ -134,13 +147,13 @@ def upload_view(request):
                 return render_to_response('upload.html',context)
             except models.User.DoesNotExist:
                 # 用户不存在
-                return HttpResponse("User dont exist.")
+                server_error(request)
             except models.AllSort.DoesNotExist:
                 # 分类不存在
-                return HttpResponse("Sort dont exist.")
+                server_error(request)
             except models.Object.DoesNotExist:
                 # 物品信息没有存入数据库
-                return HttpResponse("Upload error.")
+                server_error(request)
         else:
             #表单不合法
             context={}
@@ -209,7 +222,7 @@ def objShowinfo_view(request,object_id):
     obj_db = models.Object.objects.filter(id=object_id)
     #使用get如果味查询到会抛出异常，filter会返回空的[]
     if(len(obj_db)==0):
-        return HttpResponse("this page does not exist!")
+        page_not_found(request)
     obj = obj_db[0]
     #列表中的第一个对象
     userobj_db = models.UserObject.objects.get(object=obj.id)   # 上传的物品
@@ -240,7 +253,7 @@ def objShowinfo_view(request,object_id):
         sort = sortobj_db.sort
         context['sort'] = sort.name
     except models.SortObject.DoesNotExist:
-        HttpResponse("models.SortObject.DoesNotExist")
+        server_error(request)
     # step2
     show_obj=False  # 物品信息显示标记 初始False
     show_user=False # 用户信息显示标记 初始False
@@ -351,7 +364,7 @@ def profile_view(request,nav_id):
                         takenrecord.tag = True  # 用户2提供失物
                     takenrecord.save()
                 except models.User.DoesNotExist:
-                    return HttpResponse("The user (id=" + confirm_finish_id[0] + ") doesn't exist in database.")
+                    server_error(request)
 
         elif len(confirm_phone)>0:
             changePhone(request) # 修改手机信息
@@ -418,10 +431,9 @@ def profile_view(request,nav_id):
             context["foundobjs"] = Pagination(request,foundobjs,num_one_page,
                                              'page_found_profile',button_found_p,button_found_n)
     except models.User.DoesNotExist:
-            # 数据库没有该用户
-        return HttpResponse("The user (id="+request.session["sno"]+") doesn't exist in database.")
+        server_error(request)
     except models.Object.DoesNotExist:
-        return HttpResponse("models.Object.DoesNotExist")
+        server_error(request)
 
     return render_to_response("profile.html", context)
 
@@ -434,6 +446,7 @@ def quit_view(request):
 
 # 主界面
 def main_view(request):
+    request.session.set_expiry(0) # 当浏览器退出时，清除session
     context = {}
 
     num_one_page = 6
@@ -447,7 +460,7 @@ def main_view(request):
         lost_db = models.Object.objects.filter(tag=False,state=1)   # 通过审核的寻物启事
         found_db = models.Object.objects.filter(tag=True,state=1)   # 通过审核的失物招领
     except models.Object.DoesNotExist:
-        return HttpResponse("DoesNotExist Error")
+        server_error(request)
 
     lost=list(lost_db)
     found=list(found_db)
@@ -718,7 +731,6 @@ def search_view(request):
         context['objs_found']=objs_found
         context['objs_lost'] = objs_lost
         # 页码设置
-        #  todo keyerror
         context['page_lost'] = request.session['page_search_lost']
         context['page_found'] = request.session['page_search_found']
         context['page_lost_all'] = int((num_objs_lost / num_one_page) + 1)
@@ -855,10 +867,10 @@ def delete_obj_admin(request):
                 # 删除文件
                 os.remove(img_path)
             else:
-                print("文件删除失败")
+                server_error(request)
 
     except models.Object.DoesNotExist:
-        print("errror:管理员，信息删除错误。")
+        server_error(request)
 
 # 分页函数
 def Pagination(request,obj,k,page_index,button_p,button_n):
