@@ -306,9 +306,8 @@ def profile_view(request,nav_id):
         confirm_lost_n = request.POST.getlist(button_lost_n)
         confirm_found_p = request.POST.getlist(button_found_p)
         confirm_found_n = request.POST.getlist(button_found_n)
-
         #哪一个模态框按钮按下,这里的完成是模态对话框中的完成
-        if len(confirm_delete)>0:
+        if len(confirm_delete)>0  and confirm_delete[0]!='':
             obj_id = str(confirm_delete[0])
             tag = models.Object.objects.get(id=obj_id).tag
 
@@ -322,7 +321,7 @@ def profile_view(request,nav_id):
             #for obj_id in check_box_list:
             #    models.Object.objects.get(id=str(obj_id)).delete()
 
-        elif len(confirm_finish_id)>0:
+        elif len(confirm_finish_id)>0 and confirm_finish_obj_id[0]!='':
             #修改taken表和object表
             p=models.Object.objects.get(id=str(confirm_finish_obj_id[0]))
 
@@ -351,17 +350,19 @@ def profile_view(request,nav_id):
                         takenrecord.tag = True  # 用户2提供失物
                     takenrecord.save()
                 except models.User.DoesNotExist:
-                    return HttpResponse("The user (id=" + confirm_finish_id[0] + ") doesn't exist in database.")
+                    context['input_otherID_wrong']=True
 
-        elif len(confirm_phone)>0:
+                    #return HttpResponse("The user (id=" + confirm_finish_id[0] + ") doesn't exist in database.")
+
+        elif len(confirm_phone)>0 and confirm_phone[0]!='':
             changePhone(request) # 修改手机信息
             context['changePhone_success']=True
 
-        elif len(confirm_email)>0:
+        elif len(confirm_email)>0 and confirm_email[0]!='':
             changeEmail(request) # 修改邮箱信息
             context['changeEmail_success'] = True
 
-        elif len(confirm_pwd)>0:
+        elif len(confirm_pwd)>0 and confirm_pwd[0]!='':
             changePwd(request)   # 修改密码
             context['changePwd_success'] = True
 
@@ -1011,3 +1012,4 @@ def searchByTimeType(input_objs,timeType):
         objs=list(objsGT30)
 
     return objs
+

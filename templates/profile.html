@@ -111,7 +111,11 @@
 					        </ul>
 				        </div>
 			        </div>
+                    {% if input_otherID_wrong == 1 %}
+                        <div class="alert alert-danger">您输入的学号不存在！</div>
 
+                        <!--让这个错误信息只显示一次-->
+                    {% endif %}
                     <form action="" method="POST" enctype="multipart/form-data">
 
                         <div class="content">
@@ -287,12 +291,11 @@
                             </div>
 
                         </div>
-
                         <!-- 模态框（Modal） 用于完成交互-->
 
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                              aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -322,7 +325,7 @@
                         <!--Modal(id:change_pwd_Modal)：确认初始密码-->
                         <div class="modal fade" id="change_pwd_Modal" tabindex="-1" role="dialog" aria-labelledby="change_pwd_ModalLabel"
                              aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -346,7 +349,7 @@
                         <!--修改手机号-->
                         <div class="modal fade" id="change_phone_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                              aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -368,7 +371,7 @@
                         <!--修改邮箱-->
                         <div class="modal fade" id="change_email_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
                              aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-sm">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
