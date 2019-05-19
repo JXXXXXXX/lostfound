@@ -54,11 +54,6 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>
                 <!-- 登陆按钮-->
                 {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -93,8 +88,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="row clearfix" style="margin-top: 50px;">
-			        	<div class="col-md-12 ">
+                        <div class="col-md-12 ">
 					        <ul class="nav nav-tabs">
+                            {% if show == "review" %}
                                 <li class="active">
                                     <a href="#">
                                         信息审核
@@ -105,60 +101,124 @@
                                 </li>
                                 <li><a href="#">用户管理</a></li>
                                 <li><a href="#">信息管理</a></li>
+                            {% endif %}
+                            {% if show == "upload" %}
+                                <li>
+                                    <a href="#">
+                                        信息审核
+                                        {% if num_state0 %}
+                                            <span class="badge">{{ num_state0 }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                <li  class="active"><a href="#">用户管理</a></li>
+                                <li><a href="#">信息管理</a></li>
+                            {% endif %}
+                            {% if show == "obj" %}
+                                <li>
+                                    <a href="#">
+                                        信息审核
+                                        {% if num_state0 %}
+                                            <span class="badge">{{ num_state0 }}</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                <li><a href="#">用户管理</a></li>
+                                <li class="active"><a href="#">信息管理</a></li>
+                            {% endif %}
 					        </ul>
 				        </div>
-			        </div>
+
+
+                    </div>
 
                     <!--TODO(jinxin)：把这个放到合适的位置-->
                     <a href="../profile/0">返回个人中心</a>
 
-                    <form action="" method="POST" enctype="multipart/form-data">
-
-                        <div class="content">
+                    <div class="content">
                             <!--审核-->
+                        {% if show == "review" %}
                             <div class="list">
+                            {% else %}
+                            <div class="list" style="display:none;">
+                        {% endif %}
+
                                 {# 审核功能 #}
                                 {% if review_no_history %}
                                     <p>目前无待审核的物品</p>
                                 {% else %}
                                     <table class="table table-hover">
-                                        {% for obj in obj_review %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{% url 'object' obj.id %}">
-                                                        {{ obj.name }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="{% url 'object' obj.id %}">
-                                                        {{ obj.id }}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
-                                        {% endfor %}
+                                            <thead>
+                                                    <tr>
+                                                       <th>物品编号</th>
+                                                       <th>物品名称</th>
+                                                       <th>上传时间</th>
+                                                    </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                    {% for obj in obj_review %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{% url 'object' obj.id %}">
+                                                                {{ obj.id }}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{% url 'object' obj.id %}">
+                                                                {{ obj.name }}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{% url 'object' obj.id %}">
+                                                                {{obj.id|slice:"0:8"}}
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                        {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
+                                                    {% endfor %}
+                                                 </tbody>
+
                                     </table>
                                 {% endif %}
+                                <form action="" method="post">
+                                    <div> {% comment %}todo 这个上下页的位置 {% endcomment %}
+                                        <button type="submit" class="btn btn-default btn-sm" name="pervious_review">上一页</button>
+                                        <span>第 {{ page }}/{{ page_all }} 页</span>
+                                        <button type="submit" class="btn btn-default btn-sm" name="next_review">下一页</button>
+                                    </div>
+                                </form>
                             </div>
 
                             <!-- 用户管理 -->
-                            <div class="list" style="display: none;">
-                                <div class="data">
-                                    <label for="input_user" style="float: left;padding-right: 4px;">批量上传学生信息</label>
-                                    <input type="file" id="input_user" name="file" value="file"/>
+                            {% if show == "upload" %}
+                                <div class="list">
+                                {% else %}
+                                <div class="list" style="display: none;">
+                            {% endif %}
+                                    <form action="" method="POST" enctype="multipart/form-data">
+                                        <div class="data">
+                                            <label for="input_user" style="float: left;padding-right: 4px;">批量上传学生信息</label>
+                                            <input type="file" id="input_user" name="file" value="file"/>
+                                        </div>
+                                    </form>
+                                    <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
+                                    <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
+
+                                    {% comment %}提示用户上传信息的格式{% endcomment %}
+                                    <hr>
+                                    <p style="color: red;">请严格按照图片所示的格式进行用户信息的批量上传</p>
+                                    <img src={% static "images/demo/upload_user_excel_format.png" %}>
                                 </div>
 
-                                <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
-                                <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
 
-                                {% comment %}提示用户上传信息的格式{% endcomment %}
-                                <hr>
-                                <p>请严格按照图片所示的格式进行用户信息的批量上传</p>
-                                <img src={% static "images/demo/upload_user_excel_format.png" %}>
-                            </div>
 
                             <!-- 信息管理（对信息的批量删除） -->
+                        {% if show == "obj" %}
+                            <div class="list">
+                            {% else %}
                             <div class="list" style="display: none;">
+                        {% endif %}
                                 {% if no_obj %}
                                     <p>暂无信息。</p>
                                 {% else %}
@@ -177,30 +237,40 @@
                                                 <td><input type="checkbox" name="object" value={{ obj.id }}></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
-
+                                                {% for item in userobj %}
+                                                    {% if item.object.id == obj.id %}
+                                                        <td>{{ item.user.name }}({{ item.user.sno }})</td>
+                                                    {% endif %}
+                                                {% endfor %}
                                                 {% if obj.state == 2 %}
                                                     {% for item in record %}
                                                         {% if item.object.id == obj.id%}
                                                             {% comment %}如果在record里有obj，则显示用户1和用户2{% endcomment %}
-                                                            <td>{{ item.user1.name }}({{ item.user1.sno }})</td>
+
                                                             <td>{{ item.user2.name }}({{ item.user2.sno }})</td>
                                                         {% endif %}
                                                     {% endfor %}
                                                 {% else %}
                                                     <td>-</td>
-                                                    <td>-</td>
                                                 {% endif %}
 
-                                                {% if obj.state == 0%}<td>未审核</td>
-                                                {% elif obj.state == 1%}<td>未完成</td>
-                                                {% elif obj.state == 2%}<td>完成</td>
-                                                {% else %}<td>未通过</td>
+                                                {% if obj.state == 0%}<td style="color: darkgray">未审核</td>
+                                                {% elif obj.state == 1%}<td>通过审核</td>
+                                                {% elif obj.state == 2%}<td style="color: deepskyblue">完成</td>
+                                                {% else %}<td style="color: red">未通过审核</td>
                                                 {% endif %}
                                             </tr>
                                         {% endfor %}
                                         </tbody>
                                     </table>
-
+                                    <div>
+                                        <form action="" method="post">
+                                            <button type="submit" class="btn btn-default btn-sm" name="pervious">上一页
+                                            </button>
+                                            <span>第 {{ page }}/{{ page_all }} 页</span>
+                                            <button type="submit" class="btn btn-default btn-sm" name="next">下一页</button>
+                                        </form>
+                                    </div>
                                     <div style="margin:180px auto 0 auto;width: 160px;">
                                         <input class="btn btn-default" type="submit" name="delete_obj" value="删除"/>
                                     </div>
@@ -210,7 +280,9 @@
 
                         </div>
 
-                    </form>
+
+
+
                 </div>
             </div>
 
