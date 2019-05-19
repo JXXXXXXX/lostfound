@@ -305,8 +305,6 @@ def profile_view(request,nav_id):
 #-------------个人用户功能：信息完成与删除------------------
     context = {}
     context["show"]="info" # 默认显示个人信息页面
-    #处理复选框选中的物品
-    print(request.POST)
     if request.method == "POST":
         confirm_delete = request.POST.getlist("button_delete")
         confirm_finish_id = request.POST.getlist("finish_id")
@@ -320,6 +318,7 @@ def profile_view(request,nav_id):
         confirm_found_p = request.POST.getlist(button_found_p)
         confirm_found_n = request.POST.getlist(button_found_n)
 
+        print(request.POST.getlist)
         #哪一个模态框按钮按下,这里的完成是模态对话框中的完成
         if len(confirm_delete)>0:
             obj_id = str(confirm_delete[0])
@@ -446,7 +445,6 @@ def quit_view(request):
 
 # 主界面
 def main_view(request):
-    request.session.set_expiry(0) # 当浏览器退出时，清除session
     context = {}
 
     num_one_page = 6
@@ -475,13 +473,16 @@ def main_view(request):
                                      'page_found',button_found_p,button_found_n)  # 失物招领
 
     # 页数显示设置
-    context['page_lost']=request.session['page_lost']
-    context['page_found']=request.session['page_found']
-    context['page_lost_all']=int((len(lost)/num_one_page)+1)
-    context['page_found_all']=int((len(found)/num_one_page)+1)
+    if 'page_lost' in request.session:
+        context['page_lost']=request.session['page_lost']
+        context['page_lost_all'] = int((len(lost) / (num_one_page+0.5)) + 1)
+    if 'page_found' in request.session:
+        context['page_found']=request.session['page_found']
+        context['page_found_all']=int((len(found)/(num_one_page+0.5))+1)
 
     if 'sno' in request.session:
         # 用户已登陆
+        print(request.session['sno'])
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
@@ -565,10 +566,12 @@ def sort_view(request,sort_id):
     context['objs_lost']=objs_lost
     context['objs_found'] = objs_found
 
-    context['page_lost']=request.session['page_second_lost']
-    context['page_found'] = request.session['page_second_found']
-    context['page_lost_all']=int((num_objs_lost/num_one_page)+1)
-    context['page_found_all']=int((num_objs_found/num_one_page)+1)
+    if 'page_second_lost' in request.session:
+        context['page_lost']=request.session['page_second_lost']
+        context['page_lost_all'] = int((num_objs_lost / (num_one_page+0.5)) + 1)
+    if 'page_second_found' in request.session:
+        context['page_found'] = request.session['page_second_found']
+        context['page_found_all']=int((num_objs_found/(num_one_page+0.5))+1)
 
     # 用于导航栏显示用户
     if 'sno' in request.session:
@@ -711,6 +714,7 @@ def search_view(request):
 
         if num_objs_lost==0:
             no_lost=True
+
         else:
             # 排序
             objs_lost.sort(key=lambda obj: obj.id, reverse=True)
@@ -731,10 +735,12 @@ def search_view(request):
         context['objs_found']=objs_found
         context['objs_lost'] = objs_lost
         # 页码设置
-        context['page_lost'] = request.session['page_search_lost']
-        context['page_found'] = request.session['page_search_found']
-        context['page_lost_all'] = int((num_objs_lost / num_one_page) + 1)
-        context['page_found_all'] = int((num_objs_found / num_one_page) + 1)
+        if 'page_search_lost' in request.session:
+            context['page_lost'] = request.session['page_search_lost']
+            context['page_lost_all'] = int((num_objs_lost / (num_one_page+0.5)) + 1)
+        if 'page_search_found' in request.session:
+            context['page_found'] = request.session['page_search_found']
+            context['page_found_all'] = int((num_objs_found / (num_one_page+0.5)) + 1)
 
         return render_to_response('second.html',context)
 
@@ -794,9 +800,6 @@ def admin_view(request):
         if len(confirm_upload_user)>0:
             context["show"] = "upload" # 返回上传页面
             upload_user(request)
-            if 'page_admin_obj' in request.session:
-                del request.session['page_admin_obj']
-
         if len(confirm_delete_obj)>0:
             context["show"] = "obj"  # 返回所有物品页面
             delete_obj_admin(request)
@@ -825,7 +828,9 @@ def admin_view(request):
 
                 context["obj_review"] = obj_review
                 context["num_state0"] = num_state0
-
+                if 'page_admin_review' in request.session:
+                    context['page_review'] = request.session['page_admin_review']
+                    context['page_all_review'] = int((num_state0 / (num_one_page + 0.5)) + 1)
             # 将所有信息，显示到网页上
             obj_all = models.Object.objects.all().order_by('-id')
             num_obj_all = len(obj_all)
@@ -833,8 +838,9 @@ def admin_view(request):
                 obj_all = Pagination(request, obj_all, num_one_page,
                    'page_admin_obj', button_p, button_n) # 分页
             # 页数设置
-            context['page'] = request.session['page_admin_obj']
-            context['page_all'] = int(( num_obj_all / num_one_page) + 1)
+            if 'page_admin_obj' in request.session:
+                context['page'] = request.session['page_admin_obj']
+                context['page_all'] = int(( num_obj_all / (num_one_page+0.5)) + 1)
 
             # 添加认领记录
             record_db = models.TakenRecord.objects.all()
@@ -885,15 +891,14 @@ def Pagination(request,obj,k,page_index,button_p,button_n):
     '''
 
     # 获得当前显示的页数，没有则初始化为1
-    # todo(jinxin):这个session的设置以后优化一下，当浏览器关闭后，自动删除关于页数的session
     if page_index in request.session:
         index  = request.session[page_index]
     else:
         index  = 1
     for key in request.session.keys():
-        if str(key).find('page')!=-1 and str(key)!= page_index:
-            # 对于所有记录页码的session。保留当前，其余删除
-            request.session[str(key)]=1
+        if str(key).find('page')!=-1:
+            # 对于session中所有的page项，重置为1
+            request.session[str(key)] = 1
 
     if request.POST:
         lost_pervious = request.POST.getlist(button_p)   # 上一页
