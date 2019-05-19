@@ -1,7 +1,9 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render_to_response,HttpResponse,redirect
 from model import forms,models
-import datetime,xlrd,re,math
+import datetime,xlrd,re,os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 分类缩写与sort_id的对应关系字典
 sort={
@@ -739,10 +741,20 @@ def admin_view(request):
 
 # 管理中心-所有信息删除
 def delete_obj_admin(request):
+    img_file_path = os.path.join(BASE_DIR,"upload/img/object").replace('\\','/')
     check_box_list = request.POST.getlist("object")
     try:
         for obj_id in check_box_list:
+            # 删除数据库数据
             models.Object.objects.get(id=str(obj_id)).delete()
+
+            img_path = img_file_path+'/'+str(obj_id)+".jpg"
+            if os.path.exists(img_path):
+                # 删除文件
+                os.remove(img_path)
+            else:
+                print("文件删除失败")
+
     except models.Object.DoesNotExist:
         print("errror:管理员，信息删除错误。")
 
