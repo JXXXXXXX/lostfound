@@ -141,10 +141,11 @@ def upload_view(request):
             except KeyError:
                 return render_to_response('upload.html', context)
             # 已经登陆
-            context['user']=models.User.objects.get(sno=sno_login)
+            user_login=models.User.objects.get(sno=sno_login)
+            context['user']=user_login
             context['upload_fail'] = True
+
             return render_to_response('upload.html',context)
-            #return HttpResponse("Input invalid.")
     else:
         # 处理非POST的情况,返回表单页面，用户输入数据
         context={}
@@ -153,7 +154,13 @@ def upload_view(request):
         except KeyError:
             return render_to_response('upload.html', context)
         # 已经登陆
-        context['user']=models.User.objects.get(sno=sno_login)
+        user_login = models.User.objects.get(sno=sno_login)
+        context['user']=user_login
+        if user_login.tag:
+            # 如果为管理员，计算未审核的信息数
+            num_state0 = len(models.Object.objects.filter(state=0))
+            if num_state0 > 0:
+                context["num_state0"] = num_state0
         return render_to_response('upload.html', context)
 
 #物品详细信息显示
@@ -521,13 +528,14 @@ def sort_view(request,sort_id):
     # 对返回数据按【上传时间】进行排序
     objs_lost.sort(key=lambda obj:obj.id,reverse=True)
     objs_found.sort(key=lambda obj: obj.id,reverse=True)
-
-    if len(objs_lost) == 0:
+    num_objs_lost = len(objs_lost)
+    num_objs_found = len(objs_found)
+    if num_objs_lost == 0:
         context["no_lost"] = True
     else:
         objs_lost = Pagination(request,objs_lost,num_one_page,
                                      'page_second_lost',button_lost_p,button_lost_n)  # 寻物启事
-    if len(objs_found) == 0:
+    if num_objs_found == 0:
         context["no_found"] = True
     else:
         objs_found = Pagination(request,objs_found,num_one_page,
@@ -537,8 +545,8 @@ def sort_view(request,sort_id):
 
     context['page_lost']=request.session['page_second_lost']
     context['page_found'] = request.session['page_second_found']
-    context['page_lost_all']=int((len(objs_lost)/num_one_page)+1)
-    context['page_found_all']=int((len(objs_found)/num_one_page)+1)
+    context['page_lost_all']=int((num_objs_lost/num_one_page)+1)
+    context['page_found_all']=int((num_objs_found/num_one_page)+1)
 
     # 用于导航栏显示用户
     if 'sno' in request.session:
@@ -546,6 +554,12 @@ def sort_view(request,sort_id):
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
+
+        if user_login.tag:
+            # 如果为管理员，计算未审核的信息数
+            num_state0 = len(models.Object.objects.filter(state=0))
+            if num_state0>0:
+                context["num_state0"] = num_state0
     return render_to_response('second.html', context)
 
 
@@ -670,7 +684,18 @@ def search_view(request):
                 else:
                     objs_found.append(obj)
 
-        if len(objs_found)==0:
+        num_objs_lost = len(objs_lost)
+        num_objs_found = len(objs_found)
+
+        if num_objs_lost==0:
+            no_lost=True
+        else:
+            # 排序
+            objs_lost.sort(key=lambda obj: obj.id, reverse=True)
+            # 分页
+            objs_lost = Pagination(request, objs_lost, num_one_page,
+               'page_search_lost', button_lost_p, button_lost_n)  # 寻物启事
+        if num_objs_found==0:
             no_found=True
         else:
             # 排序
@@ -679,25 +704,16 @@ def search_view(request):
             objs_found = Pagination(request, objs_found, num_one_page,
                'page_search_found', button_found_p, button_found_n)
 
-        if len(objs_lost)==0:
-            no_lost=True
-        else:
-            # 排序
-            objs_lost.sort(key=lambda obj: obj.id, reverse=True)
-            # 分页
-            objs_lost = Pagination(request, objs_lost, num_one_page,
-               'page_search_lost', button_lost_p, button_lost_n)  # 寻物启事
-
-
         context['no_found']=no_found
         context['no_lost'] = no_lost
         context['objs_found']=objs_found
         context['objs_lost'] = objs_lost
         # 页码设置
+        #  todo keyerror
         context['page_lost'] = request.session['page_search_lost']
         context['page_found'] = request.session['page_search_found']
-        context['page_lost_all'] = int((len(objs_lost) / num_one_page) + 1)
-        context['page_found_all'] = int((len(objs_found) / num_one_page) + 1)
+        context['page_lost_all'] = int((num_objs_lost / num_one_page) + 1)
+        context['page_found_all'] = int((num_objs_found / num_one_page) + 1)
 
         return render_to_response('second.html',context)
 
@@ -741,7 +757,7 @@ def changeEmail(request):
 def admin_view(request):
     context = {}
     context["show"]="review" # 默认显示审核页面
-    num_one_page = 4 # 一页显示的物品数量
+    num_one_page = 12 # 一页显示的物品数量
     button_p = 'pervious'  # 上一页按钮名
     button_n = 'next'  # 下一页按钮名
 
@@ -786,12 +802,13 @@ def admin_view(request):
 
             # 将所有信息，显示到网页上
             obj_all = models.Object.objects.all().order_by('-id')
+            num_obj_all = len(obj_all)
             if len(obj_all)>0:
                 obj_all = Pagination(request, obj_all, num_one_page,
                    'page_admin_obj', button_p, button_n) # 分页
             # 页数设置
             context['page'] = request.session['page_admin_obj']
-            context['page_all'] = int((len(obj_all) / num_one_page) + 1)
+            context['page_all'] = int(( num_obj_all / num_one_page) + 1)
 
             # 添加认领记录
             record_db = models.TakenRecord.objects.all()
