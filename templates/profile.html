@@ -54,11 +54,6 @@
 				<div class="navbar-header">
 					<a href="../main" class="navbar-brand">校园失物招领平台</a>
 				</div>
-{% comment %}                <!--TODO(jinxin)搜索框美化一下-->
-                <form action="/search" method="get">
-                    <input type="text" name="q">
-                    <input type="submit" value="搜索">
-                </form>{% endcomment %}
                 <!-- 登陆按钮-->
                 {% if user %}
                     {# 若用户已登陆：显示用户名+退出按钮 #}
@@ -177,7 +172,7 @@
                                         <thead>
                                         <th>物品名称</th>
                                         <th>物品编号</th>
-                                        <th>审核状态</th>
+                                        <th>状态</th>
                                         <th>删除</th>
                                         <th>完成</th>
                                         </thead>
@@ -187,14 +182,16 @@
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
 
-                                                {% if obj.state == 0%}<td>未审核</td>
-                                                {% elif obj.state == 1%}<td>未完成</td>
-                                                {% elif obj.state == 2%}<td>已完成</td>
-                                                {% else %}<td>未通过审核</td>
+                                                {% if obj.state == 0%}<td style="color: darkgray">未审核</td>
+                                                {% elif obj.state == 1%}<td >通过审核</td>
+                                                {% elif obj.state == 2%}<td style="color: #0b6ac6">已完成</td>
+                                                {% else %}<td style="color:red;">未通过审核</td>
                                                 {% endif %}
+
                                                 <td><button type="submit" class="btn btn-default btn-xs" name="button_delete" value="{{ obj.id }}">
                                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                                 </button></td>
+
                                                 <td><button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#myModal" name="button_finish" onclick="Values('{{ obj.id }}')">
                                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                                 </button>
@@ -239,7 +236,7 @@
                                         <thead>
                                         <th>物品名称</th>
                                         <th>物品编号</th>
-                                        <th>审核状态</th>
+                                        <th>状态</th>
                                         <th>删除</th>
                                         <th>完成</th>
                                         </thead>
@@ -248,11 +245,13 @@
                                             <tr>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
                                                 <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
-                                                {% if obj.state == 0%}<td>未审核</td>
-                                                {% elif obj.state == 1%}<td>未完成</td>
-                                                {% elif obj.state == 2%}<td>已完成</td>
-                                                {% else %}<td>未通过审核</td>
+
+                                                {% if obj.state == 0%}<td style="color: darkgray">未审核</td>
+                                                {% elif obj.state == 1%}<td >通过审核</td>
+                                                {% elif obj.state == 2%}<td style="color: deepskyblue">完成</td>
+                                                {% else %}<td style="color:red;">未通过审核</td>
                                                 {% endif %}
+
                                                 <td><button type="submit" class="btn btn-default btn-xs" name="button_delete" value="{{ obj.id }}">
                                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                                 </button></td>

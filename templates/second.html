@@ -76,12 +76,13 @@
                     <div id="sign_out" align="right">
 
                         <a href="../profile/0">
-                            <div id="welcome" style="position:relative;float: bottom;top: 5px">
-                                你好,
+                             <div id="welcome" style="position:relative;float: bottom;top: 5px">
                             {# 点击此处可以进入用户个人中心 #}
+                            你好,
                             {{ user_name }}({{ user_sno }})
+                            {% comment %}显示管理员未处理的审核数量{% endcomment %}
+                            {% if num_state0 %}<span class="badge">{{ num_state0 }}</span>{% endif %}
                             </div>
-
                         </a>
 
                         <a href="../quit"><input type="button" class="btn btn-default btn-sm" name="quit" id="welcome" value="退出" style="opacity: 0.7;margin-top: 10px" ></a>
@@ -173,13 +174,15 @@
                                                  <td><a href="{% url 'object' obj.id %}">{{obj.name}}</a></td>
                                                  <td><a href="{% url 'object' obj.id %}">{{obj.position}}</a></td>
                                                  <td><a href="{% url 'object' obj.id %}">{{obj.time|date:"Y-m-d"}}</a></td>
-                                                 <td><a href="{% url 'object' obj.id %}">
+
+
                                                  {% if obj.state == 2 %}
-                                                 【已认领】
+                                                     <td><a href="{% url 'object' obj.id %}">已认领</a></td>
                                                  {% else %}
-                                                 【未认领】
+                                                     <td><a href="{% url 'object' obj.id %}">未认领</a></td>
                                                  {% endif %}
-                                                 </a></td>
+
+
                                                  <td><a href="{% url 'object' obj.id %}">{{obj.id|slice:"0:8"}}</a></td>
                                             </tr>
                                         {% endfor %}
@@ -229,9 +232,9 @@
                                                  <td><a href="{% url 'object' obj.id %}">{{obj.time|date:"Y-m-d"}}</a></td>
                                                  <td><a href="{% url 'object' obj.id %}">
                                                  {% if obj.state == 2 %}
-                                                 【已找回】
+                                                 已找回
                                                  {% else %}
-                                                 【未找回】
+                                                 未找回
                                                  {% endif %}
                                                  </a></td>
                                                  <td><a href="{% url 'object' obj.id %}">{{obj.id|slice:"0:8"}}</a></td>

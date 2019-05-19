@@ -28,7 +28,6 @@ urlpatterns = [
     url(r'^main$',main_view,name='main'), # 主界面
     url(r'^$',main_view),
     url(r'^sort/(?P<sort_id>[0-6]{1})$',sort_view,name='sort'), # 物品分类显示
-    # url(r'^sort/(?P<sort_id>[0-6]{1})/Timetype(?P<Timetype>[0-9]{1})$',sort_view,name='sort2'), # 物品分类显示
     url(r'^complete_info$',complete_view),# 修改密码并完善个人信息
     url(r'search$',search_view,name='search'),    # 搜索框
                                     # 这里(搜索框)的正则表达式取消了开始的尖号(^)，

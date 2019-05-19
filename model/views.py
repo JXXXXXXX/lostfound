@@ -285,14 +285,23 @@ def profile_view(request,nav_id):
         confirm_phone = request.POST.getlist("phone")
         confirm_email = request.POST.getlist("email")
         confirm_pwd = request.POST.getlist("pwd")
+
         confirm_lost_p = request.POST.getlist(button_lost_p)
         confirm_lost_n = request.POST.getlist(button_lost_n)
         confirm_found_p = request.POST.getlist(button_found_p)
         confirm_found_n = request.POST.getlist(button_found_n)
+
         #哪一个模态框按钮按下,这里的完成是模态对话框中的完成
-        print(confirm_finish_id)
         if len(confirm_delete)>0:
-            models.Object.objects.get(id=str(confirm_delete[0])).delete()
+            obj_id = str(confirm_delete[0])
+            tag = models.Object.objects.get(id=obj_id).tag
+
+            if tag==False:
+                context["show"]="lost"  # 设置按下按钮后重新加载profile页面的跳转
+            else:
+                context["show"]="found"
+            models.Object.objects.get(id=obj_id).delete()
+
             #check_box_list = request.POST.getlist("object")
             #for obj_id in check_box_list:
             #    models.Object.objects.get(id=str(obj_id)).delete()
@@ -300,6 +309,12 @@ def profile_view(request,nav_id):
         elif len(confirm_finish_id)>0:
             #修改taken表和object表
             p=models.Object.objects.get(id=str(confirm_finish_obj_id[0]))
+
+            if p.tag==False:
+                context["show"]="lost"  # 设置按下按钮后重新加载profile页面的跳转
+            else:
+                context["show"]="found"
+
             if p.state == 0 or p.state == -1:
                 pass
             else:
@@ -359,7 +374,8 @@ def profile_view(request,nav_id):
         if user_login.tag:
             # 如果为管理员，计算未审核的信息数
             num_state0 = len(models.Object.objects.filter(state=0))
-            context["num_state0"]=num_state0
+            if num_state0>0:
+                context["num_state0"]=num_state0
 
         # step2
         userobject_db = models.UserObject.objects.filter(user=user_login)
@@ -444,7 +460,8 @@ def main_view(request):
         if user_login.tag:
             # 如果为管理员，计算未审核的信息数
             num_state0 = len(models.Object.objects.filter(state=0))
-            context["num_state0"] = num_state0
+            if num_state0>0:
+                context["num_state0"] = num_state0
 
 
     return render_to_response("main.html", context)
@@ -518,7 +535,6 @@ def sort_view(request,sort_id):
     context['objs_lost']=objs_lost
     context['objs_found'] = objs_found
 
-    # todo: 在没有物品的时候，会显示：1/0页
     context['page_lost']=request.session['page_second_lost']
     context['page_found'] = request.session['page_second_found']
     context['page_lost_all']=int((len(objs_lost)/num_one_page)+1)
@@ -604,6 +620,14 @@ def upload_user(request):
 def search_view(request):
     # 1.根据keyword，从数据库中搜索出所有的物品objs
     # 2.将objs分为失物招领(found)和寻物启事(lost)在二级页面上(second.html)显示
+
+    num_one_page = 11 # 一页显示的物品数量
+    button_lost_p = 'lost_pervious'  # 寻物启事 上一页按钮名
+    button_lost_n = 'lost_next'  # 寻物启事 下一页按钮名
+    button_found_p = 'found_pervious'  # 失物招领 上一页按钮名
+    button_found_n = 'found_next'  # 失物招领 下一页按钮名
+    # print(request.get_full_path_info())
+
     if 'q' in request.GET:
         # 对物品（object）的名称、地点、描述进行查找
         keyword = str(request.GET['q'])     # 获得搜索关键词
@@ -636,22 +660,44 @@ def search_view(request):
         objs_found=[]
         objs_lost = []
         if 'sno' in request.session:
-            context['user_sno']=request.session['sno']
+            user= models.User.objects.get(sno=request.session['sno'])
+            context['user_sno']=user.sno
+            context['user_name']=user.name
         for obj in objs:
             if obj.state>0:# 过滤"未审核""审核未通过"的物品
                 if obj.tag==False:
                     objs_lost.append(obj)
                 else:
                     objs_found.append(obj)
+
         if len(objs_found)==0:
             no_found=True
+        else:
+            # 排序
+            objs_found.sort(key=lambda obj: obj.id, reverse=True)
+            # 分页
+            objs_found = Pagination(request, objs_found, num_one_page,
+               'page_search_found', button_found_p, button_found_n)
+
         if len(objs_lost)==0:
             no_lost=True
+        else:
+            # 排序
+            objs_lost.sort(key=lambda obj: obj.id, reverse=True)
+            # 分页
+            objs_lost = Pagination(request, objs_lost, num_one_page,
+               'page_search_lost', button_lost_p, button_lost_n)  # 寻物启事
+
 
         context['no_found']=no_found
         context['no_lost'] = no_lost
         context['objs_found']=objs_found
         context['objs_lost'] = objs_lost
+        # 页码设置
+        context['page_lost'] = request.session['page_search_lost']
+        context['page_found'] = request.session['page_search_found']
+        context['page_lost_all'] = int((len(objs_lost) / num_one_page) + 1)
+        context['page_found_all'] = int((len(objs_found) / num_one_page) + 1)
 
         return render_to_response('second.html',context)
 
@@ -694,41 +740,66 @@ def changeEmail(request):
 # 管理中心
 def admin_view(request):
     context = {}
+    context["show"]="review" # 默认显示审核页面
+    num_one_page = 4 # 一页显示的物品数量
+    button_p = 'pervious'  # 上一页按钮名
+    button_n = 'next'  # 下一页按钮名
+
     if request.method == "POST":
         confirm_upload_user = request.POST.getlist('upload_user')
         confirm_delete_obj = request.POST.getlist('delete_obj')
+        confirm_button_p = request.POST.getlist(button_p)
+        confirm_button_n = request.POST.getlist(button_n)
         if len(confirm_upload_user)>0:
             # ---------功能：批量上传用户信息--------
+            context["show"] = "upload" # 返回上传页面
             upload_user(request)
+            if 'page_admin_obj' in request.session:
+                del request.session['page_admin_obj']
+
         if len(confirm_delete_obj)>0:
             # ---------功能：批量删除物品信息（面向所有物品）--------
+            context["show"] = "obj"  # 返回所有物品页面
             delete_obj_admin(request)
+        if len(confirm_button_p or confirm_button_n)>0:
+            context["show"] = "obj"  # 返回所有物品页面
+
     if 'sno' in request.session:
         user = models.User.objects.get(sno=request.session['sno'])
         if user.tag == False:
             return HttpResponse("你不是管理员.")
         else:
             num_state0 = len(models.Object.objects.filter(state=0))
-            context["num_state0"] = num_state0
+            if num_state0>0:
+                context["num_state0"] = num_state0
 
             context['user'] = user
             # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
             obj_review_db = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
             obj_review=list(obj_review_db)
-            obj_review.sort(key=lambda obj: obj.id, reverse=True)
+            obj_review.sort(key=lambda obj: obj.id, reverse=True)  # 排序
 
             if len(obj_review) == 0:
                 context["review_no_history"] = True
             else:
                 context["obj_review"] = obj_review
+
             # 将所有信息，显示到网页上
             obj_all = models.Object.objects.all().order_by('-id')
+            if len(obj_all)>0:
+                obj_all = Pagination(request, obj_all, num_one_page,
+                   'page_admin_obj', button_p, button_n) # 分页
+            # 页数设置
+            context['page'] = request.session['page_admin_obj']
+            context['page_all'] = int((len(obj_all) / num_one_page) + 1)
 
             # 添加认领记录
-            record_db = models.TakenRecord.objects.all();
-
+            record_db = models.TakenRecord.objects.all()
             if len(record_db)>0:
                 context["record"]=record_db
+            userobj_db = models.UserObject.objects.all()
+            if len(userobj_db)>0:
+                context["userobj"] = userobj_db
 
             if len(obj_all) == 0:
                 context["no_obj"] = True
