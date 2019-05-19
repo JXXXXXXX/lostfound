@@ -91,9 +91,16 @@ def upload_view(request):
                 # ！其实这里有问题，假如用户随意输入的学号是存在于数据库中的，那提交的用户就会变成那个学号，而不一定是登陆的用户本身
                 user_db = models.User.objects.get(sno=request.session['sno']) #request.session通过cookie记录用户状态
                 user_obj.user=user_db
-
+                context = {}
+                context['user'] = user_db
                 # 输入物品信息
                 nowtime = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
+                time_for_cmp = datetime.datetime.now().strftime('%Y%m%d')
+                time_input = form.cleaned_data['time'].lstrip('-')
+                if time_for_cmp<time_input:
+                    context['upload_time_error']=True
+                    return render_to_response('upload.html', context)
+
                 obj.id = nowtime                            # 为物品生成一个当前时间的id，作为主键
                 obj.name = form.cleaned_data['name']
                 obj.time = form.cleaned_data['time']
@@ -120,9 +127,9 @@ def upload_view(request):
                 sort_obj.sort = sort_db
                 sort_obj.object = obj_db
                 sort_obj.save()# 上传 分类-物品记录
-                context = {}
+
                 context['upload_success'] = True
-                context['user']=user_db
+
                 return render_to_response('upload.html',context)
             except models.User.DoesNotExist:
                 # 用户不存在
@@ -303,9 +310,6 @@ def profile_view(request,nav_id):
             if p.state == 0 or p.state == -1:
                 pass
             else:
-                #更改物品状态
-                p.state=2
-                p.save()
                 try:
                     takenrecord = models.TakenRecord()
                     user1 = models.User.objects.get(sno=request.session["sno"])
@@ -314,6 +318,9 @@ def profile_view(request,nav_id):
                     takenrecord.user1 = user1
                     takenrecord.user2 = user2
                     takenrecord.object = obj
+                    # 更改物品状态
+                    p.state = 2
+                    p.save()
                     if obj.tag:  # 招领物品
                         takenrecord.tag = False  # 用户2来认领
                     else:
