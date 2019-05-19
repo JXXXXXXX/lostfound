@@ -301,9 +301,6 @@ def profile_view(request,nav_id):
             if p.state == 0 or p.state == -1:
                 pass
             else:
-                #更改物品状态
-                p.state=2
-                p.save()
                 try:
                     takenrecord = models.TakenRecord()
                     user1 = models.User.objects.get(sno=request.session["sno"])
@@ -312,6 +309,9 @@ def profile_view(request,nav_id):
                     takenrecord.user1 = user1
                     takenrecord.user2 = user2
                     takenrecord.object = obj
+                    # 更改物品状态
+                    p.state = 2
+                    p.save()
                     if obj.tag:  # 招领物品
                         takenrecord.tag = False  # 用户2来认领
                     else:
