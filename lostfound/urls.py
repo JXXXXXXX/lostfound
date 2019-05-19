@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from model.views import *
+import model
 
 urlpatterns = [
     url(r'^login$',login_view,name='login'),     # 登陆界面
@@ -37,3 +38,5 @@ urlpatterns = [
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # "+static"是显示图片的需要（参考https://blog.csdn.net/c_beautiful/article/details/79755368
 
+handler404 = page_not_found
+handler500 = server_error

@@ -15,6 +15,19 @@ sort={
     'zjxj':1,
 }
 
+# 404
+def page_not_found(request):
+    '''404页面处理'''
+    response = render_to_response('404.html')
+    response.status_code = 404
+    return response
+
+# 500
+def server_error(request):
+    '''500页面处理'''
+    response = render_to_response('500.html')
+    response.status_code = 500
+    return response
 
 # 登陆页面（新）
 def login_view(request):
@@ -134,13 +147,13 @@ def upload_view(request):
                 return render_to_response('upload.html',context)
             except models.User.DoesNotExist:
                 # 用户不存在
-                return HttpResponse("User dont exist.")
+                server_error(request)
             except models.AllSort.DoesNotExist:
                 # 分类不存在
-                return HttpResponse("Sort dont exist.")
+                server_error(request)
             except models.Object.DoesNotExist:
                 # 物品信息没有存入数据库
-                return HttpResponse("Upload error.")
+                server_error(request)
         else:
             #表单不合法
             context={}
@@ -209,7 +222,7 @@ def objShowinfo_view(request,object_id):
     obj_db = models.Object.objects.filter(id=object_id)
     #使用get如果味查询到会抛出异常，filter会返回空的[]
     if(len(obj_db)==0):
-        return HttpResponse("this page does not exist!")
+        page_not_found(request)
     obj = obj_db[0]
     #列表中的第一个对象
     userobj_db = models.UserObject.objects.get(object=obj.id)   # 上传的物品
@@ -240,7 +253,7 @@ def objShowinfo_view(request,object_id):
         sort = sortobj_db.sort
         context['sort'] = sort.name
     except models.SortObject.DoesNotExist:
-        HttpResponse("models.SortObject.DoesNotExist")
+        server_error(request)
     # step2
     show_obj=False  # 物品信息显示标记 初始False
     show_user=False # 用户信息显示标记 初始False
@@ -292,8 +305,6 @@ def profile_view(request,nav_id):
 #-------------个人用户功能：信息完成与删除------------------
     context = {}
     context["show"]="info" # 默认显示个人信息页面
-    #处理复选框选中的物品
-    print(request.POST)
     if request.method == "POST":
         confirm_delete = request.POST.getlist("button_delete")
         confirm_finish_id = request.POST.getlist("finish_id")
@@ -306,8 +317,9 @@ def profile_view(request,nav_id):
         confirm_lost_n = request.POST.getlist(button_lost_n)
         confirm_found_p = request.POST.getlist(button_found_p)
         confirm_found_n = request.POST.getlist(button_found_n)
+
         #哪一个模态框按钮按下,这里的完成是模态对话框中的完成
-        if len(confirm_delete)>0  and confirm_delete[0]!='':
+        if len(confirm_delete)>0 and confirm_delete[0]!='':
             obj_id = str(confirm_delete[0])
             tag = models.Object.objects.get(id=obj_id).tag
 
@@ -419,10 +431,9 @@ def profile_view(request,nav_id):
             context["foundobjs"] = Pagination(request,foundobjs,num_one_page,
                                              'page_found_profile',button_found_p,button_found_n)
     except models.User.DoesNotExist:
-            # 数据库没有该用户
-        return HttpResponse("The user (id="+request.session["sno"]+") doesn't exist in database.")
+        server_error(request)
     except models.Object.DoesNotExist:
-        return HttpResponse("models.Object.DoesNotExist")
+        server_error(request)
 
     return render_to_response("profile.html", context)
 
@@ -448,7 +459,7 @@ def main_view(request):
         lost_db = models.Object.objects.filter(tag=False,state=1)   # 通过审核的寻物启事
         found_db = models.Object.objects.filter(tag=True,state=1)   # 通过审核的失物招领
     except models.Object.DoesNotExist:
-        return HttpResponse("DoesNotExist Error")
+        server_error(request)
 
     lost=list(lost_db)
     found=list(found_db)
@@ -463,13 +474,16 @@ def main_view(request):
                                      'page_found',button_found_p,button_found_n)  # 失物招领
 
     # 页数显示设置
-    context['page_lost']=request.session['page_lost']
-    context['page_found']=request.session['page_found']
-    context['page_lost_all']=int((len(lost)/num_one_page)+1)
-    context['page_found_all']=int((len(found)/num_one_page)+1)
+    if 'page_lost' in request.session:
+        context['page_lost']=request.session['page_lost']
+        context['page_lost_all'] = int((len(lost) / (num_one_page+0.5)) + 1)
+    if 'page_found' in request.session:
+        context['page_found']=request.session['page_found']
+        context['page_found_all']=int((len(found)/(num_one_page+0.5))+1)
 
     if 'sno' in request.session:
         # 用户已登陆
+        print(request.session['sno'])
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
@@ -553,10 +567,12 @@ def sort_view(request,sort_id):
     context['objs_lost']=objs_lost
     context['objs_found'] = objs_found
 
-    context['page_lost']=request.session['page_second_lost']
-    context['page_found'] = request.session['page_second_found']
-    context['page_lost_all']=int((num_objs_lost/num_one_page)+1)
-    context['page_found_all']=int((num_objs_found/num_one_page)+1)
+    if 'page_second_lost' in request.session:
+        context['page_lost']=request.session['page_second_lost']
+        context['page_lost_all'] = int((num_objs_lost / (num_one_page+0.5)) + 1)
+    if 'page_second_found' in request.session:
+        context['page_found'] = request.session['page_second_found']
+        context['page_found_all']=int((num_objs_found/(num_one_page+0.5))+1)
 
     # 用于导航栏显示用户
     if 'sno' in request.session:
@@ -719,11 +735,12 @@ def search_view(request):
         context['objs_found']=objs_found
         context['objs_lost'] = objs_lost
         # 页码设置
-        #  todo keyerror
-        context['page_lost'] = request.session['page_search_lost']
-        context['page_found'] = request.session['page_search_found']
-        context['page_lost_all'] = int((num_objs_lost / num_one_page) + 1)
-        context['page_found_all'] = int((num_objs_found / num_one_page) + 1)
+        if 'page_search_lost' in request.session:
+            context['page_lost'] = request.session['page_search_lost']
+            context['page_lost_all'] = int((num_objs_lost / (num_one_page+0.5)) + 1)
+        if 'page_search_found' in request.session:
+            context['page_found'] = request.session['page_search_found']
+            context['page_found_all'] = int((num_objs_found / (num_one_page+0.5)) + 1)
 
         return render_to_response('second.html',context)
 
@@ -783,9 +800,6 @@ def admin_view(request):
         if len(confirm_upload_user)>0:
             context["show"] = "upload" # 返回上传页面
             upload_user(request)
-            if 'page_admin_obj' in request.session:
-                del request.session['page_admin_obj']
-
         if len(confirm_delete_obj)>0:
             context["show"] = "obj"  # 返回所有物品页面
             delete_obj_admin(request)
@@ -814,7 +828,9 @@ def admin_view(request):
 
                 context["obj_review"] = obj_review
                 context["num_state0"] = num_state0
-
+                if 'page_admin_review' in request.session:
+                    context['page_review'] = request.session['page_admin_review']
+                    context['page_all_review'] = int((num_state0 / (num_one_page + 0.5)) + 1)
             # 将所有信息，显示到网页上
             obj_all = models.Object.objects.all().order_by('-id')
             num_obj_all = len(obj_all)
@@ -822,8 +838,9 @@ def admin_view(request):
                 obj_all = Pagination(request, obj_all, num_one_page,
                    'page_admin_obj', button_p, button_n) # 分页
             # 页数设置
-            context['page'] = request.session['page_admin_obj']
-            context['page_all'] = int(( num_obj_all / num_one_page) + 1)
+            if 'page_admin_obj' in request.session:
+                context['page'] = request.session['page_admin_obj']
+                context['page_all'] = int(( num_obj_all / (num_one_page+0.5)) + 1)
 
             # 添加认领记录
             record_db = models.TakenRecord.objects.all()
@@ -856,10 +873,10 @@ def delete_obj_admin(request):
                 # 删除文件
                 os.remove(img_path)
             else:
-                print("文件删除失败")
+                server_error(request)
 
     except models.Object.DoesNotExist:
-        print("errror:管理员，信息删除错误。")
+        server_error(request)
 
 # 分页函数
 def Pagination(request,obj,k,page_index,button_p,button_n):
@@ -874,15 +891,14 @@ def Pagination(request,obj,k,page_index,button_p,button_n):
     '''
 
     # 获得当前显示的页数，没有则初始化为1
-    # todo(jinxin):这个session的设置以后优化一下，当浏览器关闭后，自动删除关于页数的session
     if page_index in request.session:
         index  = request.session[page_index]
     else:
         index  = 1
     for key in request.session.keys():
-        if str(key).find('page')!=-1 and str(key)!= page_index:
-            # 对于所有记录页码的session。保留当前，其余删除
-            request.session[str(key)]=1
+        if str(key).find('page')!=-1:
+            # 对于session中所有的page项，重置为1
+            request.session[str(key)] = 1
 
     if request.POST:
         lost_pervious = request.POST.getlist(button_p)   # 上一页
