@@ -148,23 +148,46 @@
                                     <p>目前无待审核的物品</p>
                                 {% else %}
                                     <table class="table table-hover">
-                                        {% for obj in obj_review %}
-                                            <tr>
-                                                <td>
-                                                    <a href="{% url 'object' obj.id %}">
-                                                        {{ obj.name }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="{% url 'object' obj.id %}">
-                                                        {{ obj.id }}
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
-                                        {% endfor %}
+                                            <thead>
+                                                    <tr>
+                                                       <th>物品编号</th>
+                                                       <th>物品名称</th>
+                                                       <th>上传时间</th>
+                                                    </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                    {% for obj in obj_review %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{% url 'object' obj.id %}">
+                                                                {{ obj.id }}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{% url 'object' obj.id %}">
+                                                                {{ obj.name }}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{% url 'object' obj.id %}">
+                                                                {{obj.id|slice:"0:8"}}
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                        {# value={{obj.id}}注意和后面的/隔开,不然value的值后面会加上/ #}
+                                                    {% endfor %}
+                                                 </tbody>
+
                                     </table>
                                 {% endif %}
+                                <form action="" method="post">
+                                    <div> {% comment %}todo 这个上下页的位置 {% endcomment %}
+                                        <button type="submit" class="btn btn-default btn-sm" name="pervious_review">上一页</button>
+                                        <span>第 {{ page }}/{{ page_all }} 页</span>
+                                        <button type="submit" class="btn btn-default btn-sm" name="next_review">下一页</button>
+                                    </div>
+                                </form>
                             </div>
 
                             <!-- 用户管理 -->

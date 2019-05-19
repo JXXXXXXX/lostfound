@@ -15,6 +15,7 @@ sort={
     'zjxj':1,
 }
 
+
 # 登陆页面（新）
 def login_view(request):
     # 检查输入的学号/密码正确性
@@ -146,6 +147,7 @@ def upload_view(request):
             context['upload_fail'] = True
 
             return render_to_response('upload.html',context)
+
     else:
         # 处理非POST的情况,返回表单页面，用户输入数据
         context={}
@@ -760,50 +762,55 @@ def admin_view(request):
     num_one_page = 12 # 一页显示的物品数量
     button_p = 'pervious'  # 上一页按钮名
     button_n = 'next'  # 下一页按钮名
+    button_p_review = 'pervious_review'    # 审核页面-上一页按钮名
+    button_n_review = 'next_review'        # 审核页面-下一页按钮名
 
     if request.method == "POST":
         confirm_upload_user = request.POST.getlist('upload_user')
         confirm_delete_obj = request.POST.getlist('delete_obj')
         confirm_button_p = request.POST.getlist(button_p)
         confirm_button_n = request.POST.getlist(button_n)
+        confirm_button_p_review = request.POST.getlist(button_p_review)
+        confirm_button_n_review = request.POST.getlist(button_n_review)
         if len(confirm_upload_user)>0:
-            # ---------功能：批量上传用户信息--------
             context["show"] = "upload" # 返回上传页面
             upload_user(request)
             if 'page_admin_obj' in request.session:
                 del request.session['page_admin_obj']
 
         if len(confirm_delete_obj)>0:
-            # ---------功能：批量删除物品信息（面向所有物品）--------
             context["show"] = "obj"  # 返回所有物品页面
             delete_obj_admin(request)
         if len(confirm_button_p or confirm_button_n)>0:
             context["show"] = "obj"  # 返回所有物品页面
+        if len(confirm_button_p_review or confirm_button_n_review):
+            context["show"] = "review"  # 返回审核页面
 
     if 'sno' in request.session:
         user = models.User.objects.get(sno=request.session['sno'])
         if user.tag == False:
             return HttpResponse("你不是管理员.")
         else:
-            num_state0 = len(models.Object.objects.filter(state=0))
-            if num_state0>0:
-                context["num_state0"] = num_state0
-
             context['user'] = user
-            # ----------功能：审核信息(将待审核的物品信息显示到网页上)---------------
+        # 将待审核的物品信息显示到网页上
             obj_review_db = models.Object.objects.filter(state=0)  # 筛选出待审核的物品 state=0
-            obj_review=list(obj_review_db)
-            obj_review.sort(key=lambda obj: obj.id, reverse=True)  # 排序
-
-            if len(obj_review) == 0:
+        # 计算管理员未审核的信息数量num_state0
+            num_state0 = len(obj_review_db)
+            if num_state0 == 0:
                 context["review_no_history"] = True
             else:
+                obj_review = list(obj_review_db)  # 转成list才能进行排序
+                obj_review.sort(key=lambda obj: obj.id, reverse=True)  # 排序
+                obj_review = Pagination(request, obj_review, num_one_page,
+                     'page_admin_review', button_p_review, button_n_review)  # 分页
+
                 context["obj_review"] = obj_review
+                context["num_state0"] = num_state0
 
             # 将所有信息，显示到网页上
             obj_all = models.Object.objects.all().order_by('-id')
             num_obj_all = len(obj_all)
-            if len(obj_all)>0:
+            if num_obj_all > 0:
                 obj_all = Pagination(request, obj_all, num_one_page,
                    'page_admin_obj', button_p, button_n) # 分页
             # 页数设置
@@ -864,6 +871,10 @@ def Pagination(request,obj,k,page_index,button_p,button_n):
         index  = request.session[page_index]
     else:
         index  = 1
+    for key in request.session.keys():
+        if str(key).find('page')!=-1 and str(key)!= page_index:
+            # 对于所有记录页码的session。保留当前，其余删除
+            request.session[str(key)]=1
 
     if request.POST:
         lost_pervious = request.POST.getlist(button_p)   # 上一页
