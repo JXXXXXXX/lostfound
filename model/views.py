@@ -687,38 +687,43 @@ def search_view(request):
     context = {}
     objs_found = []
     objs_lost = []
+    keyword=''
 
     if 'q' in request.GET:
         # 对物品（object）的名称、地点、描述进行查找
         keyword = str(request.GET['q'])     # 获得搜索关键词
-        objs=set()  # 创建一个物品集合（set）,保证物品对象不重复
-        objs.update(models.Object.objects.all().order_by('id'))
+        request.session['keyword'] = keyword
+    else:
+        if 'keyword' in request.session:
+            keyword = request.session['keyword']
+    objs = set()  # 创建一个物品集合（set）,保证物品对象不重复
+    objs.update(models.Object.objects.all().order_by('id'))
 
-        if re.search(' ',keyword):
-            keyword_set=set()
-            word=""
-            for i in range(len(keyword)):
-                if(keyword[i]!=' '):
-                    word=word+keyword[i]
-                else:
-                    # 读入空格
-                    if(word!=""):
-                        # 若word不为空,则加入keyword_list
-                        keyword_set.add(word)
-                        word="" # 重置word
-                if i+1>=len(keyword) and word!="":
+    if re.search(' ', keyword):
+        keyword_set = set()
+        word = ""
+        for i in range(len(keyword)):
+            if (keyword[i] != ' '):
+                word = word + keyword[i]
+            else:
+                # 读入空格
+                if (word != ""):
+                    # 若word不为空,则加入keyword_list
                     keyword_set.add(word)
+                    word = ""  # 重置word
+            if i + 1 >= len(keyword) and word != "":
+                keyword_set.add(word)
 
-            objs = searchByKeyword(objs, keyword_set)
-        else:
-            objs=searchByKeyword(objs,keyword)
+        objs = searchByKeyword(objs, keyword_set)
+    else:
+        objs = searchByKeyword(objs, keyword)
 
-        for obj in objs:
-            if obj.state>0:# 过滤"未审核""审核未通过"的物品
-                if obj.tag==False:
-                    objs_lost.append(obj)
-                else:
-                    objs_found.append(obj)
+    for obj in objs:
+        if obj.state > 0:  # 过滤"未审核""审核未通过"的物品
+            if obj.tag == False:
+                objs_lost.append(obj)
+            else:
+                objs_found.append(obj)
 
     Timetype=0
     if request.POST:
@@ -1056,8 +1061,11 @@ def searchByTimeType(input_objs,timeType):
             if daysdelta >= 0:
                 if daysdelta <= 3:
                     objs3.add(obj)
+                    objs14.add(obj)
+                    objs30.add(obj)
                 elif daysdelta <= 14:
                     objs14.add(obj)
+                    objs30.add(obj)
                 elif daysdelta <= 30:
                     objs30.add(obj)
                 else:  # >30
