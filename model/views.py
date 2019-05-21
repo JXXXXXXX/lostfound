@@ -448,6 +448,24 @@ def quit_view(request):
 def main_view(request):
     context = {}
 
+    Timetype=0
+    if request.POST:
+        confirm_tt0 = request.POST.getlist('Timetype0')
+        confirm_tt1=request.POST.getlist('Timetype1')
+        confirm_tt2 = request.POST.getlist('Timetype2')
+        confirm_tt3 = request.POST.getlist('Timetype3')
+        confirm_tt4 = request.POST.getlist('Timetype4')
+        if len(confirm_tt0)>0:
+            Timetype=0
+        elif len(confirm_tt1)>0:
+            Timetype=1
+        elif len(confirm_tt2)>0:
+            Timetype=2
+        elif len(confirm_tt3)>0:
+            Timetype=3
+        elif len(confirm_tt4)>0:
+            Timetype=4
+
     num_one_page = 6
     button_lost_p='lost_pervious'   # 寻物启事 上一页按钮名
     button_lost_n = 'lost_next'     # 寻物启事 下一页按钮名
@@ -463,6 +481,13 @@ def main_view(request):
 
     lost=list(lost_db)
     found=list(found_db)
+
+    if Timetype:
+        # 按时间类型进行筛选
+        if Timetype>=0 and Timetype<=4:
+            lost  = searchByTimeType(input_objs=lost_db,timeType=Timetype)
+            found = searchByTimeType(input_objs=found_db, timeType=Timetype)
+
 
     # 物品按时间倒序显示（最近时间优先
     lost.sort(key=lambda obj: obj.id, reverse=True)
@@ -483,7 +508,6 @@ def main_view(request):
 
     if 'sno' in request.session:
         # 用户已登陆
-        print(request.session['sno'])
         user_login = models.User.objects.get(sno=request.session['sno'])
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
@@ -660,13 +684,9 @@ def upload_user(request):
 def search_view(request):
     # 1.根据keyword，从数据库中搜索出所有的物品objs
     # 2.将objs分为失物招领(found)和寻物启事(lost)在二级页面上(second.html)显示
-
-    num_one_page = 11 # 一页显示的物品数量
-    button_lost_p = 'lost_pervious'  # 寻物启事 上一页按钮名
-    button_lost_n = 'lost_next'  # 寻物启事 下一页按钮名
-    button_found_p = 'found_pervious'  # 失物招领 上一页按钮名
-    button_found_n = 'found_next'  # 失物招领 下一页按钮名
-    # print(request.get_full_path_info())
+    context = {}
+    objs_found = []
+    objs_lost = []
 
     if 'q' in request.GET:
         # 对物品（object）的名称、地点、描述进行查找
@@ -693,16 +713,6 @@ def search_view(request):
         else:
             objs=searchByKeyword(objs,keyword)
 
-        # 用second.html显示搜索结果
-        context={}
-        no_found=False
-        no_lost=False
-        objs_found=[]
-        objs_lost = []
-        if 'sno' in request.session:
-            user= models.User.objects.get(sno=request.session['sno'])
-            context['user_sno']=user.sno
-            context['user_name']=user.name
         for obj in objs:
             if obj.state>0:# 过滤"未审核""审核未通过"的物品
                 if obj.tag==False:
@@ -710,39 +720,79 @@ def search_view(request):
                 else:
                     objs_found.append(obj)
 
-        num_objs_lost = len(objs_lost)
-        num_objs_found = len(objs_found)
+    Timetype=0
+    if request.POST:
+        confirm_tt0 = request.POST.getlist('Timetype0')
+        confirm_tt1=request.POST.getlist('Timetype1')
+        confirm_tt2 = request.POST.getlist('Timetype2')
+        confirm_tt3 = request.POST.getlist('Timetype3')
+        confirm_tt4 = request.POST.getlist('Timetype4')
+        if len(confirm_tt0)>0:
+            Timetype=0
+        elif len(confirm_tt1)>0:
+            Timetype=1
+        elif len(confirm_tt2)>0:
+            Timetype=2
+        elif len(confirm_tt3)>0:
+            Timetype=3
+        elif len(confirm_tt4)>0:
+            Timetype=4
 
-        if num_objs_lost==0:
-            no_lost=True
-        else:
-            # 排序
-            objs_lost.sort(key=lambda obj: obj.id, reverse=True)
-            # 分页
-            objs_lost = Pagination(request, objs_lost, num_one_page,
-               'page_search_lost', button_lost_p, button_lost_n)  # 寻物启事
-        if num_objs_found==0:
-            no_found=True
-        else:
-            # 排序
-            objs_found.sort(key=lambda obj: obj.id, reverse=True)
-            # 分页
-            objs_found = Pagination(request, objs_found, num_one_page,
-               'page_search_found', button_found_p, button_found_n)
+        if Timetype:
+            # 按时间类型进行筛选
+            if Timetype >= 0 and Timetype <= 4:
+                objs_lost = searchByTimeType(input_objs=objs_lost, timeType=Timetype)
+                objs_found = searchByTimeType(input_objs=objs_found, timeType=Timetype)
 
-        context['no_found']=no_found
-        context['no_lost'] = no_lost
-        context['objs_found']=objs_found
-        context['objs_lost'] = objs_lost
-        # 页码设置
-        if 'page_search_lost' in request.session:
-            context['page_lost'] = request.session['page_search_lost']
-            context['page_lost_all'] = int((num_objs_lost / (num_one_page+0.5)) + 1)
-        if 'page_search_found' in request.session:
-            context['page_found'] = request.session['page_search_found']
-            context['page_found_all'] = int((num_objs_found / (num_one_page+0.5)) + 1)
+    # 用second.html显示搜索结果
 
-        return render_to_response('second.html',context)
+    num_one_page = 12                   # 一页显示的物品数量
+    button_lost_p = 'lost_pervious'     # 寻物启事 上一页按钮名
+    button_lost_n = 'lost_next'         # 寻物启事 下一页按钮名
+    button_found_p = 'found_pervious'   # 失物招领 上一页按钮名
+    button_found_n = 'found_next'       # 失物招领 下一页按钮名
+
+    no_found = False
+    no_lost = False
+
+    if 'sno' in request.session:
+        user = models.User.objects.get(sno=request.session['sno'])
+        context['user_sno'] = user.sno
+        context['user_name'] = user.name
+
+    num_objs_lost = len(objs_lost)
+    num_objs_found = len(objs_found)
+
+    if num_objs_lost == 0:
+        no_lost = True
+    else:
+        # 排序
+        objs_lost.sort(key=lambda obj: obj.id, reverse=True)
+        # 分页
+        objs_lost = Pagination(request, objs_lost, num_one_page,
+                               'page_search_lost', button_lost_p, button_lost_n)  # 寻物启事
+    if num_objs_found == 0:
+        no_found = True
+    else:
+        # 排序
+        objs_found.sort(key=lambda obj: obj.id, reverse=True)
+        # 分页
+        objs_found = Pagination(request, objs_found, num_one_page,
+                                'page_search_found', button_found_p, button_found_n)
+
+    context['no_found'] = no_found
+    context['no_lost'] = no_lost
+    context['objs_found'] = objs_found
+    context['objs_lost'] = objs_lost
+    # 页码设置
+    if 'page_search_lost' in request.session:
+        context['page_lost'] = request.session['page_search_lost']
+        context['page_lost_all'] = int((num_objs_lost / (num_one_page + 0.5)) + 1)
+    if 'page_search_found' in request.session:
+        context['page_found'] = request.session['page_search_found']
+        context['page_found_all'] = int((num_objs_found / (num_one_page + 0.5)) + 1)
+
+    return render_to_response('second.html', context)
 
 # 个人中心--修改密码
 def changePwd(request):
