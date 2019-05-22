@@ -1111,23 +1111,31 @@ def superadmin(request):
             user = models.User.objects.get(sno=request.session['edit_sno'])
             confirm_name = request.POST.getlist('name')
             confirm_pwdreset = request.POST.getlist('reset')
-            confirm_tag = request.POST.getlist('tag_radio')
+            confirm_tag = request.POST.getlist('tag')
             confirm_upload_user = request.POST.getlist('upload_user')
 
             if len(confirm_name) > 0:
                 user.name = str(request.POST.get('name_input'))
                 user.save()
+                context['info_type1'] = 'success'
+                context['info1'] = '用户密码修改成功'
 
             if len(confirm_pwdreset) > 0:
                 user.pwd = user.sno # 将用户密码初始化为学号
                 user.save()
+                context['info_type1'] = 'success'
+                context['info1'] = '用户密码已初始化为学号'
 
-            if len(confirm_tag) > 0:  # 修改用户权限
-                if request.POST.getlist('tag_radio') == '0':
+            if len(confirm_tag)> 0 :
+                # 修改用户权限
+                new_tag = request.POST.get('tag_radio')
+                if new_tag == '0':
                     user.tag=0
-                elif request.POST.getlist('tag_radio') == '1':
+                elif new_tag == '1':
                     user.tag=1
                 user.save()
+                context['info_type1'] = 'success'
+                context['info1'] = '用户权限修改成功'
 
             if len(confirm_upload_user) > 0:
                 context['show'] = 'upload'

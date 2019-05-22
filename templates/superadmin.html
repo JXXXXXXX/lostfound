@@ -187,6 +187,20 @@
                                             </form>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-4" style="margin-top: 15px">
+                                        {% comment %}显示提示信息{% endcomment %}
+                                            {% if info_type1 == 'success' %}
+                                                <div class="alert alert-success alert-dismissable" role="alert">{{ info1 }}</div>
+                                            {% endif %}
+                                            {% if info_type1 == 'danger' %}
+                                                <div class="alert alert-danger alert-dismissable" role="alert">{{ info1 }}</div>
+                                            {% endif %}
+                                            {% if info_type1 == 'warning' %}
+                                                <div class="alert alert-warning alert-dismissable" role="alert">{{ info1 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -209,6 +223,7 @@
                                                     <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
                                                 </div>
                                                 <div class="col-md-4" style="margin-top: 15px">
+                                                {% comment %}显示提示信息{% endcomment %}
                                                     {% if info_type == 'success' %}
                                                         <div class="alert alert-success alert-dismissable" role="alert">{{ info }}</div>
                                                     {% endif %}
@@ -246,7 +261,7 @@
                                         <h4 class="modal-title" id="myModalLabel">修改姓名</h4>
                                     </div>
                                     <div class="modal-body">
-                                        正确的姓名 <input type="text" name="name_input" value="" maxlength="15" minlength="7"/>
+                                        正确的姓名 <input type="text" name="name_input" value=""/>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -277,7 +292,7 @@
 
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                        <input type="submit" name="feedback" class="btn btn-primary" value="提交"/>
+                                        <input type="submit" name="tag" class="btn btn-primary" value="提交"/>
                                     </div>
 
                                 </div><!-- /.modal-content -->
