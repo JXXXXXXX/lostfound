@@ -101,110 +101,135 @@
 					        </ul>
 				        </div>
 			        </div>
+                </div>
 
+                <div class="content">
+                    <!--用户信息修改-->
+                            {% if show == "edit" %}
+                                <div class="list">
+                            {% else %}
+                                <div class="list" style="display: none">
+                            {% endif %}
+                                    {% comment %}搜索要修改的用户{% endcomment %}
+                                    <div class="row">
+                                        <div class="col-md-3" style="float: left;margin-top: 15px">
+                                                <form action="/superadmin" method="get">
+                                                    <div class="input-group">
+                                                        <input type="text" name="q" class="form-control" placeholder="输入用户的学号...">
+                                                            <span class="input-group-btn">
+                                                            <button class="btn btn-default" type="submit" value="搜索">搜索</button>
+                                                        </span>
+                                                    </div><!-- /input-group -->
+                                                </form>
+                                        </div>
+                                    </div>
 
+                                    <br>
 
-                    <div class="content">
-                            <!--用户信息修改-->
-                        {% if show == "edit" %}
-                            <div class="list">
-                        {% else %}
-                            <div class="list" style="display: none">
-                        {% endif %}
-                                {% comment %}搜索要修改的用户{% endcomment %}
-                                <div class="col-md-3" style="float: left;margin-top: 15px">
-                                        <form action="/superadmin" method="get">
-                                            <div class="input-group">
-                                                <input type="text" name="q" class="form-control" placeholder="输入用户的学号...">
-                                                    <span class="input-group-btn">
-                                                    <button class="btn btn-default" type="submit" value="搜索">搜索</button>
-                                                </span>
-                                            </div><!-- /input-group -->
-                                        </form>
-                                </div><!-- /.col-lg-6 -->
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <form action="" method="POST">
+                                                {% if edit_user %}
+                                                    <table class="table table-condensed">
+                                                        <tr>
+                                                            <td>学号：</td>
+                                                            <td>{{ edit_user.sno }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>姓名：</td>
+                                                            <td>
+                                                                {% if edit_user.tag == 2 %}
+                                                                    {{ edit_user.name }}
+                                                                {% else %}
+                                                                    <a data-toggle="modal" href="#change_name_Modal">
+                                                                        {{ edit_user.name }} <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                                                    </a>
+                                                                {% endif %}
 
-                            <form action="" method="POST">
-                                {% if edit_user %}
-                                    <table class="table">
-                                        <tr>
-                                            <td>学号：</td>
-                                            <td>{{ edit_user.sno }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>姓名：</td>
-                                            <td>
-                                                {% if edit_user.tag == 2 %}
-                                                    {{ edit_user.name }}
-                                                {% else %}
-                                                    <a data-toggle="modal" href="#change_name_Modal">
-                                                        {{ edit_user.name }} <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                                    </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>权限等级：</td>
+                                                            <td>
+                                                                {% if edit_user.tag == 2 %}
+                                                                    超级管理员
+                                                                {% else %}
+                                                                    <a data-toggle="modal" href="#tag_Modal">
+                                                                        {% if edit_user.tag == 1 %}
+                                                                            管理员
+                                                                        {% endif %}
+                                                                        {% if edit_user.tag == 0 %}
+                                                                            普通用户
+                                                                        {% endif %}
+                                                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                                                    </a>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>密码：</td>
+                                                            <td>
+                                                                {% if edit_user.tag == 2 %}
+                                                                    不可见
+                                                                {% else %}
+                                                                    <button name="reset">初始化</button>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 {% endif %}
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>权限等级：</td>
-                                            <td>
-                                                {% if edit_user.tag == 2 %}
-                                                    超级管理员
+                                                {% if nfound_edit_user %}
+                                                    {% comment %}如果是数据库里没用这个用户{% endcomment %}
+                                                    <p>没有学号为{{ edit_sno }}的用户</p>
                                                 {% else %}
-                                                    <a data-toggle="modal" href="#tag_Modal">
-                                                        {% if edit_user.tag == 1 %}
-                                                            管理员
-                                                        {% endif %}
-                                                        {% if edit_user.tag == 0 %}
-                                                            普通用户
-                                                        {% endif %}
-                                                         <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                                    </a>
+                                                    {% comment %}未搜索{% endcomment %}
                                                 {% endif %}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>密码：</td>
-                                            <td>
-                                                {% if edit_user.tag == 2 %}
-                                                    不可见
-                                                {% else %}
-                                                    <button name="reset">初始化</button>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                {% endif %}
-                                {% if nfound_edit_user %}
-                                    {% comment %}如果是数据库里没用这个用户{% endcomment %}
-                                    没有学号为{{ edit_sno }}的用户
-                                {% else %}
-                                    {% comment %}未搜索{% endcomment %}
-                                {% endif %}
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            </form>
-                        </div>
 
-                            <form action="" method="POST" enctype="multipart/form-data">
                                 <!--用户导入-->
                                 {% if show == "upload" %}
                                     <div class="list">
                                     {% else %}
                                     <div class="list" style="display: none;">
                                 {% endif %}
-                                        <div class="data">
-                                            <label for="input_user" style="float: left;padding-right: 4px;">批量上传学生信息</label>
-                                            <input type="file" id="input_user" name="file" value="file"/>
+                                        <div class="row">
+                                            <form action="" method="POST" enctype="multipart/form-data">
+                                                <div class="col-md-2" style="margin-top: 20px">
+                                                    <div class="data">
+                                                        <label for="input_user" style="float: left">批量上传学生信息</label>
+                                                        <br><br>
+                                                        <input type="file" id="input_user" name="file" value="file"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1" style="font-weight: bolder;float: left;margin-top: 50px">
+                                                    <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
+                                                </div>
+                                                <div class="col-md-4" style="margin-top: 15px">
+                                                    {% if info_type == 'success' %}
+                                                        <div class="alert alert-success alert-dismissable" role="alert">{{ info }}</div>
+                                                    {% endif %}
+                                                    {% if info_type == 'danger' %}
+                                                        <div class="alert alert-danger alert-dismissable" role="alert">{{ info }}</div>
+                                                    {% endif %}
+                                                    {% if info_type == 'warning' %}
+                                                        <div class="alert alert-warning alert-dismissable" role="alert">{{ info }}</div>
+                                                    {% endif %}
+                                                </div>
+                                            </form>
+
                                         </div>
+                                        {% comment %}提示用户上传信息的格式{% endcomment %}
+                                        <hr>
+                                        <p style="color: red;">请严格按照图片所示的格式进行用户信息的批量上传</p>
 
-                                            <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
-                                            <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
+                                        <img src={% static "images/demo/upload_user_excel_format.png" %}>
 
-                                            {% comment %}提示用户上传信息的格式{% endcomment %}
-                                            <hr>
-                                            <p style="color: red;">请严格按照图片所示的格式进行用户信息的批量上传</p>
-                                            <img src={% static "images/demo/upload_user_excel_format.png" %}>
+
                                     </div>
-
-                            </form>
                     </div>
                         <!-- 模态框（Modal） 用于完成交互-->
                     <form action="" method="post">
@@ -260,6 +285,7 @@
                         </div>
                     </form>
                 </div>
+
             </div>
 
 		</div>

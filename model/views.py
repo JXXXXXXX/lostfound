@@ -299,6 +299,13 @@ def objShowinfo_view(request,object_id):
 
 # 个人中心
 def profile_view(request,nav_id):
+    if 'sno' in request.session:
+        try:
+            user_login = models.User.objects.get(sno=request.session['sno'])
+            if user_login.tag==2: # 如果是超级管理员
+                return superadmin(request)
+        except models.User.DoesNotExist:
+            server_error(request)
 #----------分页显示设置---------------
     num_one_page = 6
     button_lost_p='lost_pervious'   # 寻物启事 上一页按钮名
@@ -665,24 +672,33 @@ def upload_user(request):
 
     form = forms.UploadFileForm(request.POST, request.FILES)
     if form.is_valid():
-        count_all = 0       # 总的导入用户数
-        count_upload = 0    # 导入成功用户数
+        count = 0       # 总的导入用户数
+        count_in = 0    # 成功导入的用户数
         file = request.FILES['file']
         try:
             userdata = xlrd.open_workbook(file_contents=file.read())
         except:
             # 捕捉xlrd读取excel的出错
-            return HttpResponse("format error")
+            return "文件打开出错"
         sheet0 = userdata.sheet_by_index(0)   # 选择第一个sheet
         for i in range(1, sheet0.nrows):
-            count_all=count_all+1 # 导入用户数+1
+            count=count+1 # 总用户数+1
             new_user = models.User()
-            new_user.sno = str(int(sheet0.cell(i, 0).value))    # 读学号
-            new_user.name = str(sheet0.cell(i, 1).value)        # 读入姓名
-            new_user.pwd = new_user.sno     # 初始密码同学号
-            new_user.tag = 0                # 用户权限：普通用户
-            new_user.save() # 新用户存入数据库
-
+            sno = str(int(sheet0.cell(i, 0).value))    # 读学号
+            try:
+                models.User.objects.get(sno=sno)
+                # 没有DoseNotExist错误 说明数据库中已经有学号为sno的用户了，不必添加
+            except models.User.DoesNotExist:
+                new_user.sno = sno
+                new_user.name = str(sheet0.cell(i, 1).value)        # 读入姓名
+                new_user.pwd = new_user.sno     # 初始密码同学号
+                new_user.tag = 0                # 用户权限：普通用户
+                new_user.save() # 新用户存入数据库
+                count_in = count_in+1# 导入用户数+1
+        counts=[]
+        counts.append(count)
+        counts.append(count_in)
+        return counts
 # 搜索功能
 def search_view(request):
     # 1.根据keyword，从数据库中搜索出所有的物品objs
@@ -1092,7 +1108,6 @@ def superadmin(request):
         context['user']=models.User.objects.get(sno=request.session['sno'])
         context['show'] = 'edit'
         if request.POST and ('edit_sno' in request.session):
-            print("start edit..")
             user = models.User.objects.get(sno=request.session['edit_sno'])
             confirm_name = request.POST.getlist('name')
             confirm_pwdreset = request.POST.getlist('reset')
@@ -1116,7 +1131,19 @@ def superadmin(request):
 
             if len(confirm_upload_user) > 0:
                 context['show'] = 'upload'
-                upload_user(request)
+                result = upload_user(request)
+
+                if result.__class__==str:
+                    context['info_type'] = 'danger'
+                    context['info'] = result
+                elif result.__class__==list:
+                    if result[0]==result[1]:
+                        context['info_type'] = 'success'
+                        context['info'] = '成功导入'+str(result)+"个新用户"
+                    else:
+                        context['info_type'] = 'warning'
+                        context['info'] = '成功导入' + str(result[1]) + "个新用户，"\
+                                          +str(result[0]-result[1])+"个用户已存在于数据库中"
 
         if 'q' in request.GET:
             sno = str(request.GET['q'])  # 获得搜索学号
