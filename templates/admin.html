@@ -100,19 +100,6 @@
                                         {% endif %}
                                     </a>
                                 </li>
-                                <li><a href="#">用户管理</a></li>
-                                <li><a href="#">信息管理</a></li>
-                            {% endif %}
-                            {% if show == "upload" %}
-                                <li>
-                                    <a href="#">
-                                        信息审核
-                                        {% if num_state0 %}
-                                            <span class="badge">{{ num_state0 }}</span>
-                                        {% endif %}
-                                    </a>
-                                </li>
-                                <li  class="active"><a href="#">用户管理</a></li>
                                 <li><a href="#">信息管理</a></li>
                             {% endif %}
                             {% if show == "obj" %}
@@ -124,7 +111,6 @@
                                         {% endif %}
                                     </a>
                                 </li>
-                                <li><a href="#">用户管理</a></li>
                                 <li class="active"><a href="#">信息管理</a></li>
                             {% endif %}
 					        </ul>
@@ -190,28 +176,6 @@
                                     </form>
                                 {% endif %}
                             </div>
-
-                            <!-- 用户管理 -->
-                            {% if show == "upload" %}
-                                <div class="list">
-                                {% else %}
-                                <div class="list" style="display: none;">
-                            {% endif %}
-                                    <form action="" method="POST" enctype="multipart/form-data">
-                                        <div class="data">
-                                            <label for="input_user" style="float: left;padding-right: 4px;">批量上传学生信息</label>
-                                            <input type="file" id="input_user" name="file" value="file"/>
-                                        </div>
-                                    </form>
-                                    <!--TODO(jinxin)这个上传按钮美化一下，能不能放在“上传信息”那一行的最后-->
-                                    <button type="submit" name="upload_user" class="btn btn-default" style="display: block;margin: 0 auto;">上传</button>
-
-                                    {% comment %}提示用户上传信息的格式{% endcomment %}
-                                    <hr>
-                                    <p style="color: red;">请严格按照图片所示的格式进行用户信息的批量上传</p>
-                                    <img src={% static "images/demo/upload_user_excel_format.png" %}>
-                                </div>
-
 
 
                             <!-- 信息管理（对信息的批量删除） -->

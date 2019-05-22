@@ -47,6 +47,10 @@ def login_view(request):
                 user_db = models.User.objects.get(sno=username)#连接数据库检查密码正确性
                 if user_db.pwd == password:
                     # 密码正确
+                    if user_db.tag == 2: # 超级管理员
+                        request.session["sno"] = user_db.sno  # 记录用户sno
+                        return redirect('/superadmin')
+
                     if user_db.pwd == user_db.sno:
                         #如果密码为初始密码,则要求用户修改密码并完善个人信息
                         request.session["sno2"] = user_db.sno
@@ -56,7 +60,6 @@ def login_view(request):
                         del request.session['errortype']
 
                     request.session["sno"] = user_db.sno  # 记录用户sno
-
                     return redirect('/main') # 登陆成功-跳转到主界面
                         # redirect 只能通过session传递参数
                 else:
@@ -846,15 +849,11 @@ def admin_view(request):
     button_n_review = 'next_review'        # 审核页面-下一页按钮名
 
     if request.method == "POST":
-        confirm_upload_user = request.POST.getlist('upload_user')
         confirm_delete_obj = request.POST.getlist('delete_obj')
         confirm_button_p = request.POST.getlist(button_p)
         confirm_button_n = request.POST.getlist(button_n)
         confirm_button_p_review = request.POST.getlist(button_p_review)
         confirm_button_n_review = request.POST.getlist(button_n_review)
-        if len(confirm_upload_user)>0:
-            context["show"] = "upload" # 返回上传页面
-            upload_user(request)
         if len(confirm_delete_obj)>0:
             context["show"] = "obj"  # 返回所有物品页面
             delete_obj_admin(request)
@@ -1087,3 +1086,42 @@ def searchByTimeType(input_objs,timeType):
 
     return objs
 
+def superadmin(request):
+    context={}
+    if 'sno' in request.session:
+        context['user']=models.User.objects.get(sno=request.session['sno'])
+        context['show'] = 'edit'
+        if request.POST and ('edit_sno' in request.session):
+            user = models.User.objects.get(sno=request.session['edit_sno'])
+            confirm_name = request.POST.getlist('name')
+            confirm_pwdreset = request.POST.getlist('reset')
+            confirm_tag = request.POST.getlist('tag')
+            confirm_upload_user = request.POST.getlist('upload_user')
+
+            if len(confirm_name) > 0:
+                user.name = str(request.POST.get('name_input'))
+                user.save()
+
+            if len(confirm_pwdreset) > 0:
+                print(213)
+
+            if len(confirm_tag) > 0:  # 修改用户权限
+                print(request.POST.get('tag_radio'))
+
+            if len(confirm_upload_user) > 0:
+                context['show'] = 'upload'
+                upload_user(request)
+
+        if 'q' in request.GET:
+            sno = str(request.GET['q'])  # 获得搜索学号
+            context['edit_sno']=sno
+            try:
+                edit_user = models.User.objects.get(sno=sno)
+                request.session['edit_sno'] = sno
+                context['edit_user'] = edit_user
+            except models.User.DoesNotExist:
+                context['nfound_edit_user'] = True
+    else:
+        page_not_found(request)
+
+    return render_to_response('superadmin.html',context)

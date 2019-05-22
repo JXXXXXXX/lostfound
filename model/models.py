@@ -13,7 +13,7 @@ class User(models.Model):
     name = models.CharField(max_length=10)                  #姓名
     phone = models.CharField(max_length=15,null=True)       #电话
     email = models.EmailField(max_length=50,null=True)      #邮箱
-    tag = models.BooleanField(default=False)                #标识：tag=True 为管理员；tag=false 为普通用户
+    tag = models.IntegerField(default=0)                    #标识：tag=1 为管理员；tag=0 为普通用户 ; tag=2 超级管理员
 
 class Object(models.Model):
     id = models.CharField(primary_key=True,max_length=20)   #物品编号id 由上传的时间组成
