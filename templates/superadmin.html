@@ -123,6 +123,7 @@
                                         </form>
                                 </div><!-- /.col-lg-6 -->
 
+                            <form action="" method="POST">
                                 {% if edit_user %}
                                     <table class="table">
                                         <tr>
@@ -166,7 +167,7 @@
                                                 {% if edit_user.tag == 2 %}
                                                     不可见
                                                 {% else %}
-                                                    <a class="button" name="reset">初始化</a>
+                                                    <button name="reset">初始化</button>
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -178,7 +179,9 @@
                                 {% else %}
                                     {% comment %}未搜索{% endcomment %}
                                 {% endif %}
-                            </div>
+
+                            </form>
+                        </div>
 
                             <form action="" method="POST" enctype="multipart/form-data">
                                 <!--用户导入-->

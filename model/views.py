@@ -1092,10 +1092,11 @@ def superadmin(request):
         context['user']=models.User.objects.get(sno=request.session['sno'])
         context['show'] = 'edit'
         if request.POST and ('edit_sno' in request.session):
+            print("start edit..")
             user = models.User.objects.get(sno=request.session['edit_sno'])
             confirm_name = request.POST.getlist('name')
             confirm_pwdreset = request.POST.getlist('reset')
-            confirm_tag = request.POST.getlist('tag')
+            confirm_tag = request.POST.getlist('tag_radio')
             confirm_upload_user = request.POST.getlist('upload_user')
 
             if len(confirm_name) > 0:
@@ -1103,10 +1104,15 @@ def superadmin(request):
                 user.save()
 
             if len(confirm_pwdreset) > 0:
-                print(213)
+                user.pwd = user.sno # 将用户密码初始化为学号
+                user.save()
 
             if len(confirm_tag) > 0:  # 修改用户权限
-                print(request.POST.get('tag_radio'))
+                if request.POST.getlist('tag_radio') == '0':
+                    user.tag=0
+                elif request.POST.getlist('tag_radio') == '1':
+                    user.tag=1
+                user.save()
 
             if len(confirm_upload_user) > 0:
                 context['show'] = 'upload'
