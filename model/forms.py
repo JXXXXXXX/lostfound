@@ -18,7 +18,7 @@ class objUpload_form(forms.Form):
 class complete_form(forms.Form):
     pwd1 = forms.CharField(
         required = True,
-        label = "新密码",
+        label = "新密码:",
         error_messages={'required':"请输入新密码"},
         widget = forms.PasswordInput(
             attrs={
@@ -29,7 +29,7 @@ class complete_form(forms.Form):
         max_length=20)                                      #第一次输入的密码
     pwd2 = forms.CharField(
         required = True,
-        label = "确认密码",
+        label = "确认密码:",
         error_messages={'required':"请再次输入新密码"},
         widget = forms.PasswordInput(
             attrs={
@@ -49,7 +49,7 @@ class complete_form(forms.Form):
     #     max_length=10)                                      #姓名
     phone = forms.CharField(
         required = True,
-        label = "电话",
+        label = "电话:",
         widget = forms.TextInput(
             attrs={
                 'placeholder':"在此填写电话",
@@ -60,7 +60,7 @@ class complete_form(forms.Form):
         max_length=15)                                      #电话
     email = forms.EmailField(
         required = True,
-        label = "邮箱",
+        label = "邮箱:",
         widget = forms.EmailInput(
             attrs={
                 'placeholder':"在此填写邮箱",
