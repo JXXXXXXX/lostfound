@@ -2,6 +2,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render_to_response,HttpResponse,redirect
 from model import forms,models
 import datetime,xlrd,re,os
+import django.core.exceptions
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -150,13 +151,16 @@ def upload_view(request):
                 return render_to_response('upload.html',context)
             except models.User.DoesNotExist:
                 # 用户不存在
-                server_error(request)
+                return server_error(request)
             except models.AllSort.DoesNotExist:
                 # 分类不存在
-                server_error(request)
+                return server_error(request)
             except models.Object.DoesNotExist:
                 # 物品信息没有存入数据库
-                server_error(request)
+                return server_error(request)
+            except django.core.exceptions.ValidationError:
+                context['error']=True
+                return render_to_response('upload.html', context)
         else:
             #表单不合法
             context={}

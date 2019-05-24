@@ -69,7 +69,9 @@
                     {# 用户已登陆 #}
                     {% if upload_success %}
                         <div class="alert alert-success">上传信息成功!</div>
-
+                    {% endif %}
+                    {% if error %}
+                        <div class="alert alert-danger">上传失败，请检查格式是否正确！</div>
                     {% endif %}
                     {% if upload_fail %}
                         <div class="alert alert-warning">请按规则填写！</div>
