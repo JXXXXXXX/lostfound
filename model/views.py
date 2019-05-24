@@ -181,7 +181,7 @@ def upload_view(request):
         # 已经登陆
         user_login = models.User.objects.get(sno=sno_login)
         context['user']=user_login
-        if user_login.tag:
+        if user_login.tag==1:
             # 如果为管理员，计算未审核的信息数
             num_state0 = len(models.Object.objects.filter(state=0))
             if num_state0 > 0:
@@ -265,7 +265,7 @@ def objShowinfo_view(request,object_id):
     if 'sno' in request.session:    # 'sno'是当前登陆的用户，是查看这条信息的人
         # 已登录
         user_login = models.User.objects.get(sno=request.session['sno']) # 获得已登录用户信息
-        if user_login.tag:
+        if user_login.tag==1:
             # tag==True 管理员
             # 显示所有
             show_obj=True
@@ -410,7 +410,7 @@ def profile_view(request,nav_id):
         # step1
         user_login = models.User.objects.get(sno=sno_login)
         context["user"] = user_login  # 将'用户'加入字典中
-        if user_login.tag:
+        if user_login.tag==1:
             # 如果为管理员，计算未审核的信息数
             num_state0 = len(models.Object.objects.filter(state=0))
             if num_state0>0:
@@ -522,7 +522,7 @@ def main_view(request):
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
 
-        if user_login.tag:
+        if user_login.tag==1:
             # 如果为管理员，计算未审核的信息数
             num_state0 = len(models.Object.objects.filter(state=0))
             if num_state0>0:
@@ -615,7 +615,7 @@ def sort_view(request,sort_id):
         context['user_sno']=user_login.sno
         context['user_name']=user_login.name
 
-        if user_login.tag:
+        if user_login.tag==1:
             # 如果为管理员，计算未审核的信息数
             num_state0 = len(models.Object.objects.filter(state=0))
             if num_state0>0:
@@ -880,8 +880,8 @@ def admin_view(request):
 
     if 'sno' in request.session:
         user = models.User.objects.get(sno=request.session['sno'])
-        if user.tag == False:
-            return HttpResponse("你不是管理员.")
+        if user.tag != 1:
+            return page_not_found(request)
         else:
             context['user'] = user
         # 将待审核的物品信息显示到网页上
