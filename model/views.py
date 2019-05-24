@@ -124,6 +124,9 @@ def upload_view(request):
                 obj.time = form.cleaned_data['time']
                 obj.position = form.cleaned_data['position']
                 obj.dscp = form.cleaned_data['dscp']
+                if obj.position=="(请勿为空)" or  obj.dscp=="(请勿为空)":
+                    context['upload_fail']=True
+                    return render_to_response('upload.html', context)
                 if form.cleaned_data['tag']=='lost':
                     obj.tag=False
                 else:

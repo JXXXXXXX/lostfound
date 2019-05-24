@@ -24,7 +24,7 @@
 		</style>
 	</head>
 	<body background="{% static "images/background.jpg" %}">
-		<div class="container" style="width: 500px;height: 600px;background: #C6C8CA;margin:150px auto;">
+		<div class="container" style="width: 500px;height: 570px;background: #F8F8FF;margin:150px auto;border-radius: 1em">
             <!-- TODO(jinxin) 把这个页面统一美化-->
 			<h3 align="center">欢迎登陆</h3>
 			<hr >
@@ -73,9 +73,11 @@
                   <span class="error-msg">{{ form.errors.email.0}}</span>
                   {% endif %}
                 </div>
+             <div style="margin: 20px;text-align: center">
+                 <button type="reset" class="btn btn-default " style="margin: 20px">重置</button>
+                 <button type="submit" class="btn btn-default " style="margin: 20px">提交</button>
+             </div>
 
-              <button type="reset" class="btn btn-default pull-left">重置</button>
-              <button type="submit" class="btn btn-primary pull-right">提交</button>
             </form>
            {% else %}
               您还未登陆
