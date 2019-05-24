@@ -187,59 +187,60 @@
                                 {% if no_obj %}
                                     <p>暂无信息。</p>
                                 {% else %}
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <th>&nbsp;</th>
-                                        <th>物品编号</th>
-                                        <th>物品名称</th>
-                                        <th>用户1</th>
-                                        <th>用户2</th>
-                                        <th>状态</th>
-                                        </thead>
-                                        <tbody>
-                                        <form action="" method="post">
-                                        {% for obj in obj_all %}
-                                            <tr>
-                                                <td><input type="checkbox" name="object" value={{ obj.id }}></td>
-                                                <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
-                                                <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
-                                                {% for item in userobj %}
-                                                    {% if item.object.id == obj.id %}
-                                                        <td>{{ item.user.name }}({{ item.user.sno }})</td>
-                                                    {% endif %}
-                                                {% endfor %}
-                                                {% if obj.state == 2 %}
-                                                    {% for item in record %}
-                                                        {% if item.object.id == obj.id%}
-                                                            {% comment %}如果在record里有obj，则显示用户1和用户2{% endcomment %}
+                                    <form action="" method="post">
+                                        <table class="table table-hover">
+                                            <thead>
+                                            <th>&nbsp;</th>
+                                            <th>物品编号</th>
+                                            <th>物品名称</th>
+                                            <th>用户1</th>
+                                            <th>用户2</th>
+                                            <th>状态</th>
+                                            </thead>
+                                            <tbody>
 
-                                                            <td>{{ item.user2.name }}({{ item.user2.sno }})</td>
+                                            {% for obj in obj_all %}
+                                                <tr>
+                                                    <td><input type="checkbox" name="object" value={{ obj.id }}></td>
+                                                    <td><a href={% url 'object' obj.id %}>{{ obj.id }}</a></td>
+                                                    <td><a href={% url 'object' obj.id %}>{{ obj.name }}</a></td>
+                                                    {% for item in userobj %}
+                                                        {% if item.object.id == obj.id %}
+                                                            <td>{{ item.user.name }}({{ item.user.sno }})</td>
                                                         {% endif %}
                                                     {% endfor %}
-                                                {% else %}
-                                                    <td>-</td>
-                                                {% endif %}
+                                                    {% if obj.state == 2 %}
+                                                        {% for item in record %}
+                                                            {% if item.object.id == obj.id%}
+                                                                {% comment %}如果在record里有obj，则显示用户1和用户2{% endcomment %}
 
-                                                {% if obj.state == 0%}<td style="color: darkgray">未审核</td>
-                                                {% elif obj.state == 1%}<td>通过审核</td>
-                                                {% elif obj.state == 2%}<td style="color: deepskyblue">完成</td>
-                                                {% else %}<td style="color: red">未通过审核</td>
-                                                {% endif %}
-                                            </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                    <div>
+                                                                <td>{{ item.user2.name }}({{ item.user2.sno }})</td>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <td>-</td>
+                                                    {% endif %}
 
-                                            <button type="submit" class="btn btn-default btn-sm" name="pervious">上一页
-                                            </button>
-                                            <span>第 {{ page }}/{{ page_all }} 页</span>
-                                            <button type="submit" class="btn btn-default btn-sm" name="next">下一页</button>
+                                                    {% if obj.state == 0%}<td style="color: darkgray">未审核</td>
+                                                    {% elif obj.state == 1%}<td>通过审核</td>
+                                                    {% elif obj.state == 2%}<td style="color: deepskyblue">完成</td>
+                                                    {% else %}<td style="color: red">未通过审核</td>
+                                                    {% endif %}
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <div>
 
-                                            <input class="btn btn-default" type="submit" name="delete_obj" value="删除"/>
+                                                <button type="submit" class="btn btn-default btn-sm" name="pervious">上一页
+                                                </button>
+                                                <span>第 {{ page }}/{{ page_all }} 页</span>
+                                                <button type="submit" class="btn btn-default btn-sm" name="next">下一页</button>
 
-                                    </div>
-                                        </form>
+                                                <input class="btn btn-default" type="submit" name="delete_obj" value="删除"/>
+
+                                        </div>
+                                    </form>
 
                                     <!--上面要加上type="button" 不然对话框只是一闪而过 -->
                                 {% endif %}
