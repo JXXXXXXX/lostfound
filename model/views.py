@@ -113,7 +113,7 @@ def upload_view(request):
                 context['user'] = user_db
                 # 输入物品信息
                 nowtime = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f')
-                time_for_cmp = datetime.datetime.now().strftime('%Y%m%d')
+                time_for_cmp = str(datetime.datetime.now().date())
                 time_input = form.cleaned_data['time'].lstrip('-')
                 if time_for_cmp<time_input:
                     context['upload_time_error']=True
